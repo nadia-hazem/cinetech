@@ -1,23 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <!-- Style  css -->
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Bootstrap 5.3.0 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+<?php
+session_start();
+require 'vendor/autoload.php';
+
+$router = new AltoRouter();
+
+$router->addRoutes(array(   // array(method, path, target, name)
     
-</head>
-<body>
-    <main class="container">
+    // Home //////////////////////////////
+    array('GET', '/', function() { 
+        $movieController = new \App\Controller\MovieController();
+        $movieController->index();
+    }, 'home' ),
 
-    </main>
+    // Latest moovies ///////////////////////////
+    array('GET', '/latest-movies', function() {
+        $homeController = new \App\Controller\MovieController();
+        $homeController->displayLatestMovies();
+    }, 'latest_movies'),
 
-    <!-- Bootstrap js -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    // Popular movies ///////////////////////////
+    array('GET', '/popular-movies', function() {
+        $homeController = new \App\Controller\MovieController(); 
+        $homeController->displayPopularMovies();
+    }, 'popular_movies'),
 
-</body>
-</html>
+));
