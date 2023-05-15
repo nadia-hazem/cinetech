@@ -26,11 +26,11 @@
 
 <!-- Status -->
 
-<!-- <h4 align="center"> 
+ <h4 align="center"> 
 	🚧  Cinetech 🚀 Under construction...  🚧
 </h4> 
 
-<hr> -->
+<hr> 
 
 <p align="center">
   <a href="#dart-about">About</a> &#xa0; | &#xa0; 
@@ -46,7 +46,9 @@
 
 ## :dart: About ##
 
-Describe your project
+The goal of this project is to create a library of films and series, thanks to a public API available online.
+The API in question is “The Movie Database API”. It brings together a large number of films and series, with a lot of information on each of the elements. It will take, in a
+first, retrieve the information from this API, then store this information by following a few basic instructions.
 
 ## :sparkles: Features ##
 
@@ -58,7 +60,7 @@ Describe your project
 
 The following tools were used in this project:
 
-- [Expo](https://expo.io/)
+- [Composer](https://expo.io/)
 - [Node.js](https://nodejs.org/en/)
 - [React](https://pt-br.reactjs.org/)
 - [React Native](https://reactnative.dev/)
@@ -91,7 +93,7 @@ $ yarn start
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
 
 
-Made with :heart: by <a href="https://github.com/nadia-hazem" target="_blank">{{YOUR_NAME}}</a>
+Made with :heart: by <a href="https://github.com/nadia-hazem" target="_blank">Nadia Hazem</a>
 
 &#xa0;
 
