@@ -73,7 +73,7 @@ Before starting :checkered_flag:, you need to have dependencies above installed.
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
 
 
-Made with :heart: by <a href="https://github.com/nadia-hazem" target="_blank">{{YOUR_NAME}}</a>
+Made with :heart: by <a href="https://github.com/nadia-hazem" target="_blank">Nadia-Hazem</a>
 
 &#xa0;
 
