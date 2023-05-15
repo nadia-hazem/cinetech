@@ -1,5 +1,5 @@
 <?php
-// App/Controller/HomeController.php
+// App/Controller/MovieController.php
 
 namespace App\Controller;
 
@@ -16,26 +16,50 @@ class MovieController {
     public function index() {
         // Fonction qui renvoie la page d'accueil
         $latestMovies = $this->movieModel->getLatestMovies();
+        $latestSeries = $this->movieModel->getLatestSeries();
         $popularMovies = $this->movieModel->getPopularMovies();
-        require_once '../../view/home.php';
+        $popularSeries = $this->movieModel->getPopularSeries();
+        require_once 'src/View/home.php';
     }
 
     public function displayLatestMovies() {
-        // Récupérer les derniers films à partir du modèle
         $latestMovies = $this->movieModel->getLatestMovies();
 
-        // Renvoyer les données en format JSON
         header('Content-Type: application/json');
         echo json_encode($latestMovies);
     }
 
     public function displayPopularMovies() {
-        // Récupérer les films populaires à partir du modèle
         $popularMovies = $this->movieModel->getPopularMovies();
+
+        header('Content-Type: application/json');
+        echo json_encode($popularMovies);
+    }
+
+    public function displayLatestSeries() {
+        $latestSeries = $this->movieModel->getLatestSeries();
+
+        header('Content-Type: application/json');
+        echo json_encode($latestSeries);
+    }
+
+    public function displayPopularSeries() {
+        $popularSeries = $this->movieModel->getPopularSeries();
+
+        header('Content-Type: application/json');
+        echo json_encode($popularSeries);
+    }
+
+    public function searchMovies() {
+        // Récupérer la requête de recherche
+        $query = $_GET['query'];
+
+        // Récupérer les résultats de recherche à partir du modèle
+        $searchResults = $this->movieModel->searchMovies($query);
 
         // Renvoyer les données en format JSON
         header('Content-Type: application/json');
-        echo json_encode($popularMovies);
+        echo json_encode($searchResults);
     }
 
 }

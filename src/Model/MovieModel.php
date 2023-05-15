@@ -13,7 +13,7 @@ class MovieModel {
     }
 
     public function getLatestMovies() {
-        $url = "https://api.themoviedb.org/3/movie/latest?api_key=$this->apiKey";
+        $url = "https://api.themoviedb.org/3/movie/latest?api_key=$this->apiKey&language=fr-FR&page=1";
 
         try {
             $response = file_get_contents($url);
@@ -36,6 +36,30 @@ class MovieModel {
         }
     }
 
+    public function getLatestSeries() {
+        $url = "https://api.themoviedb.org/3/tv/latest?api_key=$this->apiKey&language=fr-FR&page=1";
+        
+        try {
+            $response = file_get_contents($url);
+            $data = json_decode($response);
+            return $data;
+        } catch (Exception $e) {
+            echo 'Erreur de requête:', $e->getMessage(), "\n";
+        }
+    }
+
+    public function getPopularSeries() {
+        $url = "https://api.themoviedb.org/3/tv/popular?api_key=$this->apiKey&language=fr-FR&page=1";
+        
+        try {
+            $response = file_get_contents($url);
+            $data = json_decode($response);
+            return $data->results;
+        } catch (Exception $e) {
+            echo 'Erreur de requête:', $e->getMessage(), "\n";
+        }
+    }
+
     public function searchMovies($query) {
         $url = "https://api.themoviedb.org/3/search/movie?api_key=$this->apiKey&language=fr-FR&query=$query";
         
@@ -48,6 +72,5 @@ class MovieModel {
         }
     }
 
-  // Autres fonctions pour récupérer les détails d'un film, les films similaires, les résultats pour les séries TV, etc.
 }
 ?>

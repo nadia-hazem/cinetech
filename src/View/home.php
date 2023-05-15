@@ -8,37 +8,81 @@
     <!-- Bootstrap 5.3.0 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
     
-
-    
     <style>
-        .movies-container {
+        .movie-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 2rem 0;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
         }
 
         .movie {
-            width: 300px;
+            width: 200px;
             margin: 1rem;
-            text-align: center;
+            scroll-snap-align: center;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .movie:hover {
+            transform: scale(1.05);
+            z-index: 1;
+        }
+
+        .movie:hover:before {
+            opacity: 0.3;
+        }
+
+        .movie:before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1));
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
         }
 
         .movie img {
             width: 100%;
             height: auto;
-            margin-bottom: 1rem;
+            object-fit: cover;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .movie:hover img {
+            transform: scale(1.1);
         }
 
         .movie h2 {
-            font-size: 1.2rem;
+            font-size: 1rem;
             margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .movie p {
-            font-size: 0.9rem;
+            display: none;
+            font-size: 0.8rem;
             line-height: 1.2;
             margin-bottom: 1rem;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .movie:hover p {
+            display: block;
         }
     </style>
 </head>
@@ -46,37 +90,23 @@
 
     <main>
 
-        <h1>Bienvenue sur mon application de films !</h1>
+    <?php
+    $movieController = new \App\Controller\MovieController();
+    $latestMovies = $movieController->displayLatestMovies();
 
-        <?php
-        // Afficher les derniers films
-        if (!empty($latestMovies)) {
-            echo '<h2>Derniers films</h2>';
-            echo '<div class="movies-container">';
-            foreach ($latestMovies as $movie) {
-                echo '<div class="movie">';
-                echo '<img src="https://image.tmdb.org/t/p/w300/'.$movie->poster_path.'" alt="'.$movie->title.'">';
-                echo '<h2>'.$movie->title.'</h2>';
-                echo '<p>'.$movie->overview.'</p>';
-                echo '</div>';
-            }
-            echo '</div>';
-        }
+    // Afficher chaque film
+    foreach ($latestMovie as $movie) {
+        // Vérifier si le film a une image de poster
+        if (!empty($movie->poster_path)) {
+            // Construire l'URL de l'image du poster en utilisant le champ poster_path et la base URL de l'API
+            $posterUrl = "https://image.tmdb.org/t/p/w200" . $movie->poster_path;
 
-        // Afficher les films populaires
-        if (!empty($popularMovies)) {
-            echo '<h2>Films populaires</h2>';
-            echo '<div class="movies-container">';
-            foreach ($popularMovies as $movie) {
-                echo '<div class="movie">';
-                echo '<img src="https://image.tmdb.org/t/p/w300/'.$movie->poster_path.'" alt="'.$movie->title.'">';
-                echo '<h2>'.$movie->title.'</h2>';
-                echo '<p>'.$movie->overview.'</p>';
-                echo '</div>';
-            }
-            echo '</div>';
+            // Afficher l'image du poster
+            echo "<img src=\"$posterUrl\" alt=\"$movie->title\">";
         }
-        ?>
+    }
+    ?>
+
 
     </main>
 
