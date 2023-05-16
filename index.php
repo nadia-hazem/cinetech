@@ -10,6 +10,15 @@ $router->addRoutes(array(   // array(method, path, target, name)
         require_once 'src/View/home.php';
     }, 'home' ),
 
+    // Register //////////////////////////////
+    array('GET', '/register', function() { 
+        require_once 'src/View/register.php';
+    }, 'register' ),
+
+    // Login //////////////////////////////
+    array('GET', '/login', function() { 
+        require_once 'src/View/login.php';
+    }, 'login' ),
 
 ));
 

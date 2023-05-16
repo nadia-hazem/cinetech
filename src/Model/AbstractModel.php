@@ -26,5 +26,33 @@ abstract class AbstractModel {
         }
     }
 
+    public function findOneBy($colname, $value)
+    {
+        $query = "SELECT * FROM $this->tablename WHERE $colname = :value";
+        $select = $this->pdo->prepare($query);
+        $select->execute([':value' => $value]);
+        $result = $select->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    // Find all data from a table
+    public function findAll()
+    {
+        $query = "SELECT * FROM $this->tablename";
+        $select = $this->pdo->prepare($query);
+        $select->execute();
+        $result = $select->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    // delete one data from a table
+    public function deleteOne($id, $colname)
+    {
+        $id = htmlspecialchars($id);
+
+        $query = "DELETE FROM $this->tablename WHERE $colname = :id";
+        $delete = $this->pdo->prepare($query);
+        $delete->execute([':id' => $id]);
+    }
 
 }
