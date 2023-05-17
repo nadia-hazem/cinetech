@@ -3,7 +3,6 @@
 
 namespace App\Controller;
 use App\Model\UserModel;
-use App\Controller\Utils;
 
 class AuthController {
 
@@ -20,11 +19,18 @@ class AuthController {
             if($password !== $cpassword) {
                 throw new \Exception('Les mots de passe ne correspondent pas');
             }
+            
+            $_POST['login'] = htmlspecialchars($_POST['login'], ENT_QUOTES);
+            $_POST['email'] = htmlspecialchars($_POST['email'], ENT_QUOTES);
+            $_POST['password'] = htmlspecialchars($_POST['password'], ENT_QUOTES);
+            $_POST['cpassword'] = htmlspecialchars($_POST['cpassword'], ENT_QUOTES);
+            
+            $login = $_POST['login'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $cpassword = $_POST['cpassword'];
+            
             $password = password_hash($password, PASSWORD_DEFAULT);
-
-            $login = Utils::valid_data($login);
-            $email = Utils::valid_data($email);
-            $password = Utils::valid_data($password);
 
             // Vérifier si l'e-mail est déjà utilisé
             $userModel = new UserModel();
@@ -40,7 +46,6 @@ class AuthController {
                 echo '<p class="mx-5">Utilisateur créé avec succès</p>';
                 // Rediriger l'utilisateur vers une autre page
                 header('Location: /login');
-
                 exit;
             }
         }
@@ -55,8 +60,11 @@ class AuthController {
             $login = $_POST['login'];
             $password = $_POST['password'];
 
-            $login = Utils::valid_data($login);
-            $password = Utils::valid_data($password);
+            $_POST['login'] = htmlspecialchars($_POST['login'], ENT_QUOTES);
+            $_POST['password'] = htmlspecialchars($_POST['password'], ENT_QUOTES);
+
+            $login = $_POST['login'];
+            $password = $_POST['password'];
 
             $request = new UserModel();
             $user = $request->findOneBy('login', $login);

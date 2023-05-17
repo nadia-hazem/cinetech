@@ -17,7 +17,7 @@ abstract class AbstractModel {
         $dbpass = '';
 
         try {
-            $this->pdo = new PDO ("mysql:host=$host; $dbname=$dbname;charset=utf8", $dbuser, $dbpass);
+            $this->pdo = new PDO ("mysql:host=$host; dbname=$dbname;charset=utf8", $dbuser, $dbpass);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->exec("set names utf8");
         } catch (\PDOException $e) {

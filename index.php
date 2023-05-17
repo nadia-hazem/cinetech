@@ -10,15 +10,34 @@ $router->addRoutes(array(   // array(method, path, target, name)
         require_once 'src/View/home.php';
     }, 'home' ),
 
-    // Register //////////////////////////////
-    array('GET', '/register', function() { 
-        require_once 'src/View/register.php';
-    }, 'register' ),
+    // register get //////////////////////////
+    array('GET', '/register', function () {
+        require 'src/View/register.php'; 
+    }, 'register-get'),
 
-    // Login //////////////////////////////
-    array('GET', '/login', function() { 
-        require_once 'src/View/login.php';
-    }, 'login' ),
+    // register post /////////////////////////
+    array('POST', '/register', function () {
+        $authController = new \App\Controller\AuthController();
+        $authController->register();
+    }, 'register-post'),
+
+    // login get /////////////////////////////
+    array('GET', '/login', function () {
+        require 'src/View/login.php'; 
+    }, 'login-get'),
+
+    // login post ////////////////////////////
+    array('POST', '/login', function () {
+        $authController = new \App\Controller\AuthController();
+        $authController->login();
+    }, 'login-post'),
+
+    // logout ////////////////////////////////
+    array('GET', '/logout', function () {
+        $authController = new \App\Controller\AuthController();
+        $authController->logout();
+    }, 'logout'),
+
 
 ));
 

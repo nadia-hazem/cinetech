@@ -14,25 +14,25 @@
     <main class="container my-5 w-75">
         <h1 class="fw-light my-5">Register</h1>
         <a href="/" class="btn btn-light mx-2">Back to home</a>
-        <form method="post" action="">
+        <form method="post">
             <div class="row mt-5 ">
                 <div class="col-6 mb-3">
                     <label for="login" class="form-label">login</label>
-                    <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Your Login" required>
+                    <input type="text" class="form-control" id="login" name="login" placeholder="Your Login" required>
                 </div>
                 <div class="col-6 mb-3">
-                    <label for="email" class="form-label">Mail</label>
+                    <label for="email" class="form-label">E-Mail</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="E-mail" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-6 mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="text" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                 </div>
                 <div class="col-6 mb-3">
                     <label for="password" class="form-label">Confirm Password</label>
-                    <input type="text" class="form-control" id="cpassword" name="cpassword" placeholder="Password" required>
+                    <input type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Password" required>
                 </div>
             </div>
             <div class="row">
