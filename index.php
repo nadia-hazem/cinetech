@@ -44,9 +44,9 @@ $router->addRoutes(array(   // array(method, path, target, name)
     }, 'films' ),
     
     // detail //////////////////////////////
-    array('GET', '/detail.php/{id}', function ($params) {
+    array('GET', '/detail.php?{id}', function ($params) {
         $movieId = $params['id'];
-        require_once 'src/view/detail.php';
+        require_once 'src/View/detail.php';
     }, 'films-detail' ),
 
 )); // end of addRoutes

@@ -1,4 +1,5 @@
 const movieDetail = document.querySelector("#movie-detail");
+const similarMovies = document.querySelector("#similar-movies");
 
 const options = {
     method: 'GET',
@@ -106,3 +107,19 @@ const idParam = urlParams.get('id');
 if (idParam) {
     fetchDetail(idParam);
 }
+
+async function fetchSimilarMovies(movieId) {
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/similar?language=fr-FR&page=1`, options);
+        const similarMoviesData = await response.json();
+
+        similarMovies.innerHTML = '';
+        similarMoviesData.results.forEach(function (movie) {
+            const movieDiv = createMovieElement(movie);
+            similarMovies.appendChild(movieDiv);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
