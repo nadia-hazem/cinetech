@@ -4,31 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>detail</title>
+    <title>Home</title>
     <!-- Bootstrap 5.3.0 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-    
+    <!-- CSS -->
+    <link rel="stylesheet" href="public/css/style.css">
+    <!-- Javascript -->
+    <script defer src="public/js/detail.js"></script>
+
 </head>
 <body>
 
     <main class="container">
 
-        <h2>{{ movieTitle }}</h2>
-        <p><strong>Réalisateur :</strong> {{ movieDirector }}</p>
-        <p><strong>Type :</strong> {{ movieType }}</p>
-        <p><strong>Pays d'origine :</strong> {{ movieCountry }}</p>
-        <p><strong>Résumé :</strong> {{ movieSummary }}</p>
-
-        <h3>Acteurs :</h3>
-        <ul>
-            {% for actor in movieActors %}
-                <li>{{ actor }}</li>
-            {% endfor %}
-        </ul>
+        <div id="movie-detail" class="d-flex"></div>
 
         <div>
             <h3>Films similaires :</h3>
-            <ul id="similar-movies"></ul>
+            <ul id="similar-movies" class="d-flex"></ul>
         </div>
 
     </main>

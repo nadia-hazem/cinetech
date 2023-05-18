@@ -10,7 +10,8 @@
     <!-- CSS -->
     <link rel="stylesheet" href="public/css/style.css">
     <!-- Javascript -->
-    <!-- <script type="text/javascript" src="public/js/index.js"></script> -->
+    <!-- <script type="module" defer src="public/js/pagination.js"></script> -->
+    <script defer src="public/js/test.js"></script>
 
 </head>
     <meta charset="UTF-8">
@@ -21,9 +22,29 @@
 <body>
     
     <main>
-        
+        <h1 class="h1">Les films à venir</h1>
+
+        <div id="upcoming-movies" class="d-flex"></div>
+
+        <h1 class="h1">Tous les films</h1>
+
+        <div id="genre-select-wrapper">
+            <select id="genre-select">
+                <option value="">Tous les genres</option>
+            </select>
+        </div>
+
+        <div id="all-movies" class="d-flex flex-wrap grid-movies justify-content-between"></div>
+
+
+        <div class="d-flex justify-content-center m-5">
+            <button id="prev-page-btn" class="pagination-btn btn btn-light m-auto">Précédent</button>
+            <button id="next-page-btn" class="pagination-btn btn btn-light m-auto">Suivant</button>
+        </div>
     </main>
 
+
+    <!--------------------------------------------------------->
     <!-- Bootstrap js -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
