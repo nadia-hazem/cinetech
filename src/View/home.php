@@ -10,19 +10,22 @@
     <!-- CSS -->
     <link rel="stylesheet" href="public/css/style.css">
     <!-- Javascript -->
-    <script type="text/javascript" src="public/js/index.js"></script>
+    <script defer src="public/js/index.js"></script>
 
 </head>
 <body>
     
     <main>
 
-        <h1>Découvrez les derniers films</h1>
-        <div id="latest-movies" class="d-flex"></div>
+        <h1>Dans les salles</h1>
+        <div id="now-playing" class="d-flex"></div>
+
         <h1>Découvrez les dernières séries</h1>
         <div id="latest-series" class="d-flex"></div>
+
         <h1>Les films les plus populaires</h1>
         <div id="popular-movies" class="d-flex"></div>
+
         <h1>Les séries les plus populaires</h1>
         <div id="popular-series" class="d-flex"></div>
 

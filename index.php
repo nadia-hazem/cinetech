@@ -38,8 +38,20 @@ $router->addRoutes(array(   // array(method, path, target, name)
         $authController->logout();
     }, 'logout'),
 
+    // films //////////////////////////////
+    array('GET', '/films', function() { 
+        require_once 'src/View/films.php';
+    }, 'films' ),
+    
+    // detail //////////////////////////////
+    array('GET', '/detail.php/{id}', function ($params) {
+        $movieId = $params['id'];
+        require_once 'src/view/detail.php';
+    }, 'films-detail' ),
 
-));
+)); // end of addRoutes
+
+
 
 
 $match = $router->match();
