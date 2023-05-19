@@ -21,6 +21,8 @@
 </head>
 <body>
     
+    <?php require_once 'src/View/inc/header.php'; ?>
+
     <main>
         <h1 class="h1">Les films à venir</h1>
 

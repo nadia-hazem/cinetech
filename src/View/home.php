@@ -14,7 +14,8 @@
 
 </head>
 <body>
-    
+    <?php require_once 'src/View/inc/header.php'; ?>
+
     <main>
 
         <h1>Dans les salles</h1>

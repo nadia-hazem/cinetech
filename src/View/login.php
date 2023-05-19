@@ -10,6 +10,9 @@
 
 </head>
 <body>
+
+    <?php require_once 'src/View/inc/header.php'; ?>
+
     <main class="container my-5 w-75">
         <h1 class="fw-light my-5">Login</h1>
         <a href="/" class="btn btn-light mb-5">Back to home</a>

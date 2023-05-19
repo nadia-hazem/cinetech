@@ -20,7 +20,23 @@
 </head>
 <body>
     
+    <?php require_once 'src/View/inc/header.php'; ?>
+    
     <main>
+
+        <h1>Les séries à venir</h1>
+
+        <div id="upcoming-series" class="d-flex"></div>
+
+        <h1>Toutes les séries</h1>
+
+        <div id="genre-select-wrapper">
+            <select id="genre-select">
+                <option value="">Tous les genres</option>
+            </select>
+        </div>
+
+        <div id="all-series" class="d-flex flex-wrap grid-series justify-content-between"></div>
 
     </main>
 

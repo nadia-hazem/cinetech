@@ -15,6 +15,8 @@
 </head>
 <body>
 
+    <?php require_once 'src/View/inc/header.php'; ?>
+
     <main class="container">
 
         <div id="movie-detail" class="d-flex"></div>
