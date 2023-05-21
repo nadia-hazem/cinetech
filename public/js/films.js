@@ -10,14 +10,6 @@ const nextPageBtn = document.querySelector("#next-page-btn");
 let currentPage = 1;
 let totalPages = 0;
 
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY'
-    }
-};
-
 /**************Fonctions génériques******************/
 
 function createMovieElement(movie) {
@@ -31,7 +23,7 @@ function createMovieElement(movie) {
     posterImg.setAttribute('data-id', movie.id);
 
     const movieLink = document.createElement('a');
-    movieLink.href = `detail.php?id=${movie.id}`;
+    movieLink.href = `film-detail.php?id=${movie.id}`;
     movieLink.appendChild(posterImg);
     movieDiv.appendChild(movieLink);
 
@@ -85,7 +77,7 @@ function createGridMovieElement(movie) {
     link.addEventListener('click', function (e) {
         e.preventDefault();
         const movieId = this.firstChild.getAttribute('data-movie-id');
-        window.location.href = `detail.php?id=${movieId}`;
+        window.location.href = `film-detail.php?id=${movieId}`;
     });
 
     return movieDiv;

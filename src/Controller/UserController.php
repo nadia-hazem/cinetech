@@ -1,5 +1,5 @@
 <?php
-// App/Controller/UserController.php
+// path: src/Controller/UserController.php
 
 namespace App\Controller;
 use App\Model\UserModel;
