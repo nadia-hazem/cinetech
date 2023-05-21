@@ -1,6 +1,17 @@
 <?php
 session_start();
-require 'vendor/autoload.php';
+use Dotenv\Dotenv;
+require __DIR__ . '/vendor/autoload.php';
+
+// Charger le fichier .env
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+// Lire la valeur de la variable TMDB_API_KEY
+$apiKey = $_ENV['TMDB_API_KEY'];
+// Passer la clé API aux pages de fetch
+include 'src/View/home.php';
+include 'src/View/films.php';
+
 $router = new AltoRouter();
 
 $router->addRoutes(array(   // array(method, path, target, name)
@@ -43,11 +54,27 @@ $router->addRoutes(array(   // array(method, path, target, name)
         require_once 'src/View/films.php';
     }, 'films' ),
     
-    // detail //////////////////////////////
-    array('GET', '/detail.php?{id}', function ($params) {
+    // film-detail //////////////////////////////
+    array('GET', '/film-detail.php?{id}', function ($params) {
         $movieId = $params['id'];
-        require_once 'src/View/detail.php';
-    }, 'films-detail' ),
+        require_once 'src/View/film-detail.php';
+    }, 'film-detail' ),
+
+    // series //////////////////////////////
+    array('GET', '/series', function() { 
+        require_once 'src/View/series.php';
+    }, 'series' ),
+
+    // serie-detail //////////////////////////////
+    array('GET', '/serie-detail.php?{id}', function ($params) {
+        $serieId = $params['id'];
+        require_once 'src/View/serie-detail.php';
+    }, 'serie-detail' ),
+    
+    // search //////////////////////////////
+    array('GET', '/search', function() { 
+        require_once 'src/View/search.php';
+    }, 'search' ),
 
 )); // end of addRoutes
 

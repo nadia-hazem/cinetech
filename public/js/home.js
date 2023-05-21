@@ -5,13 +5,7 @@ const popularSeries = document.querySelector("#popular-series");
 
 $random = Math.floor(Math.random() * 1000) + 1;
 
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY'
-    }
-};
+/* console.log(apiKey); */
 
 /**************Fonction générique******************/
 
@@ -43,7 +37,7 @@ function createMovieElement(movie) {
 
 async function fetchNowPlaying() {
     try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?language=fr-FR&poster_path!=null&page=1',  options);
+        const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?language=fr-FR&poster_path!=null&page=1', options);
         const nowPlayingData = await response.json();
 
         nowPlaying.innerHTML = '';

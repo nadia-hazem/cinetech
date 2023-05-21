@@ -10,13 +10,7 @@ const nextPageBtn = document.querySelector("#next-page-btn");
 let currentPage = 1;
 let totalPages = 0;
 
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY'
-    }
-};
+
 
 /**************Fonctions génériques******************/
 

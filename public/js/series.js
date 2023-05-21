@@ -1,4 +1,12 @@
+// Variables globales
+const upcomingSeries = document.querySelector("#upcoming-series");
 const series = document.querySelector("#series");
+
+const prevPageBtn = document.querySelector("#prev-page-btn");
+const nextPageBtn = document.querySelector("#next-page-btn");
+
+let currentPage = 1;
+let totalPages = 0;
 
 $random = Math.floor(Math.random() * 500) + 1;
 
@@ -6,6 +14,8 @@ const options = {
     method: 'GET',
     headers: {
         accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY'
+        Authorization:  apiKey
     }
 };
+
+/**************Fonction générique******************/
