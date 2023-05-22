@@ -1,4 +1,3 @@
-<!-- Essai d'externalisation du head pour une meilleure maintenance du code -->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,14 +18,7 @@
     <link rel="stylesheet" href="public/css/style.css">
     <!-- apiKey -->
     <script>
-        const apiKey = "<?php echo $apiKey; ?>";
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: 'Bearer ' + apiKey
-            }
-        };
+        
     </script>
 
     <!-- Menu responsive Bootstrap -->

@@ -1,49 +1,29 @@
-const nowPlaying = document.querySelector("#now-playing");
-const latestSeries = document.querySelector("#latest-series");
+import { createItemElement } from './script.js';
+import { options, apiKey } from './script.js';
+
+const nowPlayingMovies = document.querySelector("#now-playing-movies");
 const popularMovies = document.querySelector("#popular-movies");
+const latestSeries = document.querySelector("#latest-series");
 const popularSeries = document.querySelector("#popular-series");
 
-$random = Math.floor(Math.random() * 1000) + 1;
+const itemsPerPage = 20;
 
-/* console.log(apiKey); */
+const prevPageBtn = document.querySelector("#prev-page-btn");
+const nextPageBtn = document.querySelector("#next-page-btn");
 
-/**************Fonction générique******************/
-
-function createMovieElement(movie) {
-    const movieDiv = document.createElement('div');
-    movieDiv.classList.add('movie');
-
-    const posterUrl = 'https://image.tmdb.org/t/p/w300' + movie.poster_path;
-    const posterImg = document.createElement('img');
-    posterImg.src = posterUrl;
-    posterImg.alt = movie.title;
-    movieDiv.appendChild(posterImg);
-
-    const overlayDiv = document.createElement('div');
-    overlayDiv.classList.add('movie-overlay');
-    const summaryParagraph = document.createElement('p');
-    summaryParagraph.textContent = movie.overview;
-    overlayDiv.appendChild(summaryParagraph);
-    movieDiv.appendChild(overlayDiv);
-
-    const titleHeading = document.createElement('h2');
-    titleHeading.textContent = movie.title;
-    movieDiv.appendChild(titleHeading);
-
-    return movieDiv;
-}
+const random = Math.floor(Math.random() * 500) + 1;
 
 /**************Fonctions spécifiques******************/
 
 async function fetchNowPlaying() {
     try {
         const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?language=fr-FR&poster_path!=null&page=1', options);
-        const nowPlayingData = await response.json();
+        const nowPlayingMoviesData = await response.json();
 
-        nowPlaying.innerHTML = '';
-        nowPlayingData.results.forEach(function (movie) {
-            const movieDiv = createMovieElement(movie);
-            nowPlaying.appendChild(movieDiv);
+        nowPlayingMovies.innerHTML = '';
+        nowPlayingMoviesData.results.forEach(async function (movie) {
+            const movieDiv = await createItemElement(movie);
+            nowPlayingMovies.appendChild(movieDiv);
         });
     } catch (error) {
         console.error(error);
@@ -52,12 +32,13 @@ async function fetchNowPlaying() {
 
 async function fetchPopularMovies() {
     try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/popular?language=fr-FR&include_adult=false&include_video=false&poster_path!=null&page=1&vote_count.gte=50', options);
+        const response = await fetch('https://api.themoviedb.org/3/movie/popular?language=fr-FR&include_adult=false&include_video=false&poster_path!=null&page=1&vote_count.gte=50' + random, options);
         const popularMoviesData = await response.json();
 
         popularMovies.innerHTML = '';
-        popularMoviesData.results.forEach(function (movie) {
-        const movieDiv = createMovieElement(movie);
+
+        popularMoviesData.results.forEach(async function (movie) {
+        const movieDiv = await createItemElement(movie);
         popularMovies.appendChild(movieDiv);
         });
     } catch (error) {
@@ -65,15 +46,16 @@ async function fetchPopularMovies() {
     }
 }
 
-async function fetchLatestSeries() {
+async function fetchLatestSeries() 
+{
     try {
-        const response = await fetch('https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=fr-FR&page=1&sort_by=popularity.desc&poster_path!=null' + $random, options);
+        const response = await fetch('https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=fr-FR&page=1&sort_by=popularity.desc&poster_path!=null' + random, options);
         const latestSeriesData = await response.json();
 
         latestSeries.innerHTML = '';
-        latestSeriesData.results.forEach(function (movie) {
-        const movieDiv = createMovieElement(movie);
-        latestSeries.appendChild(movieDiv);
+        latestSeriesData.results.forEach(async function (item) {
+        const itemDiv = await createItemElement(item);
+        latestSeries.appendChild(itemDiv);
         });
 
     } catch (error) {
@@ -81,15 +63,16 @@ async function fetchLatestSeries() {
     }
 }
 
-async function fetchPopularSeries() {
+async function fetchPopularSeries() 
+{
     try {
-        const response = await fetch('https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=fr-FR&page=1&sort_by=popularity.desc&poster_path!=null' + $random, options);
+        const response = await fetch('https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=fr-FR&page=1&sort_by=popularity.desc&poster_path!=null' + random, options);
         const popularSeriesData = await response.json();
 
         popularSeries.innerHTML = '';
-        popularSeriesData.results.forEach(function (movie) {
-        const movieDiv = createMovieElement(movie);
-        popularSeries.appendChild(movieDiv);
+        popularSeriesData.results.forEach(async function (item) {
+        const itemDiv = await createItemElement(item);
+        popularSeries.appendChild(itemDiv);
         });
 
     } catch (error) {
@@ -97,6 +80,7 @@ async function fetchPopularSeries() {
     }
 }
 
+/****************Appel des fonctions*********************/
 fetchNowPlaying();
 fetchPopularMovies();
 fetchLatestSeries();

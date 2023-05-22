@@ -115,7 +115,7 @@ async function fetchSimilarMovies(movieId) {
 
         similarMovies.innerHTML = '';
         similarMoviesData.results.forEach(function (movie) {
-            const movieDiv = createMovieElement(movie);
+            const movieDiv = createItemElement(movie);
             similarMovies.appendChild(movieDiv);
         });
     } catch (error) {

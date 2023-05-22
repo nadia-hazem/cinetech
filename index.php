@@ -9,9 +9,6 @@ $dotenv->load();
 // Lire la valeur de la variable TMDB_API_KEY
 $apiKey = $_ENV['TMDB_API_KEY'];
 // Passer la clé API aux pages de fetch
-include 'src/View/home.php';
-include 'src/View/films.php';
-
 $router = new AltoRouter();
 
 $router->addRoutes(array(   // array(method, path, target, name)

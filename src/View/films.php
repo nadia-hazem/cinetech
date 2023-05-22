@@ -17,11 +17,13 @@
 
         <h1 class="h1">Tous les films</h1>
 
-        <div id="genre-select-wrapper">
+        <div id="genre-container" class="d-flex flex-wrap justify-content-center"></div>
+
+        <!--  <div id="genre-select-wrapper">
             <select id="genre-select">
                 <option value="">Tous les genres</option>
             </select>
-        </div>
+        </div> -->
 
         <div id="all-movies" class="d-flex flex-wrap grid-movies justify-content-between"></div>
 
@@ -30,12 +32,13 @@
             <button id="prev-page-btn" class="pagination-btn btn btn-light m-auto">Précédent</button>
             <button id="next-page-btn" class="pagination-btn btn btn-light m-auto">Suivant</button>
         </div>
+
     </main>
 
 
     <!--------------------------------------------------------->
     <!-- Bootstrap js -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script defer src="public/js/films.js"></script>
+    <script defer type="module" src="public/js/films.js"></script>
 </body>
 </html>

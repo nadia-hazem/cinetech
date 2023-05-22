@@ -2,7 +2,7 @@
 <html lang="fr">
 
     <?php 
-    $pageTitle = "Détail";
+    $pageTitle = "Film-Détail";
     require_once 'src/View/inc/head.php';
     ?>
 
@@ -12,6 +12,7 @@
 
     <main class="container">
 
+        <!-- Titre du film -->
         <div id="movie-detail" class="d-flex"></div>
 
         <div>
