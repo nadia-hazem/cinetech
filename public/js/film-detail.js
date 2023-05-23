@@ -1,97 +1,150 @@
 import { options, apiKey } from './script.js';
 import { createItemElement } from './script.js';
-console.log('film-detail.js');
 
 const itemDetail = document.querySelector("#item-detail");
+const similarMovies = document.querySelector("#similar-movies");
+
+function createDetailElement(detailData) {
+    const detailDiv = document.createElement('div');
+    detailDiv.classList.add('detail','row');
+
+    const containerLeft = document.createElement('div');
+    containerLeft.classList.add('col', 'col-md-6', 'justify-content-center', 'align-items-center');
+    detailDiv.appendChild(containerLeft);
+
+    // poster
+    const posterUrl = 'https://image.tmdb.org/t/p/w300' + detailData.poster_path;
+    const posterImg = document.createElement('img');
+    posterImg.src = posterUrl;
+    posterImg.alt = detailData.title;
+    containerLeft.appendChild(posterImg);
+
+    // containerRight
+    const containerRight = document.createElement('div');
+    containerRight.classList.add('col', 'col-md-6', 'justify-content-center', 'my-5', 'py-5');
+    detailDiv.appendChild(containerRight);
+
+    // title
+    const titleHeading = document.createElement('h2');
+    titleHeading.classList.add('title', 'mb-5');
+    titleHeading.textContent = detailData.title;
+    containerRight.appendChild(titleHeading);
+
+    // release date
+    const releaseDate = document.createElement('div');
+    releaseDate.classList.add('releaseDate');
+    const releaseDateHeading = document.createElement('h4');
+    releaseDateHeading.textContent = 'Date de sortie';
+    const releaseDateParagraph = document.createElement('p');
+    releaseDateParagraph.textContent = detailData.release_date;
+    releaseDate.appendChild(releaseDateHeading);
+    releaseDate.appendChild(releaseDateParagraph);
+    containerRight.appendChild(releaseDate);
+
+    // overview
+    const overview = document.createElement('div');
+    overview.classList.add('overview');
+    const overviewHeading = document.createElement('h4');
+    overviewHeading.textContent = 'Synopsis';
+    const overviewParagraph = document.createElement('p');
+    overviewParagraph.textContent = detailData.overview;
+    overview.appendChild(overviewHeading);
+    overview.appendChild(overviewParagraph);
+    containerRight.appendChild(overview);
+
+    // runtime
+    const runtime = document.createElement('div');
+    runtime.classList.add('runtime');
+    const runtimeHeading = document.createElement('h4');
+    runtimeHeading.textContent = 'Durée';
+    const runtimeParagraph = document.createElement('p');
+    runtimeParagraph.textContent = `${detailData.runtime} minutes`;
+    runtime.appendChild(runtimeHeading);
+    runtime.appendChild(runtimeParagraph);
+    containerRight.appendChild(runtime);
+
+    // genres
+    const genres = document.createElement('div');
+    genres.classList.add('genres');
+    const genresHeading = document.createElement('h4');
+    genresHeading.textContent = 'Genres';
+    const genresList = document.createElement('ul');
+    detailData.genres.forEach(genre => {
+        const genreItem = document.createElement('li');
+        genreItem.textContent = genre.name;
+        genresList.appendChild(genreItem);
+    });
+    genres.appendChild(genresHeading);
+    genres.appendChild(genresList);
+    containerRight.appendChild(genres);
+
+    // production companies
+    const productionCompanies = document.createElement('div');
+    productionCompanies.classList.add('productionCompanies');
+    const productionCompaniesHeading = document.createElement('h4');
+    productionCompaniesHeading.textContent = 'Production';
+    const productionCompaniesList = document.createElement('ul');
+    detailData.production_companies.forEach(company => {
+        const companyItem = document.createElement('li');
+        companyItem.textContent = company.name;
+        productionCompaniesList.appendChild(companyItem);
+    });
+    productionCompanies.appendChild(productionCompaniesHeading);
+    productionCompanies.appendChild(productionCompaniesList);
+    containerRight.appendChild(productionCompanies);
+
+    return detailDiv;
+}
 
 async function fetchDetail(itemId) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}?language=fr-FR&debug=${itemId}`, options);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}?language=fr-FR`, options);
         const detailData = await response.json();
-        console.log(detailData);
-        
+
         itemDetail.innerHTML = '';
 
-        const detailDiv = createDetailElement(itemId);
+        const detailDiv = createDetailElement(detailData);
         itemDetail.appendChild(detailDiv);
     } catch (error) {
         console.error(error);
     }
 }
 
-function createDetailElement(item) {
-    const detailDiv = document.createElement('div');
-    detailDiv.classList.add('detail', 'd-flex', 'flex-column', 'justify-content-center', 'align-items-center');
-    // title
-    const titleHeading = document.createElement('h2');
-    titleHeading.textContent = item.title;
-    detailDiv.appendChild(titleHeading);
-    // poster
-    const posterUrl = 'https://image.tmdb.org/t/p/w300' + item.poster_path;
-    const posterImg = document.createElement('img');
-    posterImg.src = posterUrl;
-    posterImg.alt = item.title;
-    detailDiv.appendChild(posterImg);
-    // pitch
-    const pitch = document.createElement('div');
-    pitch.classList.add('pitch');
-    const pitchParagraph = document.createElement('p');
-    pitchParagraph.textContent = item.overview;
-    pitch.appendChild(pitchParagraph);
-    detailDiv.appendChild(pitch);
-    // release date
-    const releaseDate = document.createElement('div');
-    releaseDate.classList.add('releaseDate');
-    const releaseDateParagraph = document.createElement('p');
-    releaseDateParagraph.textContent = item.release_date;
-    releaseDate.appendChild(releaseDateParagraph);
-    detailDiv.appendChild(releaseDate);
-    // vote average
-    const voteAverage = document.createElement('div');
-    voteAverage.classList.add('voteAverage');
-    const voteAverageParagraph = document.createElement('p');
-    voteAverageParagraph.textContent = item.vote_average;
-    voteAverage.appendChild(voteAverageParagraph);
-    detailDiv.appendChild(voteAverage);
-    // vote count
-    const voteCount = document.createElement('div');
-    voteCount.classList.add('voteCount');
-    const voteCountParagraph = document.createElement('p');
-    voteCountParagraph.textContent = item.vote_count;
-    voteCount.appendChild(voteCountParagraph);
-    detailDiv.appendChild(voteCount);
-    // genres
-    const genres = document.createElement('div');
-    genres.classList.add('genres');
-    const genresParagraph = document.createElement('p');
-    genresParagraph.textContent = item.genres.map(genre => genre.name).join(', ');
-    genres.appendChild(genresParagraph);
-    detailDiv.appendChild(genres);
-    // original language
-    const spokenLanguages = document.createElement('div');
-    spokenLanguages.classList.add('spokenLanguages');
-    const spokenLanguagesParagraph = document.createElement('p');
-    spokenLanguagesParagraph.textContent = item.spoken_languages.map(language => language.name).join(', ');
-    spokenLanguages.appendChild(spokenLanguagesParagraph);
-    detailDiv.appendChild(spokenLanguages);
-    // status
-    const status = document.createElement('div');
-    status.classList.add('status');
-    const statusParagraph = document.createElement('p');
-    statusParagraph.textContent = item.status;
-    status.appendChild(statusParagraph);
-    detailDiv.appendChild(status);
+async function fetchImages(itemId) {
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}/images?language=fr-FR`, options);
+        const imagesData = await response.json();
 
-    return detailDiv;
+        const images = document.createElement('div');
+        images.classList.add('images', 'd-flex', 'my-5', 'py-5');
+        const imagesHeading = document.createElement('h4');
+        imagesHeading.textContent = 'Images';
+        const imagesList = document.createElement('ul');
+        imagesData.backdrops.forEach(image => {
+            const imageItem = document.createElement('li');
+            const imageUrl = 'https://image.tmdb.org/t/p/w300' + image.file_path;
+            const imageImg = document.createElement('img');
+            imageImg.src = imageUrl;
+            imageImg.alt = detailData.title;
+            imageItem.appendChild(imageImg);
+            imagesList.appendChild(imageItem);
+        });
+        images.appendChild(imagesHeading);
+        images.appendChild(imagesList);
+
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-const similarMovies = document.querySelector("#similar-movies");
+
 async function fetchSimilarMovies(itemId) {
     try {
         const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}/similar?language=fr-FR&page=1`, options);
         const similarMoviesData = await response.json();
 
         similarMovies.innerHTML = '';
+
         similarMoviesData.results.forEach(async function (item) {
             const itemDiv = await createItemElement(item);
             similarMovies.appendChild(itemDiv);
@@ -101,9 +154,11 @@ async function fetchSimilarMovies(itemId) {
     }
 }
 
-const urlParams = new URLSearchParams(window.location.search);
+const urlParams = new URLSearchParams(window.location.search); 
 const idParam = urlParams.get('id');
+
 if (idParam) {
     fetchDetail(idParam);
     fetchSimilarMovies(idParam);
+    fetchImages(idParam);
 }

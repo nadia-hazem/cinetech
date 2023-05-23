@@ -1,4 +1,4 @@
-const moviesPerPage = 20; // Nombre de films par page
+const itemsPerPage = 20; // Nombre de films par page
 
 const prevPageBtn = document.querySelector("#prev-page-btn");
 const nextPageBtn = document.querySelector("#next-page-btn");
@@ -46,8 +46,8 @@ export async function createItemElement(item) {
     // Ajout du gestionnaire d'événements pour les liens vers la page de détail
     itemLink.addEventListener('click', function (e) {
         e.preventDefault();
-        const itemId = this.firstChild.getAttribute('data-item-id');
-        window.location.href = `film-detail.php?id=${itemId}`;
+        const itemId = item.id;
+        window.location.href = `src/View/film-detail.php?id=${itemId}`;
     });
 
     return itemDiv;
@@ -80,15 +80,14 @@ export async function createGridItemElement(item) {
     itemDiv.appendChild(titleHeading);
     
     // ajout du code pour activer les liens vers les détails du film ou de la série
-    const link = itemLink;
-    link.addEventListener('click', function (e) {
+    itemLink.addEventListener('click', function (e) {
         e.preventDefault();
-        const itemId = this.firstChild.getAttribute('data-item-id');
-        
+        const itemId = item.id; 
+
         if (item.media_type === 'tv') {
-        window.location.href = `serie-detail.php?id=${itemId}`;
+        window.location.href = `src/View/serie-detail.php?id=${itemId}`;
         } else if (item.media_type === 'movie') {
-        window.location.href = `film-detail.php?id=${itemId}`;
+        window.location.href = `src/View/film-detail.php?id=${itemId}`;
         }
     });
 
