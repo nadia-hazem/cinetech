@@ -19,40 +19,6 @@ export const options = {
 // item
 export async function createItemElement(item) {
     const itemDiv = document.createElement('div');
-    itemDiv.classList.add('movie');
-
-    const posterUrl = 'https://image.tmdb.org/t/p/w300' + item.poster_path;
-    const posterImg = document.createElement('img');
-    posterImg.src = posterUrl;
-    posterImg.alt = item.title;
-    posterImg.setAttribute('data-id', item.id);
-
-    const itemLink = document.createElement('a');
-    itemLink.href = `film-detail.php?id=${item.id}`;
-    itemLink.appendChild(posterImg);
-    itemDiv.appendChild(itemLink);
-
-    const overlayDiv = document.createElement('div');
-    overlayDiv.classList.add('Item-overlay');
-    const summaryParagraph = document.createElement('p');
-    summaryParagraph.textContent = item.overview;
-    overlayDiv.appendChild(summaryParagraph);
-    itemDiv.appendChild(overlayDiv);
-
-    const titleHeading = document.createElement('h2');
-    titleHeading.textContent = item.title;
-    itemDiv.appendChild(titleHeading);
-
-    posterImg.addEventListener('click', function() {
-        const itemId = this.getAttribute('data-id');
-        fetchDetail(itemId);
-    });
-    return itemDiv;
-    
-}
-// gridItem
-export async function createGridItemElement(item) {
-    const itemDiv = document.createElement('div');
     itemDiv.classList.add('item');
 
     const posterUrl = 'https://image.tmdb.org/t/p/w300' + item.poster_path;
@@ -76,13 +42,54 @@ export async function createGridItemElement(item) {
     const titleHeading = document.createElement('h2');
     titleHeading.textContent = item.title;
     itemDiv.appendChild(titleHeading);
+
+    // Ajout du gestionnaire d'événements pour les liens vers la page de détail
+    itemLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        const itemId = this.firstChild.getAttribute('data-item-id');
+        window.location.href = `film-detail.php?id=${itemId}`;
+    });
+
+    return itemDiv;
+}
+
+// gridItem
+export async function createGridItemElement(item) {
+    const itemDiv = document.createElement('div');
+    itemDiv.classList.add('item');
+
+    const posterUrl = 'https://image.tmdb.org/t/p/w300' + item.poster_path;
+    const posterImg = document.createElement('img');
+    posterImg.src = posterUrl;
+    posterImg.alt = item.title;
+    posterImg.setAttribute('data-item-id', item.id);
+
+    const itemLink = document.createElement('a');
+    itemLink.appendChild(posterImg);
+    itemDiv.appendChild(itemLink);
+
+    const overlayDiv = document.createElement('div');
+    overlayDiv.classList.add('item-overlay');
+    const summaryParagraph = document.createElement('p');
+    summaryParagraph.textContent = item.overview;
+    overlayDiv.appendChild(summaryParagraph);
+    itemDiv.appendChild(overlayDiv);
+
+    const titleHeading = document.createElement('h2');
+    titleHeading.textContent = item.title;
+    itemDiv.appendChild(titleHeading);
     
-    // ajout du code pour activer les liens vers les détails du film
+    // ajout du code pour activer les liens vers les détails du film ou de la série
     const link = itemLink;
     link.addEventListener('click', function (e) {
         e.preventDefault();
         const itemId = this.firstChild.getAttribute('data-item-id');
+        
+        if (item.media_type === 'tv') {
+        window.location.href = `serie-detail.php?id=${itemId}`;
+        } else if (item.media_type === 'movie') {
         window.location.href = `film-detail.php?id=${itemId}`;
+        }
     });
 
     return itemDiv;

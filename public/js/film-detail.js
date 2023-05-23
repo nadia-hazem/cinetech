@@ -1,125 +1,109 @@
-const movieDetail = document.querySelector("#movie-detail");
-const similarMovies = document.querySelector("#similar-movies");
+import { options, apiKey } from './script.js';
+import { createItemElement } from './script.js';
+console.log('film-detail.js');
 
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization:  apiKey
-    }
-};
+const itemDetail = document.querySelector("#item-detail");
 
-async function fetchDetail(movieId) {
+async function fetchDetail(itemId) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=fr-FR&debug=${movieId}`, options);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}?language=fr-FR&debug=${itemId}`, options);
         const detailData = await response.json();
+        console.log(detailData);
         
-        movieDetail.innerHTML = '';
-        const detailDiv = createDetailElement(detailData);
-        movieDetail.appendChild(detailDiv);
+        itemDetail.innerHTML = '';
+
+        const detailDiv = createDetailElement(itemId);
+        itemDetail.appendChild(detailDiv);
     } catch (error) {
         console.error(error);
     }
 }
 
-function createDetailElement(movie) {
+function createDetailElement(item) {
     const detailDiv = document.createElement('div');
     detailDiv.classList.add('detail', 'd-flex', 'flex-column', 'justify-content-center', 'align-items-center');
-
+    // title
     const titleHeading = document.createElement('h2');
-    titleHeading.textContent = movie.title;
+    titleHeading.textContent = item.title;
     detailDiv.appendChild(titleHeading);
-
-    const posterUrl = 'https://image.tmdb.org/t/p/w300' + movie.poster_path;
+    // poster
+    const posterUrl = 'https://image.tmdb.org/t/p/w300' + item.poster_path;
     const posterImg = document.createElement('img');
     posterImg.src = posterUrl;
-    posterImg.alt = movie.title;
+    posterImg.alt = item.title;
     detailDiv.appendChild(posterImg);
-
+    // pitch
     const pitch = document.createElement('div');
     pitch.classList.add('pitch');
     const pitchParagraph = document.createElement('p');
-    pitchParagraph.textContent = movie.overview;
+    pitchParagraph.textContent = item.overview;
     pitch.appendChild(pitchParagraph);
     detailDiv.appendChild(pitch);
-
+    // release date
     const releaseDate = document.createElement('div');
     releaseDate.classList.add('releaseDate');
     const releaseDateParagraph = document.createElement('p');
-    releaseDateParagraph.textContent = movie.release_date;
+    releaseDateParagraph.textContent = item.release_date;
     releaseDate.appendChild(releaseDateParagraph);
     detailDiv.appendChild(releaseDate);
-
+    // vote average
     const voteAverage = document.createElement('div');
     voteAverage.classList.add('voteAverage');
     const voteAverageParagraph = document.createElement('p');
-    voteAverageParagraph.textContent = movie.vote_average;
+    voteAverageParagraph.textContent = item.vote_average;
     voteAverage.appendChild(voteAverageParagraph);
     detailDiv.appendChild(voteAverage);
-
+    // vote count
     const voteCount = document.createElement('div');
     voteCount.classList.add('voteCount');
     const voteCountParagraph = document.createElement('p');
-    voteCountParagraph.textContent = movie.vote_count;
+    voteCountParagraph.textContent = item.vote_count;
     voteCount.appendChild(voteCountParagraph);
     detailDiv.appendChild(voteCount);
-
+    // genres
     const genres = document.createElement('div');
     genres.classList.add('genres');
     const genresParagraph = document.createElement('p');
-    genresParagraph.textContent = movie.genres.map(genre => genre.name).join(', ');
+    genresParagraph.textContent = item.genres.map(genre => genre.name).join(', ');
     genres.appendChild(genresParagraph);
     detailDiv.appendChild(genres);
-
-    const productionCompanies = document.createElement('div');
-    productionCompanies.classList.add('productionCompanies');
-    const productionCompaniesParagraph = document.createElement('p');
-    productionCompaniesParagraph.textContent = movie.production_companies.map(company => company.name).join(', ');
-    productionCompanies.appendChild(productionCompaniesParagraph);
-    detailDiv.appendChild(productionCompanies);
-
-    const productionCountries = document.createElement('div');
-    productionCountries.classList.add('productionCountries');
-    const productionCountriesParagraph = document.createElement('p');
-    productionCountriesParagraph.textContent = movie.production_countries.map(country => country.name).join(', ');
-    productionCountries.appendChild(productionCountriesParagraph);
-    detailDiv.appendChild(productionCountries);
-
+    // original language
     const spokenLanguages = document.createElement('div');
     spokenLanguages.classList.add('spokenLanguages');
     const spokenLanguagesParagraph = document.createElement('p');
-    spokenLanguagesParagraph.textContent = movie.spoken_languages.map(language => language.name).join(', ');
+    spokenLanguagesParagraph.textContent = item.spoken_languages.map(language => language.name).join(', ');
     spokenLanguages.appendChild(spokenLanguagesParagraph);
     detailDiv.appendChild(spokenLanguages);
-
+    // status
     const status = document.createElement('div');
     status.classList.add('status');
     const statusParagraph = document.createElement('p');
-    statusParagraph.textContent = movie.status;
+    statusParagraph.textContent = item.status;
     status.appendChild(statusParagraph);
     detailDiv.appendChild(status);
 
     return detailDiv;
 }
 
-const urlParams = new URLSearchParams(window.location.search);
-const idParam = urlParams.get('id');
-if (idParam) {
-    fetchDetail(idParam);
-}
-
-async function fetchSimilarMovies(movieId) {
+const similarMovies = document.querySelector("#similar-movies");
+async function fetchSimilarMovies(itemId) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/similar?language=fr-FR&page=1`, options);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}/similar?language=fr-FR&page=1`, options);
         const similarMoviesData = await response.json();
 
         similarMovies.innerHTML = '';
-        similarMoviesData.results.forEach(function (movie) {
-            const movieDiv = createItemElement(movie);
-            similarMovies.appendChild(movieDiv);
+        similarMoviesData.results.forEach(async function (item) {
+            const itemDiv = await createItemElement(item);
+            similarMovies.appendChild(itemDiv);
         });
     } catch (error) {
         console.error(error);
     }
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+const idParam = urlParams.get('id');
+if (idParam) {
+    fetchDetail(idParam);
+    fetchSimilarMovies(idParam);
+}
