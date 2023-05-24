@@ -1,18 +1,13 @@
+import { options, apiKey } from './script.js';
 import { createMovieElement } from './script.js';
 import { createGridMovieElement } from './script.js';
-import { goToPreviousPage } from './script.js';
-import { goToNextPage } from './script.js';
-import { updatePaginationButtons } from './script.js';
-import { options, apiKey } from './script.js';
+
 
 const upcomingMovies = document.querySelector("#upcoming-movies");
 const allMovies = document.querySelector("#all-movies");
 const genreContainer = document.querySelector("#genre-container");
 
 const itemsPerPage = 20; 
-
-const prevPageBtn = document.querySelector("#prev-page-btn");
-const nextPageBtn = document.querySelector("#next-page-btn");
 
 const random = Math.floor(Math.random() * 500) + 1;
 
@@ -66,10 +61,10 @@ async function fetchAllMovies() {
 
         console.log(`Nombre total de films récupérées : ${totalMovies, totalPages, itemsPerPage}`);
 
-        // Mettre à jour l'état des boutons de pagination
-        updatePaginationButtons();
+        // mettre à jour les informations de pagination
+        /* updatePaginationButtons(); */
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 }
 
@@ -123,10 +118,6 @@ async function fetchItemsByGenre(genreId) {
     console.error(error);
     }
 }
-
-// Pagination
-prevPageBtn.addEventListener("click", goToPreviousPage);
-nextPageBtn.addEventListener("click", goToNextPage);
 
 // Appels de fonctions
 fetchMoviesGenres();

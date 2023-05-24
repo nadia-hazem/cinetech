@@ -1,13 +1,5 @@
+
 const itemsPerPage = 20; // Nombre de films par page
-
-const allMovies = document.querySelector("#all-movies");
-const allSeries = document.querySelector("#all-series");
-const genreContainer = document.querySelector("#genre-container");
-const prevPageBtn = document.querySelector("#prev-page-btn");
-const nextPageBtn = document.querySelector("#next-page-btn");
-
-let currentPage = 1;
-let totalPages = 0;
 
 export const apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY";
 export const options = {
@@ -191,40 +183,3 @@ export async function createGridSerieElement(item) {
 
 
 /*****************Pagination************************/
-export function goToPreviousPage(currentPage) {
-    if (currentPage > 1) {
-        currentPage--;
-        fetchMoviesByPage(currentPage);
-        allMovies.scrollIntoView({ behavior: "smooth", block: "start" });
-        updatePaginationButtons();
-    } else if(currentPage === 1) {
-        prevPageBtn.disabled = true;
-    }
-}
-
-export function goToNextPage(currentPage) {
-    if (currentPage < totalPages) {
-        currentPage++;
-        fetchMoviesByPage(currentPage);
-        allMovies.scrollIntoView({ behavior: "smooth", block: "start" });
-        updatePaginationButtons();
-    } else if (currentPage === totalPages) {
-        nextPageBtn.disabled = true;
-    }
-}
-
-export async function updatePaginationButtons() {
-    if (currentPage === 1) {
-        prevPageBtn.disabled = true;
-    } else {
-        prevPageBtn.disabled = false;
-    }
-
-    if (currentPage === totalPages) {
-        nextPageBtn.disabled = true;
-    } else {
-        nextPageBtn.disabled = false;
-        prevPageBtn.disabled = false;
-    }
-}
-
