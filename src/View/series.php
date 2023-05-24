@@ -26,7 +26,7 @@
             </select>
         </div> -->
 
-        <div id="all-series" class="d-flex flex-wrap grid-series justify-content-between"></div>
+        <div id="all-series" class="d-flex flex-wrap grid-items justify-content-between"></div>
 
         <div class="d-flex justify-content-center m-5">
             <button id="prev-page-btn" class="pagination-btn btn btn-light m-auto">Précédent</button>

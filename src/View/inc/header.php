@@ -47,20 +47,20 @@ if (isset($_GET['logout'])) {
                     ?>
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
-                        <li class="nav-item"><a class="nav-link" href="films">Films</a></li>
-                        <li class="nav-item"><a class="nav-link" href="series">Séries</a></li>
-                        <li class="nav-item"><a class="nav-link" href="logout">Déconnexion</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/films">Films</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/series">Séries</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Déconnexion</a></li>
                     </ul>
                     <?php
                 } else { ?>
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
-                        <li class="nav-item"><a class="nav-link" href="films">Films</a></li>
-                        <li class="nav-item"><a class="nav-link" href="series">Séries</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/films">Films</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/series">Séries</a></li>
                     </ul>
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="register">Inscription</a></li>
-                        <li class="nav-item"><a class="nav-link" href="login">Connexion</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/register">Inscription</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Connexion</a></li>
                     </ul>
                 <?php
                 } ?>

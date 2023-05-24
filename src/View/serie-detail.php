@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php 
-    $pageTitle = "Série-Détail";
+    <?php 
+    $pageTitle = "Série-détail";
     require_once 'src/View/inc/head.php';
     ?>
 
@@ -17,14 +17,15 @@
 
         <div>
             <h3>Séries similaires :</h3>
-            <ul id="similar-series" class="d-flex"></ul>
+            <div id="similar-series" class="d-flex"></div>
         </div>
 
     </main>
 
     <!-- Bootstrap js -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script defer type="module" src="public/js/serie-detail.js"></script>
+
+    <script defer type="module" src="../../public/js/serie-detail.js"></script>
 
 </body>
 </html>
