@@ -1,18 +1,12 @@
+import { options, apiKey } from './script.js';
 import { createSerieElement } from './script.js';
 import { createGridSerieElement } from './script.js';
-import { goToPreviousPage } from './script.js';
-import { goToNextPage } from './script.js';
-import { updatePaginationButtons } from './script.js';
-import { options, apiKey } from './script.js';
 
 const topRatedSeries = document.querySelector("#top-rated-series");
 const allSeries = document.querySelector("#all-series");
 const genreContainer = document.querySelector("#genre-container");
 
 const itemsPerPage = 20;
-
-const prevPageBtn = document.querySelector("#prev-page-btn");
-const nextPageBtn = document.querySelector("#next-page-btn");
 
 const random = Math.floor(Math.random() * 500) + 1;
 
@@ -68,7 +62,7 @@ async function fetchAllSeries() {
         console.log(`Nombre total de series récupérées : ${totalSeries, totalPages, itemsPerPage}`);
 
         // Mettre à jour l'état des boutons de pagination
-        updatePaginationButtons();
+        /* updatePaginationButtons(); */
     } catch (error) {
         console.error(error);
     }
@@ -136,10 +130,6 @@ async function fetchItemsByGenre(genreId, mediaType) {
     console.error(error);
     }
 }
-
-// Pagination
-prevPageBtn.addEventListener("click", goToPreviousPage);
-nextPageBtn.addEventListener("click", goToNextPage);
 
 // Appels de fonctions
 fetchSeriesGenres(); 
