@@ -52,7 +52,7 @@ $router->addRoutes(array(   // array(method, path, target, name)
     }, 'films' ),
     
     // film-detail //////////////////////////////
-    array('GET', '/film-detail', function () { 
+    array('GET', '/film-detail/[i:id]', function ($id) { 
         require_once 'src/View/film-detail.php'; 
     }, 'film-detail'),
 
@@ -62,10 +62,9 @@ $router->addRoutes(array(   // array(method, path, target, name)
     }, 'series' ),
 
     // serie-detail //////////////////////////////
-    array('GET', '/serie-detail?{id}', function ($params) {
-        $itemId = $params['id'];
+    array('GET', '/serie-detail/[i:id]', function ($id) {
         require_once 'src/View/serie-detail.php';
-    }, 'serie-detail' ),
+    }, 'serie-detail'),
     
     // search //////////////////////////////
     array('GET', '/search', function() { 

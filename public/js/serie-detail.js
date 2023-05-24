@@ -1,27 +1,18 @@
+import { createSerieElement } from './script.js';
+import { options, apiKey } from './script.js';
+
 const serieDetail = document.querySelector("#serie-detail");
 const similarSeries = document.querySelector("#similar-series");
 
-const options = {
+/* const options = {
     method: 'GET',
     headers: {
         accept: 'application/json',
         Authorization:  apiKey
     }
-};
+}; */
 
-async function fetchDetail(serieId) {
-    try {
-        const response = await fetch(`https://api.themoviedb.org/3/motv/${serieId}?language=fr-FR&debug=${serieId}`, options);
-        const detailData = await response.json();
-        
-        serieDetail.innerHTML = '';
-        const detailDiv = createDetailElement(detailData);
-        serieDetail.appendChild(detailDiv);
-    } catch (error) {
-        console.error(error);
-    }
 
-    
 function createDetailElement(serie) {
     const detailDiv = document.createElement('div');
     detailDiv.classList.add('detail', 'd-flex', 'flex-column', 'justify-content-center', 'align-items-center');
@@ -102,26 +93,36 @@ function createDetailElement(serie) {
     return detailDiv;
 }
 
-const urlParams = new URLSearchParams(window.location.search);
-const idParam = urlParams.get('id');
-if (idParam) {
-    fetchDetail(idParam);
-}
-
-async function fetchSimilarseries(serieId) {
+async function fetchDetail(serieId) {
     try {
-        const response = await fetch(`https://api.theseriedb.org/3/serie/${serieId}/similar?language=fr-FR&page=1`, options);
-        const similarSeriesData = await response.json();
-
-        similarSeries.innerHTML = '';
-        similarSeriesData.results.forEach(function (serie) {
-            const serieDiv = createSerieElement(serie);
-            similarseries.appendChild(serieDiv);
-        });
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}?language=fr-FR`, options);
+        const detailData = await response.json();
+        
+        serieDetail.innerHTML = '';
+        const detailDiv = createDetailElement(detailData);
+        serieDetail.appendChild(detailDiv);
     } catch (error) {
         console.error(error);
     }
 }
 
+async function fetchSimilarseries(serieId) {
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/similar?language=fr-FR&page=1`, options);
+        const similarSeriesData = await response.json();
 
+        similarSeries.innerHTML = '';
+        similarSeriesData.results.forEach(async function (serie) {
+            const serieDiv = await createSerieElement(serie);
+            similarSeries.appendChild(serieDiv);
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }
+const idParam = window.location.pathname.split('/').pop();
+if (idParam) {
+    fetchDetail(idParam);
+    fetchSimilarseries(idParam);
+}
+

@@ -22,20 +22,23 @@ h1 {
  *  INDEX PAGE
  ***************************/
 
-#now-playing,
+#now-playing-movies,
 #popular-movies,
 #latest-series,
 #popular-series,
-#upcoming-movies {
+#upcoming-movies, 
+#top-rated-series,
+#similar-movies {
     display: inline-block;
     vertical-align: top;
     overflow-x: scroll;
     white-space: nowrap;
     scroll-snap-type: x mandatory; 
     padding: 10px;
+    scrollbar-color: rebeccapurple green!important;
 }
 
-.grid-movies {
+.grid-items {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-gap: 1rem;

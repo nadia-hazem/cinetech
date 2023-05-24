@@ -1,12 +1,12 @@
 import { options, apiKey } from './script.js';
-import { createItemElement } from './script.js';
+import { createMovieElement } from './script.js';
 
-const itemDetail = document.querySelector("#item-detail");
+const itemDetail = document.querySelector("#movie-detail");
 const similarMovies = document.querySelector("#similar-movies");
 
 function createDetailElement(detailData) {
     const detailDiv = document.createElement('div');
-    detailDiv.classList.add('detail','row');
+    detailDiv.classList.add('detail','row', 'my-5', 'py-5');
 
     const containerLeft = document.createElement('div');
     containerLeft.classList.add('col', 'col-md-6', 'justify-content-center', 'align-items-center');
@@ -110,7 +110,7 @@ async function fetchDetail(itemId) {
     }
 }
 
-async function fetchImages(itemId) {
+/* async function fetchImages(itemId) {
     try {
         const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}/images?language=fr-FR`, options);
         const imagesData = await response.json();
@@ -136,7 +136,7 @@ async function fetchImages(itemId) {
         console.error(error);
     }
 }
-
+ */
 
 async function fetchSimilarMovies(itemId) {
     try {
@@ -146,7 +146,7 @@ async function fetchSimilarMovies(itemId) {
         similarMovies.innerHTML = '';
 
         similarMoviesData.results.forEach(async function (item) {
-            const itemDiv = await createItemElement(item);
+            const itemDiv = await createMovieElement(item);
             similarMovies.appendChild(itemDiv);
         });
     } catch (error) {
@@ -154,11 +154,11 @@ async function fetchSimilarMovies(itemId) {
     }
 }
 
-const urlParams = new URLSearchParams(window.location.search); 
-const idParam = urlParams.get('id');
-
+const idParam = window.location.pathname.split('/').pop();
+console.log(idParam); 
 if (idParam) {
+
     fetchDetail(idParam);
     fetchSimilarMovies(idParam);
-    fetchImages(idParam);
-}
+/*     fetchImages(idParam);
+ */}
