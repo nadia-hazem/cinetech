@@ -36,6 +36,7 @@ async function fetchSeriesByPage(page)
     }
 }
 
+// affiche les series les mieux notées
 async function fetchTopRatedSeries() 
 {
     try {
@@ -54,19 +55,7 @@ async function fetchTopRatedSeries()
     }
 }
 
-// liste des genres
-async function fetchSerieGenres() 
-{
-    try {
-        const response = await fetch('https://api.themoviedb.org/3/genre/tv/list?nclude_adult=false=language=fr-FR&sort_by=popularity.desc&poster_path!=null&page=1', options);
-        const genresData = await response.json();
-        return genresData.genres;
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
-}
-
+// fetch de toutes les series
 async function fetchAllSeries() {
     try {
         const totalSeries = 500; // Nombre total de series à récupérer
@@ -85,18 +74,74 @@ async function fetchAllSeries() {
     }
 }
 
-/*****************Event Listeners*******************/
-genreContainer.addEventListener('change', function () {
-    const selectedGenreId = genreSelect.value;
+// affiche les genres
+async function fetchSeriesGenres() {
+    try {
+    const seriesGenresResponse = await fetch(`https://api.themoviedb.org/3/genre/tv/list?language=fr-FR`, options);
+    const seriesGenresData = await seriesGenresResponse.json();
 
-    fetchItemsByGenre(selectedGenreId);
-});
+    const seriesGenres = seriesGenresData.genres;
 
-/*****************Pagination************************/
+    const seriesGenresList = document.createElement('ul');
+    seriesGenresList.classList.add('d-flex','flex-wrap','list-inline');
+
+    seriesGenres.forEach(genre => {
+        const genreItem = document.createElement('li');
+        const genreLink = document.createElement('a');
+        genreLink.textContent = genre.name;
+        genreLink.classList.add('list-inline-item');
+        genreLink.href = `#`;
+        genreLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetchItemsByGenre(genre.id, 'tv');
+        });
+        genreItem.appendChild(genreLink);
+        seriesGenresList.appendChild(genreItem);
+    });
+
+    genreContainer.appendChild(seriesGenresList);
+    } catch (error) {
+    console.error(error);
+    }
+}
+
+// affiche les series par genre
+async function fetchItemsByGenre(genreId, mediaType) {
+    try {
+    const response = await fetch(`https://api.themoviedb.org/3/discover/${mediaType}?with_genres=${genreId}&language=fr-FR`, options);
+    const itemsData = await response.json();
+    
+    let itemsSection;
+    if (mediaType === 'movie') {
+        itemsSection = allMovies;
+    } else if (mediaType === 'tv') {
+        itemsSection = allSeries;
+    }
+
+    // Clear previous items
+    itemsSection.innerHTML = '';
+    
+    const items = itemsData.results;
+
+    items.forEach(async item => {
+        let itemElement;
+        if (mediaType === 'movie') {
+        itemElement = await createMovieElement(item);
+        } else if (mediaType === 'tv') {
+        itemElement = await createSerieElement(item);
+        }
+        itemsSection.appendChild(itemElement);
+    });
+    } catch (error) {
+    console.error(error);
+    }
+}
+
+// Pagination
 prevPageBtn.addEventListener("click", goToPreviousPage);
 nextPageBtn.addEventListener("click", goToNextPage);
 
-/**************Appels de fonctions******************/
-fetchSerieGenres(); 
+// Appels de fonctions
+fetchSeriesGenres(); 
 fetchTopRatedSeries();
 fetchAllSeries();

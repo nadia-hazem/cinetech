@@ -17,7 +17,7 @@
 
         <h1 class="h1">Tous les films</h1>
 
-        <ul id="genre-container" class="list-group-horizontal unstyled"></ul>
+        <div id="genre-container" class="list-group-horizontal unstyled"></div>
 
         <!--  <div id="genre-select-wrapper">
             <select id="genre-select">

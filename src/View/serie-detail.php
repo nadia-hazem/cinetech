@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
     <?php 
     $pageTitle = "Série-détail";
@@ -12,11 +12,11 @@
     
     <main class="container">
 
-        <!-- Titre de la série -->
         <div id="serie-detail" class="d-flex"></div>
 
         <div>
-            <h3>Séries similaires :</h3>
+            <h3 class="h1 my-5 py-5">Séries similaires :</h3>
+
             <div id="similar-series" class="d-flex"></div>
         </div>
 

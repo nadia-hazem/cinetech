@@ -36,6 +36,7 @@ async function fetchMoviesByPage(page)
     }
 }
 
+// affiche les films à venir
 async function fetchUpcomingMovies() {
     try {
         const response = await fetch('https://api.themoviedb.org/3/movie/upcoming?language=fr-FR&include_adult=false&poster_path!=null&region=FR&page=1', options);
@@ -53,19 +54,7 @@ async function fetchUpcomingMovies() {
     }
 }
 
-// liste des genres
-async function fetchMovieGenres() 
-{
-    try {
-        const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?include_adult=false&language=fr-FR&sort_by=popularity.desc&poster_path!=null&region=FR&page=1', options);
-        const genresData = await response.json();
-        return genresData.genres;
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
-}
-
+// fetch de tous les films
 async function fetchAllMovies() {
     try {
         const totalMovies = 500; // Nombre total de films à récupérer
@@ -84,18 +73,62 @@ async function fetchAllMovies() {
     }
 }
 
-/*****************Event Listeners*******************/
-genreContainer.addEventListener('change', function () {
-    const selectedGenreId = genreSelect.value;
+// affiche les genres
+async function fetchMoviesGenres() {
+    try {
+    const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?language=fr-FR`, options);
+    const movieGenresData = await response.json();
 
-    fetchItemsByGenre(selectedGenreId);
-});
+    const movieGenres = movieGenresData.genres;
 
-/*****************Pagination************************/
+    const movieGenresList = document.createElement('ul');
+    movieGenresList.classList.add('d-flex','flex-wrap','list-inline');
+
+    movieGenres.forEach(genre => {
+        const genreItem = document.createElement('li');
+        const genreLink = document.createElement('a');
+        genreLink.textContent = genre.name;
+        genreLink.classList.add('list-inline-item');
+        genreLink.href = `#`;
+        genreLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetchItemsByGenre(genre.id);
+        });
+        genreItem.appendChild(genreLink);
+        movieGenresList.appendChild(genreItem);
+    });
+
+    genreContainer.appendChild(movieGenresList);
+    } catch (error) {
+    console.error(error);
+    }
+}
+
+// affiche les films par genre
+async function fetchItemsByGenre(genreId) {
+    try {
+    const response = await fetch(`https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&language=fr-FR`, options);
+    const itemsData = await response.json();
+    
+    // Clear previous items
+    allMovies.innerHTML = '';
+    
+    const items = itemsData.results;
+
+    items.forEach(async item => {
+        const itemElement = await createMovieElement(item);
+        allMovies.appendChild(itemElement);
+    });
+    } catch (error) {
+    console.error(error);
+    }
+}
+
+// Pagination
 prevPageBtn.addEventListener("click", goToPreviousPage);
 nextPageBtn.addEventListener("click", goToNextPage);
 
-/**************Appels de fonctions******************/
+// Appels de fonctions
+fetchMoviesGenres();
 fetchUpcomingMovies();
 fetchAllMovies();
-fetchMovieGenres();

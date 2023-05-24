@@ -4,30 +4,31 @@ import { createMovieElement } from './script.js';
 const itemDetail = document.querySelector("#movie-detail");
 const similarMovies = document.querySelector("#similar-movies");
 
-function createDetailElement(detailData) {
+function createDetailElement(movie) {
     const detailDiv = document.createElement('div');
-    detailDiv.classList.add('detail','row', 'my-5', 'py-5');
+    detailDiv.classList.add('detail','row','my-5','py-5');
 
+    // container left
     const containerLeft = document.createElement('div');
-    containerLeft.classList.add('col', 'col-md-6', 'justify-content-center', 'align-items-center');
+    containerLeft.classList.add('col','col-md-6', 'justify-content-center', 'align-items-center');
     detailDiv.appendChild(containerLeft);
 
     // poster
-    const posterUrl = 'https://image.tmdb.org/t/p/w300' + detailData.poster_path;
+    const posterUrl = 'https://image.tmdb.org/t/p/w300' + movie.poster_path;
     const posterImg = document.createElement('img');
     posterImg.src = posterUrl;
-    posterImg.alt = detailData.title;
+    posterImg.alt = movie.title;
     containerLeft.appendChild(posterImg);
 
     // containerRight
     const containerRight = document.createElement('div');
-    containerRight.classList.add('col', 'col-md-6', 'justify-content-center', 'my-5', 'py-5');
+    containerRight.classList.add('col','col-md-6','justify-content-center','my-5','py-5');
     detailDiv.appendChild(containerRight);
 
     // title
     const titleHeading = document.createElement('h2');
-    titleHeading.classList.add('title', 'mb-5');
-    titleHeading.textContent = detailData.title;
+    titleHeading.classList.add('title','mb-5');
+    titleHeading.textContent = movie.title;
     containerRight.appendChild(titleHeading);
 
     // release date
@@ -36,7 +37,7 @@ function createDetailElement(detailData) {
     const releaseDateHeading = document.createElement('h4');
     releaseDateHeading.textContent = 'Date de sortie';
     const releaseDateParagraph = document.createElement('p');
-    releaseDateParagraph.textContent = detailData.release_date;
+    releaseDateParagraph.textContent = movie.release_date;
     releaseDate.appendChild(releaseDateHeading);
     releaseDate.appendChild(releaseDateParagraph);
     containerRight.appendChild(releaseDate);
@@ -47,7 +48,7 @@ function createDetailElement(detailData) {
     const overviewHeading = document.createElement('h4');
     overviewHeading.textContent = 'Synopsis';
     const overviewParagraph = document.createElement('p');
-    overviewParagraph.textContent = detailData.overview;
+    overviewParagraph.textContent = movie.overview;
     overview.appendChild(overviewHeading);
     overview.appendChild(overviewParagraph);
     containerRight.appendChild(overview);
@@ -58,7 +59,7 @@ function createDetailElement(detailData) {
     const runtimeHeading = document.createElement('h4');
     runtimeHeading.textContent = 'Durée';
     const runtimeParagraph = document.createElement('p');
-    runtimeParagraph.textContent = `${detailData.runtime} minutes`;
+    runtimeParagraph.textContent = `${movie.runtime} minutes`;
     runtime.appendChild(runtimeHeading);
     runtime.appendChild(runtimeParagraph);
     containerRight.appendChild(runtime);
@@ -69,7 +70,7 @@ function createDetailElement(detailData) {
     const genresHeading = document.createElement('h4');
     genresHeading.textContent = 'Genres';
     const genresList = document.createElement('ul');
-    detailData.genres.forEach(genre => {
+    movie.genres.forEach(genre => {
         const genreItem = document.createElement('li');
         genreItem.textContent = genre.name;
         genresList.appendChild(genreItem);
@@ -84,7 +85,7 @@ function createDetailElement(detailData) {
     const productionCompaniesHeading = document.createElement('h4');
     productionCompaniesHeading.textContent = 'Production';
     const productionCompaniesList = document.createElement('ul');
-    detailData.production_companies.forEach(company => {
+    movie.production_companies.forEach(company => {
         const companyItem = document.createElement('li');
         companyItem.textContent = company.name;
         productionCompaniesList.appendChild(companyItem);
@@ -96,23 +97,23 @@ function createDetailElement(detailData) {
     return detailDiv;
 }
 
-async function fetchDetail(itemId) {
+async function fetchDetail(movieId) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}?language=fr-FR`, options);
-        const detailData = await response.json();
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=fr-FR`, options);
+        const movie = await response.json();
 
         itemDetail.innerHTML = '';
 
-        const detailDiv = createDetailElement(detailData);
+        const detailDiv = createDetailElement(movie);
         itemDetail.appendChild(detailDiv);
     } catch (error) {
         console.error(error);
     }
 }
 
-/* async function fetchImages(itemId) {
+/* async function fetchImages(movieId) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}/images?language=fr-FR`, options);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/images?language=fr-FR`, options);
         const imagesData = await response.json();
 
         const images = document.createElement('div');
@@ -125,7 +126,7 @@ async function fetchDetail(itemId) {
             const imageUrl = 'https://image.tmdb.org/t/p/w300' + image.file_path;
             const imageImg = document.createElement('img');
             imageImg.src = imageUrl;
-            imageImg.alt = detailData.title;
+            imageImg.alt = movie.title;
             imageItem.appendChild(imageImg);
             imagesList.appendChild(imageItem);
         });
@@ -138,9 +139,9 @@ async function fetchDetail(itemId) {
 }
  */
 
-async function fetchSimilarMovies(itemId) {
+async function fetchSimilarMovies(movieId) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${itemId}/similar?language=fr-FR&page=1`, options);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/similar?language=fr-FR&page=1`, options);
         const similarMoviesData = await response.json();
 
         similarMovies.innerHTML = '';

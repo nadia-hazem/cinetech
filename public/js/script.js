@@ -1,5 +1,8 @@
 const itemsPerPage = 20; // Nombre de films par page
 
+const allMovies = document.querySelector("#all-movies");
+const allSeries = document.querySelector("#all-series");
+const genreContainer = document.querySelector("#genre-container");
 const prevPageBtn = document.querySelector("#prev-page-btn");
 const nextPageBtn = document.querySelector("#next-page-btn");
 
@@ -118,7 +121,7 @@ export async function createGridMovieElement(item) {
     titleHeading.textContent = item.title;
     itemDiv.appendChild(titleHeading);
     
-    // ajout du code pour activer les liens vers les détails du film ou de la série
+    // ajout du code pour activer les liens vers les détails du film
     itemLink.href = "/film-detail/"+item.id;
 
     /* itemLink.addEventListener('click', function (e) { */
@@ -160,59 +163,13 @@ export async function createGridSerieElement(item) {
     titleHeading.textContent = item.title;
     itemDiv.appendChild(titleHeading);
     
-
-    // ajout du code pour activer les liens vers les détails du film ou de la série
+    // ajout du code pour activer les liens vers les détails de la série
         itemLink.href = "serie-detail/"+item.id;
-
-    /* itemLink.addEventListener('click', function (e) { */
-        /* e.preventDefault(); */
-        /* const itemId = item.id; 
-
-        if (item.media_type === 'tv') {
-            window.location.href = `serie-detail/${itemId}`;
-        } else if (item.media_type === 'movie') {
-            window.location.href = `film-detail/${itemId}`;
-        }
-    }); */
 
     return itemDiv;
 }
 
-// Créer les options du select de genre
-export async function populateGenre() {
-    const pageTitle = document.title;
-    let fetchFunction;
 
-    if (pageTitle.includes("Films")) {
-    fetchFunction = fetchMovieGenres;
-    } else if (pageTitle.includes("Séries")) {
-    fetchFunction = fetchSerieGenres;
-    } else {
-    console.error('Invalid page title');
-    return;
-    }
-    const genres = await fetchFunction();
-
-    const genreContainer = document.querySelector("#genre-container");
-    genreContainer.classList.add('d-flex', 'justify-content-center', 'align-items-center', 'flex-wrap');
-    genres.forEach(function (genre) {
-        const genreLink = document.createElement('a');
-        genreLink.href = "#";
-        genreLink.textContent = genre.name;
-        genreLink.addEventListener('click', function () {
-
-            fetchItemsByGenre(genre.id);
-        });
-
-    genreContainer.appendChild(genreLink);
-
-    /* genres.forEach(function (genre) {
-    const option = document.createElement('option');
-    option.value = genre.id;
-    option.textContent = genre.name;
-    genreSelect.appendChild(option); */
-    });
-}
 /* async function fetchMoviesOrSeries(itemsPerPage) {
     try {
         const totalItems = 1000; // Nombre total de films à récupérer
@@ -232,43 +189,6 @@ export async function populateGenre() {
     }
 } */
 
-// Afficher par catégorie (films ou séries)
-export async function fetchItemsBygenre(genreId, itemType) {
-    let url = '';
-    if (itemType === 'movies') {
-        url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=fr-FR&page=1&sort_by=popularity.desc&poster_path!=null';
-    } else if (itemType === 'series') {
-        url = 'https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=fr-FR&page=1&sort_by=popularity.desc&poster_path!=null';
-    } else {
-        console.error('Invalid item type');
-        return;
-    }
-
-    if (genreId) {
-        url += '&with_genres=' + genreId;
-    }
-
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-    
-        if (itemType === 'movies') {
-            allMovies.innerHTML = '';
-            data.results.forEach(function (movie) {
-            const movieDiv = createGridItemElement(movie);
-            allMovies.appendChild(movieDiv);
-            });
-        } else if (itemType === 'series') {
-            allSeries.innerHTML = '';
-            data.results.forEach(function (series) {
-            const seriesDiv = createGridItemElement(series);
-            allSeries.appendChild(seriesDiv);
-            });
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
 
 /*****************Pagination************************/
 export function goToPreviousPage(currentPage) {
@@ -307,3 +227,4 @@ export async function updatePaginationButtons() {
         prevPageBtn.disabled = false;
     }
 }
+
