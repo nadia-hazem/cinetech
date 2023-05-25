@@ -53,6 +53,9 @@ function createDetailElement(movie) {
     overview.appendChild(overviewParagraph);
     containerRight.appendChild(overview);
 
+    // credits
+
+
     // runtime
     const runtime = document.createElement('div');
     runtime.classList.add('runtime');
@@ -111,34 +114,6 @@ async function fetchDetail(movieId) {
     }
 }
 
-/* async function fetchImages(movieId) {
-    try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/images?language=fr-FR`, options);
-        const imagesData = await response.json();
-
-        const images = document.createElement('div');
-        images.classList.add('images', 'd-flex', 'my-5', 'py-5');
-        const imagesHeading = document.createElement('h4');
-        imagesHeading.textContent = 'Images';
-        const imagesList = document.createElement('ul');
-        imagesData.backdrops.forEach(image => {
-            const imageItem = document.createElement('li');
-            const imageUrl = 'https://image.tmdb.org/t/p/w300' + image.file_path;
-            const imageImg = document.createElement('img');
-            imageImg.src = imageUrl;
-            imageImg.alt = movie.title;
-            imageItem.appendChild(imageImg);
-            imagesList.appendChild(imageItem);
-        });
-        images.appendChild(imagesHeading);
-        images.appendChild(imagesList);
-
-    } catch (error) {
-        console.error(error);
-    }
-}
- */
-
 async function fetchSimilarMovies(movieId) {
     try {
         const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/similar?language=fr-FR&page=1`, options);
@@ -155,11 +130,8 @@ async function fetchSimilarMovies(movieId) {
     }
 }
 
-const idParam = window.location.pathname.split('/').pop();
-console.log(idParam); 
+const idParam = window.location.pathname.split('/').pop(); 
 if (idParam) {
-
     fetchDetail(idParam);
     fetchSimilarMovies(idParam);
-/*     fetchImages(idParam);
- */}
+}

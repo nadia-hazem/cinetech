@@ -4,13 +4,13 @@ body {
 }
 
 h1 {
-    font-family: "Montserrat", Arial, sans-serif;
+    font-family: 'Oswald', sans-serif;
     text-align: center;
     font-weight: 100!important;
     color: white;
     background-color: #333;
     padding: 20px;
-    border-bottom: 15px solid #f7f7f7;
+    /* border-bottom: 15px solid #f7f7f7; */
 }
 
 /***************************
@@ -21,7 +21,6 @@ h1 {
 /***************************
  *  INDEX PAGE
  ***************************/
-
 #now-playing-movies,
 #popular-movies,
 #latest-series,
@@ -53,8 +52,7 @@ h1 {
 }
  */
 
-/****************class pour chaque film****************/
-
+/****************class pour chaque item****************/
 .item {
     min-width: 250px;
     min-height: 350px;
@@ -123,23 +121,54 @@ h1 {
     padding-bottom: 40px;
 }
 
-/***************class pour le select****************/
-
+/***************select****************/
 #genre-container {
     margin: 50px;
 }
 #genre-container a {
-    color: white;
     text-decoration: none;
-    padding: 10px;
-    border: 1px solid white;
-    border-radius: 5px;
-    margin: 5px;
+    padding: 5px 20px;
+    color: #fff;
+    border: none!important;
+    margin: 10px;
     cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 100;
+    font-size: 1rem;
+    background: #333333;
 }
 
-/***************class pour la fiche détail****************/
+#genre-container a:hover {
+    background: #5f6367;
+}
 
+.list-inline-item.active {
+    background: #75777a!important;
+    font-weight: bold!important;
+}
+
+/**************Pagination****************/
+.pagination-btn {
+    color: #fff;border: none!important;
+    background: transparent;
+    font-family: "Montserrat", Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #fff;
+}
+
+.pagination-btn.active {
+    background-color: #212529;
+    color: #fff;border: none!important;
+}
+
+.pagination-numbers{
+    color: #fff;border: none!important;
+}
+
+/***************************
+    *  PAGE DETAIL
+***************************/
 .detail img {
     width: 100%;
     height: 100%;

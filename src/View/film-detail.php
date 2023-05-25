@@ -15,7 +15,7 @@
         <div id="movie-detail" class="d-flex"></div>
 
         <div>
-            <h3 class="h1 my-5 py-5">Films similaires</h3>
+            <h1 class="h1">Films similaires</h1>
 
             <div id="similar-movies" class="d-flex"></div>
         </div>

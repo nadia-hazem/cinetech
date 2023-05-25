@@ -1,7 +1,13 @@
 import { options, apiKey } from './script.js';
 import { createMovieElement } from './script.js';
 import { createGridMovieElement } from './script.js';
+import { initializePagination } from './pagination.js';
 
+
+const prevPageBtn = document.getElementById('prev-page-btn');
+const nextPageBtn = document.getElementById('next-page-btn');
+const paginationNumbers = document.getElementById('pagination-numbers');
+const totalPages = 500;
 
 const upcomingMovies = document.querySelector("#upcoming-movies");
 const allMovies = document.querySelector("#all-movies");
@@ -79,16 +85,38 @@ async function fetchMoviesGenres() {
     const movieGenresList = document.createElement('ul');
     movieGenresList.classList.add('d-flex','flex-wrap','list-inline');
 
+    // Ajouter un lien pour afficher tous les genres
+    const allGenresLink = document.createElement('a');
+    allGenresLink.textContent = "Tous";
+    allGenresLink.classList.add('list-inline-item');
+    allGenresLink.href = `#`;
+    allGenresLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetchAllMovies(); 
+    });
+    const allGenresItem = document.createElement('li');
+    allGenresItem.appendChild(allGenresLink);
+    movieGenresList.appendChild(allGenresItem);
+
     movieGenres.forEach(genre => {
         const genreItem = document.createElement('li');
         const genreLink = document.createElement('a');
         genreLink.textContent = genre.name;
         genreLink.classList.add('list-inline-item');
         genreLink.href = `#`;
+
         genreLink.addEventListener('click', function(e) {
         e.preventDefault();
-        fetchItemsByGenre(genre.id);
+        fetchItemsByGenre(genre.id, 'movie');
+
+        // Ajouter la classe "active" au lien actuellement sélectionné
+        const activeLink = document.querySelector('.active');
+        if (activeLink) {
+            activeLink.classList.remove('active');
+        }
+        genreLink.classList.add('active');
         });
+        
         genreItem.appendChild(genreLink);
         movieGenresList.appendChild(genreItem);
     });
@@ -120,6 +148,7 @@ async function fetchItemsByGenre(genreId) {
 }
 
 // Appels de fonctions
+initializePagination(fetchMoviesByPage, totalPages, prevPageBtn, nextPageBtn, paginationNumbers);
 fetchMoviesGenres();
 fetchUpcomingMovies();
 fetchAllMovies();

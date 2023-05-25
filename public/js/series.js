@@ -1,6 +1,12 @@
 import { options, apiKey } from './script.js';
 import { createSerieElement } from './script.js';
 import { createGridSerieElement } from './script.js';
+import { initializePagination } from './pagination.js';
+
+const prevPageBtn = document.getElementById('prev-page-btn');
+const nextPageBtn = document.getElementById('next-page-btn');
+const paginationNumbers = document.getElementById('pagination-numbers');
+const totalPages = 500;
 
 const topRatedSeries = document.querySelector("#top-rated-series");
 const allSeries = document.querySelector("#all-series");
@@ -71,13 +77,26 @@ async function fetchAllSeries() {
 // affiche les genres
 async function fetchSeriesGenres() {
     try {
-    const seriesGenresResponse = await fetch(`https://api.themoviedb.org/3/genre/tv/list?language=fr-FR`, options);
-    const seriesGenresData = await seriesGenresResponse.json();
+    const Response = await fetch(`https://api.themoviedb.org/3/genre/tv/list?language=fr-FR`, options);
+    const seriesGenresData = await Response.json();
 
     const seriesGenres = seriesGenresData.genres;
 
     const seriesGenresList = document.createElement('ul');
     seriesGenresList.classList.add('d-flex','flex-wrap','list-inline');
+
+    // Ajouter un lien pour afficher tous les genres
+    const allGenresLink = document.createElement('a');
+    allGenresLink.textContent = "Tous";
+    allGenresLink.classList.add('list-inline-item');
+    allGenresLink.href = `#`;
+    allGenresLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetchAllSeries(); 
+    });
+    const allGenresItem = document.createElement('li');
+    allGenresItem.appendChild(allGenresLink);
+    seriesGenresList.appendChild(allGenresItem);
 
     seriesGenres.forEach(genre => {
         const genreItem = document.createElement('li');
@@ -85,10 +104,19 @@ async function fetchSeriesGenres() {
         genreLink.textContent = genre.name;
         genreLink.classList.add('list-inline-item');
         genreLink.href = `#`;
+
         genreLink.addEventListener('click', function(e) {
         e.preventDefault();
         fetchItemsByGenre(genre.id, 'tv');
+
+        // Ajouter la classe "active" au lien actuellement sélectionné
+        const activeLink = document.querySelector('.active');
+        if (activeLink) {
+            activeLink.classList.remove('active');
+        }
+        genreLink.classList.add('active');
         });
+
         genreItem.appendChild(genreLink);
         seriesGenresList.appendChild(genreItem);
     });
@@ -132,6 +160,7 @@ async function fetchItemsByGenre(genreId, mediaType) {
 }
 
 // Appels de fonctions
+initializePagination(fetchSeriesByPage, totalPages, prevPageBtn, nextPageBtn, paginationNumbers);
 fetchSeriesGenres(); 
 fetchTopRatedSeries();
 fetchAllSeries();

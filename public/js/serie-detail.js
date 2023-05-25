@@ -18,7 +18,7 @@ function createDetailElement(serie) {
     const posterImg = document.createElement('img');
     posterImg.src = posterUrl;
     posterImg.alt = serie.title;
-    detailDiv.appendChild(posterImg);
+    containerLeft.appendChild(posterImg);
 
     // containerRight
     const containerRight = document.createElement('div');
@@ -29,7 +29,7 @@ function createDetailElement(serie) {
     const titleHeading = document.createElement('h2');
     titleHeading.classList.add('title','mb-5');
     titleHeading.textContent = serie.title;
-    detailDiv.appendChild(titleHeading);
+    containerRight.appendChild(titleHeading);
     
     // release date
     const releaseDate = document.createElement('div');
@@ -40,7 +40,7 @@ function createDetailElement(serie) {
     releaseDateParagraph.textContent = serie.release_date;
     releaseDate.appendChild(releaseDateHeading);
     releaseDate.appendChild(releaseDateParagraph);
-    detailDiv.appendChild(releaseDate);
+    containerRight.appendChild(releaseDate);
 
     // overview
     const overview = document.createElement('div');
@@ -52,6 +52,9 @@ function createDetailElement(serie) {
     overview.appendChild(overviewHeading);
     overview.appendChild(overviewParagraph);
     containerRight.appendChild(overview);
+
+    // credits
+
 
     // runtime
     const runtime = document.createElement('div');
@@ -93,44 +96,17 @@ function createDetailElement(serie) {
     productionCompanies.appendChild(productionCompaniesHeading);
     productionCompanies.appendChild(productionCompaniesList);
     containerRight.appendChild(productionCompanies);
-/*****************/
-    const voteAverage = document.createElement('div');
-    voteAverage.classList.add('voteAverage');
-    const voteAverageParagraph = document.createElement('p');
-    voteAverageParagraph.textContent = serie.vote_average;
-    voteAverage.appendChild(voteAverageParagraph);
-    detailDiv.appendChild(voteAverage);
-
-    const voteCount = document.createElement('div');
-    voteCount.classList.add('voteCount');
-    const voteCountParagraph = document.createElement('p');
-    voteCountParagraph.textContent = serie.vote_count;
-    voteCount.appendChild(voteCountParagraph);
-    detailDiv.appendChild(voteCount);
-
-    const spokenLanguages = document.createElement('div');
-    spokenLanguages.classList.add('spokenLanguages');
-    const spokenLanguagesParagraph = document.createElement('p');
-    spokenLanguagesParagraph.textContent = serie.spoken_languages.map(language => language.name).join(', ');
-    spokenLanguages.appendChild(spokenLanguagesParagraph);
-    detailDiv.appendChild(spokenLanguages);
-
-    const status = document.createElement('div');
-    status.classList.add('status');
-    const statusParagraph = document.createElement('p');
-    statusParagraph.textContent = serie.status;
-    status.appendChild(statusParagraph);
-    detailDiv.appendChild(status);
 
     return detailDiv;
 }
 
 async function fetchDetail(serieId) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}?language=fr-FR`, options);
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}?language=fr-FR&append_to_response=credits`, options);
         const serie = await response.json();
-        
+        console.log(serie);
         itemDetail.innerHTML = '';
+        
         const detailDiv = createDetailElement(serie);
         itemDetail.appendChild(detailDiv);
     } catch (error) {
@@ -144,14 +120,16 @@ async function fetchSimilarseries(serieId) {
         const similarSeriesData = await response.json();
 
         similarSeries.innerHTML = '';
-        similarSeriesData.results.forEach(async function (serie) {
-            const serieDiv = await createSerieElement(serie);
-            similarSeries.appendChild(serieDiv);
+
+        similarSeriesData.results.forEach(async function (item) {
+            const itemDiv = await createSerieElement(item);
+            similarSeries.appendChild(itemDiv);
         });
     } catch (error) {
         console.error(error);
     }
 }
+
 const idParam = window.location.pathname.split('/').pop();
 if (idParam) {
     fetchDetail(idParam);
