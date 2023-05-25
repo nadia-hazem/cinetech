@@ -16,7 +16,7 @@ if (isset($_GET['logout'])) {
     <nav class="navbar bg-dark navbar-expand-lg" data-bs-theme="dark">
         <div class="container-fluid">
 
-            <a class="navbar-brand" href="#">Cinétech</a>
+            <a class="navbar-brand" href="/">Cinétech</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -33,7 +33,6 @@ if (isset($_GET['logout'])) {
                     echo '<p class="fw-light mb-0">Bienvenue' . ' ' . $login . '</p>';
                     ?>
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
                         <li class="nav-item"><a class="nav-link" href="films">Films</a></li>
                         <li class="nav-item"><a class="nav-link" href="series">Séries</a></li>
                         <li class="nav-item"><a class="nav-link" href="logout">Déconnexion</a></li>
@@ -46,7 +45,6 @@ if (isset($_GET['logout'])) {
                     echo '<p class="fw-light mb-0">Bienvenue' . ' ' . $login . '</p>';
                     ?>
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
                         <li class="nav-item"><a class="nav-link" href="/films">Films</a></li>
                         <li class="nav-item"><a class="nav-link" href="/series">Séries</a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">Déconnexion</a></li>
@@ -54,7 +52,6 @@ if (isset($_GET['logout'])) {
                     <?php
                 } else { ?>
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
                         <li class="nav-item"><a class="nav-link" href="/films">Films</a></li>
                         <li class="nav-item"><a class="nav-link" href="/series">Séries</a></li>
                     </ul>

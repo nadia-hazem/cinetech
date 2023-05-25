@@ -27,7 +27,8 @@ h1 {
 #popular-series,
 #upcoming-movies, 
 #top-rated-series,
-#similar-movies {
+#similar-movies,
+#similar-series {
     display: inline-block;
     vertical-align: top;
     overflow-x: scroll;
@@ -175,4 +176,10 @@ h1 {
     object-fit: cover;
     transition: transform 0.2s ease-in-out;
 
+}
+p.subject {
+    font-family: 'arial', sans-serif;
+    font-size: 1rem;
+    color: brown!important;
+    padding-right: 20px;
 }

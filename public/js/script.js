@@ -44,7 +44,7 @@ export async function createMovieElement(item) {
     itemLink.addEventListener('click', function (e) {
         e.preventDefault();
         const itemId = item.id;
-            window.location.href = `film-detail/${itemId}`;
+            window.location.href = `/film-detail/${itemId}`;
         });
     return itemDiv;
 }
@@ -81,7 +81,7 @@ export async function createSerieElement(item) {
     itemLink.addEventListener('click', function (e) {
         e.preventDefault();
         const itemId = item.id;
-            window.location.href = `serie-detail/${itemId}`;
+            window.location.href = `/serie-detail/${itemId}`;
     });
 
     return itemDiv;
