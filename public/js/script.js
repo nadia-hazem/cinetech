@@ -180,6 +180,3 @@ export async function createGridSerieElement(item) {
         console.error(error);
     }
 } */
-
-
-/*****************Pagination************************/

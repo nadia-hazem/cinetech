@@ -15,7 +15,7 @@
         <div id="serie-detail" class="d-flex"></div>
 
         <div>
-            <h3 class="h1 my-5 py-5">Séries similaires :</h3>
+            <h1 class="h1">Séries similaires</h1>
 
             <div id="similar-series" class="d-flex"></div>
         </div>

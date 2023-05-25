@@ -17,29 +17,27 @@
 
         <h1 class="h1">Tous les films</h1>
 
-        <div id="genre-container" class="list-group-horizontal unstyled"></div>
-
-        <!--  <div id="genre-select-wrapper">
-            <select id="genre-select">
-                <option value="">Tous les genres</option>
-            </select>
-        </div> -->
+        <div id="genre-container" class="list-group-horizontal unstyled text-secondary"></div>
 
         <div id="all-movies" class="d-flex flex-wrap grid-items justify-content-between"></div>
 
 
         <div class="d-flex justify-content-center m-5">
-            <button id="prev-page-btn" class="pagination-btn btn btn-light m-auto">Précédent</button>
-            <button id="next-page-btn" class="pagination-btn btn btn-light m-auto">Suivant</button>
+            <button id="prev-page-btn" class="pagination-btn m-auto text-secondary">Précédent</button>
+            <div id="pagination-numbers" class="pagination-numbers text-secondary"></div>
+            <button id="next-page-btn" class="pagination-btn m-auto text-secondary">Suivant</button>
         </div>
 
     </main>
 
-
-    <!--------------------------------------------------------->
+    <!---------------------------scripts------------------------------>
     <!-- Bootstrap js -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     
+    
+    <!-- pagination -->
+    <script defer type="module" src="public/js/pagination.js"></script>
+    <!-- films -->
     <script defer type="module" src="public/js/films.js"></script>
 </body>
 </html>
