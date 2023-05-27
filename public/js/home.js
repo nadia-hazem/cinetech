@@ -2,20 +2,23 @@ import { createMovieElement } from './script.js';
 import { createSerieElement } from './script.js';
 import { options, apiKey } from './script.js';
 
+// variables
 const nowPlayingMovies = document.querySelector("#now-playing-movies");
 const popularMovies = document.querySelector("#popular-movies");
 const latestSeries = document.querySelector("#latest-series");
 const popularSeries = document.querySelector("#popular-series");
-
 const itemsPerPage = 20;
 
+// pagination
 const prevPageBtn = document.querySelector("#prev-page-btn");
 const nextPageBtn = document.querySelector("#next-page-btn");
 
+// random
 const random = Math.floor(Math.random() * 500) + 1;
 
-/**************Fonctions spécifiques******************/
 
+
+/**************Fonctions spécifiques******************/
 async function fetchNowPlaying() {
     try {
         const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?language=fr-FR&include_adult=false&include_video=false&poster_path!=null' + random, options);
@@ -84,7 +87,6 @@ async function fetchPopularSeries()
 }
 
 /****************Appel des fonctions*********************/
-
 fetchNowPlaying();
 fetchPopularMovies();
 fetchLatestSeries();

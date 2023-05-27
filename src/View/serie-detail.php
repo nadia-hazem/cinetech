@@ -10,13 +10,13 @@
     
     <?php require_once 'src/View/inc/header.php'; ?>
     
-    <main>
+    <main class="mb-5">
 
         <div class="container">
             <div id="serie-detail" class="d-flex"></div>
         </div>
 
-        <h1 class="h1">Séries similaires</h1>
+        <h1 class="h1 my-5">Séries similaires</h1>
 
         <div id="similar-series" class="d-flex"></div>
 
