@@ -28,7 +28,16 @@ p {
 /***************************
     *  HEADER
 ***************************/
-
+.sitename {
+    font-family: 'Coda', cursive;
+    color: brown!important;
+    font-size: 1.3rem;
+    font-weight: 100!important;
+    color: white;
+}
+.sitename:hover {
+    color: #ccc!important;
+}
 
 /***************************
  *  HOME PAGE
@@ -289,4 +298,15 @@ p {
     background-size: contain;
     margin: 0;
     opacity: 0.8;
+}
+
+/***************************
+    *  FORMULAIRES
+***************************/
+body#register, body#login {
+    background: url(/public/img/abstract.jpg) no-repeat center center fixed;
+    background-position: center;
+    background-size: cover;
+    margin: 0;
+    /* opacity: 0.8; */
 }
