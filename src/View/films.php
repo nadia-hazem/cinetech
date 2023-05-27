@@ -19,7 +19,7 @@
 
         <div id="genre-container" class="list-group-horizontal unstyled text-secondary"></div>
 
-        <div id="all-movies" class="d-flex flex-wrap grid-items justify-content-between"></div>
+        <div id="all-movies" class="aura d-flex flex-wrap grid-items justify-content-between"></div>
 
 
         <div class="d-flex justify-content-center m-5">

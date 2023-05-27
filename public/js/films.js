@@ -3,18 +3,18 @@ import { createMovieElement } from './script.js';
 import { createGridMovieElement } from './script.js';
 import { initializePagination } from './pagination.js';
 
-
+// pagination
 const prevPageBtn = document.getElementById('prev-page-btn');
 const nextPageBtn = document.getElementById('next-page-btn');
 const paginationNumbers = document.getElementById('pagination-numbers');
-const totalPages = 500;
 
+// variables pour les films
 const upcomingMovies = document.querySelector("#upcoming-movies");
 const allMovies = document.querySelector("#all-movies");
 const genreContainer = document.querySelector("#genre-container");
 
-const itemsPerPage = 20; 
-
+const totalPages = 500;
+const itemsPerPage = 20;
 const random = Math.floor(Math.random() * 500) + 1;
 
 // affiche les films par page

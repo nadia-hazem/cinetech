@@ -17,6 +17,13 @@ $router->addRoutes(array(   // array(method, path, target, name)
     array('GET', '/', function() { 
         require_once 'src/View/home.php';
     }, 'home' ),
+    /* array('GET', '/', function() { 
+        header('Location: http://cinetech/home');
+    }),
+
+    array('GET', '/home', function() { 
+            require_once 'src/View/home.php';
+    }, 'home'), */
 
     // register get //////////////////////////
     array('GET', '/register', function () {

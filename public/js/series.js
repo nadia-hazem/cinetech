@@ -3,6 +3,7 @@ import { createSerieElement } from './script.js';
 import { createGridSerieElement } from './script.js';
 import { initializePagination } from './pagination.js';
 
+// pagination
 const prevPageBtn = document.getElementById('prev-page-btn');
 const nextPageBtn = document.getElementById('next-page-btn');
 const paginationNumbers = document.getElementById('pagination-numbers');
@@ -66,9 +67,9 @@ async function fetchAllSeries() {
         fetchSeriesByPage(1); // Récupère uniquement la première page initialement
 
         console.log(`Nombre total de series récupérées : ${totalSeries, totalPages, itemsPerPage}`);
-
+        
         // Mettre à jour l'état des boutons de pagination
-        /* updatePaginationButtons(); */
+        updatePaginationButtons();
     } catch (error) {
         console.error(error);
     }

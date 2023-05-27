@@ -5,10 +5,10 @@ export function initializePagination(
     nextPageBtn,
     paginationNumbers
 ) {
-    const itemsPerPage = 20; // Nombre d'éléments par page
-    let currentPage = 1; // Page actuelle
+    const itemsPerPage = 20;
+    let currentPage = 1; 
 
-    // Fonction pour afficher les chiffres de pagination
+    // chiffres de pagination
     function displayPaginationNumbers() {
         paginationNumbers.innerHTML = '';
 
@@ -28,7 +28,7 @@ export function initializePagination(
         }
     }
 
-    // Fonction pour aller à la page spécifiée
+    // page spécifiée
     function goToPage(page) {
         if (page >= 1 && page <= totalPages) {
             currentPage = page;
@@ -38,7 +38,7 @@ export function initializePagination(
         }
     }
 
-    // Fonction pour aller à la page précédente
+    // page précédente
     function goToPreviousPage() {
         // cacher le bouton précédent à la page 1
         if (currentPage === 1) {
@@ -51,7 +51,7 @@ export function initializePagination(
         window.scrollTo(0, 0);
     }
 
-    // Fonction pour aller à la page suivante
+    // page suivante
     function goToNextPage() {
         // cacher le bouton suivant à la dernière page
         if (currentPage === totalPages) {
@@ -64,8 +64,7 @@ export function initializePagination(
         window.scrollTo(0, 0);
     }
 
-
-    // Gestionnaire d'événement pour les chiffres de pagination
+    // event chiffres de pagination
     paginationNumbers.addEventListener('click', function (event) {
         if (event.target.classList.contains('pagination-btn')) {
             const page = parseInt(event.target.textContent);
@@ -74,19 +73,19 @@ export function initializePagination(
         }
     });
 
-    // Gestionnaire d'événement pour le bouton "Précédent"
+    // event bouton "Précédent"
     prevPageBtn.addEventListener('click', function () {
         goToPreviousPage();
         window.scrollTo(0, 0);
     });
 
-    // Gestionnaire d'événement pour le bouton "Suivant"
+    // event bouton "Suivant"
     nextPageBtn.addEventListener('click', function () {
         goToNextPage();
         window.scrollTo(0, 0);
     });
 
-    // Fonction pour mettre à jour l'état des boutons de pagination
+    // maj l'état des boutons de pagination
     function updatePaginationButtons() {
         prevPageBtn.disabled = currentPage === 1;
         nextPageBtn.disabled = currentPage === totalPages;

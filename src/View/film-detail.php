@@ -10,15 +10,15 @@
 
     <?php require_once 'src/View/inc/header.php'; ?>
 
-    <main class="container">
+    <main class="mb-5">
 
-        <div id="movie-detail" class="d-flex"></div>
-
-        <div>
-            <h1 class="h1">Films similaires</h1>
-
-            <div id="similar-movies" class="d-flex"></div>
+        <div class="container">
+            <div id="movie-detail" class="d-flex"></div>
         </div>
+
+        <h1 class="h1">Films similaires</h1>
+
+        <div id="similar-movies" class="d-flex mb-5"></div>
 
     </main>
 

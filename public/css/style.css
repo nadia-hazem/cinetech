@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Coda:wght@800&family=Noticia+Text&family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap');
+
 body {
     background-color: black;
     color: white;
 }
 
 h1 {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Coda', cursive;
     text-align: center;
     font-weight: 100!important;
     color: white;
@@ -13,13 +15,23 @@ h1 {
     /* border-bottom: 15px solid #f7f7f7; */
 }
 
+
+p {
+    font-family: 'Notitia', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #ccc;
+    text-align: justify;
+    line-height: 1.3rem;
+}
+
 /***************************
     *  HEADER
 ***************************/
 
 
 /***************************
- *  INDEX PAGE
+ *  HOME PAGE
  ***************************/
 #now-playing-movies,
 #popular-movies,
@@ -27,14 +39,14 @@ h1 {
 #popular-series,
 #upcoming-movies, 
 #top-rated-series,
-#similar-movies {
+#similar-movies,
+#similar-series {
     display: inline-block;
     vertical-align: top;
     overflow-x: scroll;
     white-space: nowrap;
     scroll-snap-type: x mandatory; 
     padding: 10px;
-    scrollbar-color: rebeccapurple green!important;
 }
 
 .grid-items {
@@ -51,6 +63,54 @@ h1 {
     padding: 1rem;
 }
  */
+
+.hero {
+    background-image: url("/public/img/cinema.jpg");
+    background-position: center;
+    background-size: cover;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.hero-title {
+    color:brown;
+    font-size: 3rem;
+    margin-bottom: 8rem;
+    background: transparent;
+    text-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;}
+
+.hero-text {
+    font-size: 1rem;
+}
+
+.info {
+    background-color: #333;
+    padding: 20px;
+    margin: 0;
+    color: #fff;
+}
+
+/**********************banner*************************/
+.banner {
+    overflow: hidden;
+}
+
+#bannerText {
+    display: inline-block;
+    animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
 
 /****************class pour chaque item****************/
 .item {
@@ -146,24 +206,29 @@ h1 {
     background: #75777a!important;
     font-weight: bold!important;
 }
+.active {
+    color: rgb(165, 42, 42);
+}
 
 /**************Pagination****************/
 .pagination-btn {
-    color: #fff;border: none!important;
+    color: #fff;
+    border: none!important;
     background: transparent;
     font-family: "Montserrat", Arial, sans-serif;
     font-size: 1rem;
     font-weight: 400;
-    color: #fff;
 }
 
 .pagination-btn.active {
     background-color: #212529;
-    color: #fff;border: none!important;
+    color: brown;
+    border: none!important;
 }
 
 .pagination-numbers{
-    color: #fff;border: none!important;
+    color: #fff;
+    border: none!important;
 }
 
 /***************************
@@ -172,7 +237,35 @@ h1 {
 .detail img {
     width: 100%;
     height: 100%;
+    max-width: 500px;
+    max-height: 650px;
+    padding: 10px;
     object-fit: cover;
     transition: transform 0.2s ease-in-out;
+}
 
+.subject {
+    font-family: 'arial', sans-serif;
+    font-size: 1rem;
+    color: brown!important;
+    padding-right: 20px;
+}
+
+.seasonImage {
+    width: 100%;
+    height: 100%;
+    max-width: 150px!important;
+    max-height: 200px!important;
+    object-fit: cover;
+    transition: transform 0.2s ease-in-out;
+}
+/***************************
+    *  PAGE FILMS & SERIES
+***************************/
+.aura {
+    background: url(/public/img/aura.jpg) no-repeat center center fixed;
+    background-position: center;
+    background-size: contain;
+    margin: 0;
+    opacity: 0.8;
 }
