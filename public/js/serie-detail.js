@@ -7,7 +7,7 @@ const similarSeries = document.querySelector("#similar-series");
 
 function createDetailElement(serie) {
     const detailDiv = document.createElement('div');
-    detailDiv.classList.add('detail','row','justify-content-center','flex-wrap','mt-2','pt-2');
+    detailDiv.classList.add('detail','row','justify-content-center','flex-wrap','my-5');
 
     // container left
     //*************************************************** */
@@ -265,7 +265,7 @@ async function fetchDetail(serieId) {
 
 async function fetchSimilarseries(serieId) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/similar?language=fr-FR&page=1`, options);
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${serieId}/similar?language=fr-FR&poster_path!=null&page=1`, options);
         const similarSeriesData = await response.json();
 
         similarSeries.innerHTML = '';

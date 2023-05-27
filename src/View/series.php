@@ -11,16 +11,20 @@
     <?php require_once 'src/View/inc/header.php'; ?>
     
     <main>
+        
+        <div class="title">
+            <h1 class="title">LES SERIES</h1>
+        </div>
 
         <h1>Les séries les mieux notées</h1>
 
-        <div id="top-rated-series" class="d-flex"></div>
+        <div id="top-rated-series" class="aura d-flex"></div>
 
         <h1>Toutes les séries</h1>
 
         <div id="genre-container" class="list-group-horizontal unstyled text-secondary"></div>
 
-        <div id="all-series" class="d-flex flex-wrap grid-items justify-content-between"></div>
+        <div id="all-series" class="aura d-flex flex-wrap grid-items justify-content-between"></div>
 
         <div class="d-flex justify-content-center m-5">
             <button id="prev-page-btn" class="pagination-btn m-auto text-secondary">Précédent</button>

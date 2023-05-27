@@ -6,18 +6,19 @@ const similarMovies = document.querySelector("#similar-movies");
 
 function createDetailElement(movie) {
     const detailDiv = document.createElement('div');
-    detailDiv.classList.add('detail', 'd-flex');
+    detailDiv.classList.add('detail', 'd-flex', 'flex-wrap', 'justify-content-center', 'my-5');
 
     // container left
     //************************************************* */
     const containerLeft = document.createElement('div');
-    containerLeft.classList.add('col','col-md-6', 'justify-content-center', 'align-items-center');
+    containerLeft.classList.add('col','col-md-6', 'justify-content-center');
     detailDiv.appendChild(containerLeft);
 
     // poster
     //************************************************* */
     const posterUrl = 'https://image.tmdb.org/t/p/w300' + movie.poster_path;
     const posterImg = document.createElement('img');
+    posterImg.classList.add('poster');
     posterImg.src = posterUrl;
     posterImg.alt = movie.title;
     containerLeft.appendChild(posterImg);
@@ -31,7 +32,7 @@ function createDetailElement(movie) {
     // title
     //************************************************* */
     const titleContainer = document.createElement('div');
-    titleContainer.classList.add('title-container', );
+    titleContainer.classList.add('title-container', 'd-flex', 'justify-content-center');
     const titleHeading = document.createElement('h2');
     titleHeading.classList.add('title','mb-4');
     titleHeading.textContent = movie.title;
@@ -41,7 +42,7 @@ function createDetailElement(movie) {
      // original title
     //************************************************* */
     const titleOriginalContainer = document.createElement('div');
-    titleOriginalContainer.classList.add('title-original');
+    titleOriginalContainer.classList.add('title-original', 'd-flex');
     const titleOriginalHeading = document.createElement('p');
     titleOriginalHeading.classList.add('subject', 'my-1');
     titleOriginalHeading.textContent = 'Titre original : ';
@@ -54,7 +55,7 @@ function createDetailElement(movie) {
     // original language
     //************************************************* */
     const languageContainer = document.createElement('div');
-    languageContainer.classList.add('language');
+    languageContainer.classList.add('language', 'd-flex');
     const languageHeading = document.createElement('p');
     languageHeading.classList.add('subject', 'my-1');
     languageHeading.textContent = 'Langue originale : ';
@@ -99,7 +100,7 @@ function createDetailElement(movie) {
     // runtime
     //************************************************* */
     const runtime = document.createElement('div');
-    runtime.classList.add('runtime');
+    runtime.classList.add('runtime', 'd-flex');
     const runtimeHeading = document.createElement('p');
     runtimeHeading.classList.add('subject', 'my-1');
     runtimeHeading.textContent = 'Durée';
@@ -112,7 +113,7 @@ function createDetailElement(movie) {
     // release date
     //************************************************* */
     const releaseDate = document.createElement('div');
-    releaseDate.classList.add('releaseDate');
+    releaseDate.classList.add('releaseDate', 'd-flex');
     const releaseDateHeading = document.createElement('p');
     releaseDateHeading.classList.add('subject', 'my-1');
     releaseDateHeading.textContent = 'Date de sortie';
@@ -217,7 +218,7 @@ async function fetchDetail(movieId) {
 
 async function fetchSimilarMovies(movieId) {
     try {
-        const response = await fetch('https://api.themoviedb.org/3/movie/' + movieId + '/similar?language=fr-FR&page=1', options);
+        const response = await fetch('https://api.themoviedb.org/3/movie/' + movieId + '/similar?language=fr-FR&poster_path!=null&page=1', options);
         const similarMoviesData = await response.json();
 
         similarMovies.innerHTML = '';

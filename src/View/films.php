@@ -11,9 +11,14 @@
     <?php require_once 'src/View/inc/header.php'; ?>
 
     <main>
+
+        <div class="title">
+            <h1 class="title">LES FILMS</h1>
+        </div>
+
         <h1 class="h1">Les films à venir</h1>
 
-        <div id="upcoming-movies" class="d-flex"></div>
+        <div id="upcoming-movies" class="aura d-flex"></div>
 
         <h1 class="h1">Tous les films</h1>
 

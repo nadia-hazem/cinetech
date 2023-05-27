@@ -49,20 +49,6 @@ p {
     padding: 10px;
 }
 
-.grid-items {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    grid-gap: 1rem;
-    padding: 1rem;
-}
-/* pour une grille de 4 films */
-/* .grid-movies {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 1rem;
-    padding: 1rem;
-}
- */
 
 .hero {
     background-image: url("/public/img/cinema.jpg");
@@ -114,10 +100,11 @@ p {
 
 /****************class pour chaque item****************/
 .item {
-    min-width: 250px;
-    min-height: 350px;
-    max-width: 250px;
-    max-height: 350px;
+    min-width: 270px;
+    min-height: 400px;
+    max-width: 270px;
+    max-height: 400px;
+    object-fit: fill;
     object-position: center center; 
     margin: 1rem;
     scroll-snap-align: center;
@@ -138,6 +125,19 @@ p {
 .item:hover .item-overlay {
     opacity: .8;
 }
+
+/* h2.item-title {
+    font-size: 1rem!important;
+    color: brown;
+    z-index: 99;
+    position: relative;
+    text-align: center;
+}
+
+.item:hover h2.item-title  {
+    color: #fff;
+    background-color: rgbe(0, 0, 0, 0.8);
+} */
 
 .item img {
     width: 100%;
@@ -179,6 +179,18 @@ p {
     display: inline-block;
     line-height: 1.3;
     padding-bottom: 40px;
+}
+
+.grid-items {
+    /* display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 1rem;
+    padding: 1rem; */
+
+    /* pour une grille de 4 films */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 1rem;
 }
 
 /***************select****************/
@@ -262,6 +274,15 @@ p {
 /***************************
     *  PAGE FILMS & SERIES
 ***************************/
+.title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    color: brown!important;
+    background: #000;
+    text-align: center;
+    margin: 0;
+}
+
 .aura {
     background: url(/public/img/aura.jpg) no-repeat center center fixed;
     background-position: center;
