@@ -1,14 +1,9 @@
+import { options } from './script.js';
+
+// variables
 const search = document.getElementById("searchInput");
 const matchList = document.querySelector("#matchList");
 const matchList2 = document.querySelector("#matchList2");
-
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: apiKey
-    }
-};
 
 const searchItem = async (searchText) => {
     if (searchText.length === 0) {
@@ -16,31 +11,26 @@ const searchItem = async (searchText) => {
         matchList2.innerHTML = "";
         return;
     }
-    
-    const search = document.getElementById('searchInput');
 
-    search.addEventListener('input', () => {
-        const searchText = search.value;
-        searchItem(searchText);
-    });
-
-    const url = fetch(`https://api.themoviedb.org/3/search/multi?query=${searchText}&include_adult=false&language=fr-FR&page=1`, options);
-    const response = await fetch(url, options);
+    const response = await fetch(`https://api.themoviedb.org/3/search/multi?query=${searchText}&include_adult=false&language=fr-FR&page=1`, options);
     const data = await response.json();
     const items = data.results;
 
     // check if searchText has a correspondance in db
-    let matches = product.filter((title) => {
-        // first proposal ( ^ is for first caracter of the string)
-        const regex = new RegExp(`^${searchText}`, "gi");
-        // first argument is the regex, second is the flag (g = global, i = case insensitive)
-        return title.title.match(regex);
+    let matches = items.filter((item) => {
+        if (item.title) {
+            const regex = new RegExp(`^${searchText}`, "gi");
+            return item.title.match(regex);
+        }
     });
-    // second proposal
-    let matches2 = product.filter((title) => {
-        const regex = new RegExp(`${searchText}`, "gi");
-        return title.title.match(regex);
+        
+    let matches2 = items.filter((item) => {
+        if (item.title) {
+            const regex = new RegExp(`${searchText}`, "gi");
+            return item.title.match(regex);
+        }
     });
+
     // if searchText is empty, hide the list
     if (searchText.length === 0) {
         matches = [];
@@ -51,7 +41,6 @@ const searchItem = async (searchText) => {
     outputHtml2(matches2);
 };
 
-
 // send the html to the DOM
 const outputHtml = (matches) => {
     if (matches.length > 0) {
@@ -60,8 +49,8 @@ const outputHtml = (matches) => {
             .slice(0, 5)
             .map(
             (match) => `
-                    <li class="card card-body bg-dark mb-1">
-                        <a class="text-decoration-none link-light" href="search.php?id=${match.id}">${match.title}</a>
+                    <li class="card card-body  mb-1">
+                        <a class="text-decoration-none link-light" href="/search.php?id=${match.id}">${match.title}</a>
                     </li>
                 `
             )
@@ -76,8 +65,8 @@ const outputHtml2 = (matches) => {
         .slice(0, 5)
         .map(
         (match) => `
-                <li class="card card-body text-white bg-secondary mb-1">
-                    <a class="text-decoration-none link-light" href="product.php?id=${match.id}">${match.title}</a>
+                <li class="card card-body text-white bg-secondary ">
+                    <a class="text-decoration-none link-light" href="/search.php?id=${match.id}">${match.title}</a>
                 </li>
             `
         )
@@ -91,6 +80,11 @@ const hideLists = () => {
     matchList2.innerHTML = "";
 };
 
+/* search.addEventListener('input', () => {
+    const searchText = search.value;
+    searchItem(searchText);
+}); */
+
 // Ecoute l'évènement keyup
 search.addEventListener("keyup", () => searchItem(search.value));
 
@@ -100,9 +94,29 @@ search.addEventListener("keydown", (event) => {
     window.location.href = "search.php?search=" + search.value;
     }
 });
-
+// Ecoute l'évènement blur pour cacher la liste des suggestions
 search.addEventListener("blur", () => {
     setTimeout(() => {
     hideLists();
     }, 500);
 });
+
+// Pagination
+const pagination = async (page) => {
+    const search = document.getElementById('searchInput');
+    const searchText = search.value;
+    const response = await fetch(`https://api.themoviedb.org/3/search/multi?query=${searchText}&include_adult=false&language=fr-FR&page=${page}`, options);
+    const data = await response.json();
+    const items = data.results;
+    let matches = items.filter((item) => {
+        const regex = new RegExp(`^${searchText}`, "gi");
+        return item.title.match(regex);
+    });
+    let matches2 = items.filter((item) => {
+        const regex = new RegExp(`${searchText}`, "gi");
+        return item.title.match(regex);
+    });
+    outputHtml(matches);
+    outputHtml2(matches2);
+}
+pagination(1);

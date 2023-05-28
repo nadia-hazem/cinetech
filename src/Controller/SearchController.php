@@ -1,18 +1,27 @@
 <?php
-// Path: src/Controller/SearchController.php
+// path: src/Controller/SearchController.php
+require_once 'vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
-namespace App\Controller;
-use App\Model\SearchModel;
+use SearchModel;
 
-class SearchController
-{
-    public function search()
-    {
+class SearchController {
+    public function search() {
         $query = $_GET['query'] ?? '';
 
-        $searchModel = new SearchModel();
+        // Instancier SearchModel en passant la clé d'API
+        $apiKey = $_ENV['API_KEY']; // charger la clé depuis les variables d'environnement
+        $searchModel = new SearchModel($apiKey);
         $results = $searchModel->search($query);
 
-        //Traitement des résultats
+        // Traitement des résultats
+        $response = [
+            'status' => 'success',
+            'data' => $results
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }
 }
