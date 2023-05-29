@@ -1,4 +1,7 @@
 <?php
+/* require_once __DIR__ . '/../../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
+$dotenv->load(); */
 require_once 'vendor/autoload.php';
 $router = new AltoRouter();
 $user = new \App\Controller\UserController();
@@ -9,8 +12,26 @@ if (isset($_GET['logout'])) {
         $user->logout();
     }
 }
-?>
 
+require_once 'src/Model/SearchModel.php';
+
+$apiKey = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY';
+$searchModel = new SearchModel($apiKey); 
+
+// Vérifier si une recherche a été soumise
+if (isset($_GET['search'])) {
+    $searchTerm = $_GET['search'];
+
+    // Effectuer la recherche en utilisant la méthode appropriée du modèle
+    $results = $searchModel->search($searchTerm);
+
+    // Afficher les résultats ici
+    foreach ($results as $result) {
+        // Afficher les détails de chaque résultat
+        echo $result['title'];
+    }
+}
+?>
 <header class="header bg-light">
 
     <nav class="navbar bg-dark navbar-expand-lg" data-bs-theme="dark">
@@ -26,7 +47,7 @@ if (isset($_GET['logout'])) {
                 <?php
                 // Obtenez l'utilisateur actuel connecté
                 $loggedInUser = $user->getCurrentUser();
-                //$login = $loggedInUser['login'];
+
                 // Vérifiez si l'utilisateur est un administrateur
                 if ($loggedInUser && $loggedInUser['role'] == 'admin') {
                     $login = $loggedInUser['login'];
@@ -64,12 +85,12 @@ if (isset($_GET['logout'])) {
 
                 <!-- search bar -->
                 <span class="d-flex vertical-align-bottom">
-                    <form class="d-flex" method="get" action="search.php">
+                    <form class="d-flex" method="get" action="/search.php">
                         <input id="searchInput" class="form-control me-sm-1" type="text" name="search" placeholder="Search..." autocomplete="off">
                         <button class="btn btn-transparent text-white my-sm-0" type="submit"><i class="fas fa-search"></i></button>
                     </form>
-                    <ul id="matchList" class="position-absolute z-3 mt-5"></ul>
-                    <ul id="matchList2" class="position-absolute z-3 mt-5"></ul>
+                    <ul id="matchList" class="position-absolute z-3 mt-5" style="display:block;"></ul>
+                    <ul id="matchList2" class="position-absolute z-3 mt-5" style="display:block;"></ul>
                 </span> <!-- end search bar -->
 
             </div> <!-- end navbar-collapse -->
