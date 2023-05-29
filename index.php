@@ -53,6 +53,16 @@ $router->addRoutes(array(   // array(method, path, target, name)
         $authController->logout();
     }, 'logout'),
 
+    // profile ///////////////////////////////
+    array('GET', '/profile', function () {
+        require_once 'src/View/profile.php';
+    }, 'profile'),
+
+    // admin /////////////////////////////////
+    array('GET', '/admin', function () {
+        require_once 'src/View/admin.php';
+    }, 'admin'),
+
     // films //////////////////////////////
     array('GET', '/films', function() { 
         require_once 'src/View/films.php';

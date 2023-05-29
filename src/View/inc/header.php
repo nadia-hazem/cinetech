@@ -13,6 +13,8 @@ if (isset($_GET['logout'])) {
     }
 }
 
+<header class="header sticky-top bg-light">
+
 require_once 'src/Model/SearchModel.php';
 
 $apiKey = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY';
@@ -32,7 +34,6 @@ if (isset($_GET['search'])) {
     }
 }
 ?>
-<header class="header bg-light">
 
     <nav class="navbar bg-dark navbar-expand-lg" data-bs-theme="dark">
         <div class="container-fluid">
@@ -54,9 +55,10 @@ if (isset($_GET['search'])) {
                     echo '<p class="fw-light mb-0">Bienvenue' . ' ' . $login . '</p>';
                     ?>
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="films">Films</a></li>
-                        <li class="nav-item"><a class="nav-link" href="series">Séries</a></li>
-                        <li class="nav-item"><a class="nav-link" href="logout">Déconnexion</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/films">Films</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/series">Séries</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Déconnexion</a></li>
                     </ul>
                     <?php
 
@@ -68,6 +70,7 @@ if (isset($_GET['search'])) {
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" href="/films">Films</a></li>
                         <li class="nav-item"><a class="nav-link" href="/series">Séries</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/profile">Profil</a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">Déconnexion</a></li>
                     </ul>
                     <?php

@@ -24,8 +24,6 @@ class UserController
         } else {
             // Return user data as JSON
             echo json_encode($userData);
-            // Render user data using user.php view file
-            // require_once 'src/View/user.php';
         }
     }
 
@@ -63,5 +61,39 @@ class UserController
     public function logout() {
         session_destroy();
         header('Location: index.php');
+    }
+
+    public function updateLogin($login, $old, $password) {
+        $userModel = new UserModel();
+        $user = $userModel->findOneBy('login', $old);
+        $password = password_verify($password, $user['password']);
+        if ($password) {
+            $userModel->updateUserLogin($login, $old, $password);
+            $_SESSION['user']['login'] = $login;
+            if($user['role'] == 'admin') {
+                header('Location: /admin');
+            } else {
+                header('Location: /profile');
+            }
+
+        } else {
+            throw new \Exception('Mot de passe incorrect');
+        }
+    }
+
+    public function updatePassword($password, $newPassword) {
+        $userModel = new UserModel();
+        $user = $userModel->findOneBy('id', $_SESSION['user']['id']);
+        $password = password_verify($password, $user['password']);
+        if ($password) {
+            $userModel->updateUserPassword($newPassword, $_SESSION['user']['id']);
+            if($user['role'] == 'admin') {
+                header('Location: /admin');
+            } else {
+                header('Location: /profile');
+            }
+        } else {
+            throw new \Exception('Mot de passe incorrect');
+        }
     }
 }

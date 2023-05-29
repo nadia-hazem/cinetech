@@ -42,8 +42,10 @@ class AuthController {
                 // Créer un nouvel utilisateur dans la base de données
                 $userModel = new UserModel();
                 $userModel->createUser($login, $email, $password);
-                require_once 'src/View/register.php';
-                echo '<p class="mx-5">Utilisateur créé avec succès</p>';
+                
+                require_once 'src/View/register.php'; ?>
+                <p class="mx-5">Utilisateur créé avec succès</p>
+                <?php
                 // Rediriger l'utilisateur vers une autre page
                 header('Location: /login');
                 exit;
@@ -74,9 +76,16 @@ class AuthController {
             } else {
                 if(password_verify($password, $user['password'])) {
                     session_start();
-                    $_SESSION['user'] = $user;
-                    header('Location: /');
-                    exit;
+                    $_SESSION['user'] = $user; // Définir l'utilisateur actuel dans la session
+
+                    if ($user['role'] == 'admin') {
+                        header('Location: /admin');
+                        exit;
+                    } else {
+                        header('Location: /profile');
+                        exit;
+                    }
+
                 } else {
                     require_once 'src/View/login.php';
                     echo '<p class="mx-5">login ou mot de passe incorrect</p>';
