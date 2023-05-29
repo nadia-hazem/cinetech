@@ -11,7 +11,7 @@ if (isset($_GET['logout'])) {
 }
 ?>
 
-<header class="header bg-light">
+<header class="header sticky-top bg-light">
 
     <nav class="navbar bg-dark navbar-expand-lg" data-bs-theme="dark">
         <div class="container-fluid">
@@ -33,9 +33,10 @@ if (isset($_GET['logout'])) {
                     echo '<p class="fw-light mb-0">Bienvenue' . ' ' . $login . '</p>';
                     ?>
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="films">Films</a></li>
-                        <li class="nav-item"><a class="nav-link" href="series">Séries</a></li>
-                        <li class="nav-item"><a class="nav-link" href="logout">Déconnexion</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/films">Films</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/series">Séries</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Déconnexion</a></li>
                     </ul>
                     <?php
 
@@ -47,6 +48,7 @@ if (isset($_GET['logout'])) {
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" href="/films">Films</a></li>
                         <li class="nav-item"><a class="nav-link" href="/series">Séries</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/profile">Profil</a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">Déconnexion</a></li>
                     </ul>
                     <?php

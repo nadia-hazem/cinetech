@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Coda:wght@800&family=Noticia+Text&family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap');
 
 body {
-    background-color: black;
-    color: white;
+    background-color: rgb(35, 35, 35);
+    color: ghostwhite;
 }
 
 h1 {
     font-family: 'Coda', cursive;
     text-align: center;
     font-weight: 100!important;
-    color: white;
+    color: ghostwhite;
     background-color: #333;
     padding: 20px;
     /* border-bottom: 15px solid #f7f7f7; */
@@ -20,9 +20,23 @@ p {
     font-family: 'Notitia', sans-serif;
     font-size: 1rem;
     font-weight: 400;
-    color: #ccc;
+    color: ghostwhite;
     text-align: justify;
     line-height: 1.3rem;
+}
+
+.bg-grey {
+    background: #333;
+}
+
+.bg-ghost {
+    background: ghostwhite;
+}
+
+input[type=text], input[type=password], input[type=email] {
+    background: ghostwhite!important;
+    border: none!important;
+    padding: 10px;
 }
 
 /***************************
@@ -33,10 +47,9 @@ p {
     color: brown!important;
     font-size: 1.3rem;
     font-weight: 100!important;
-    color: white;
 }
 .sitename:hover {
-    color: #ccc!important;
+    color: ghostwhite!important;
 }
 
 /***************************
@@ -89,7 +102,7 @@ p {
     background-color: #333;
     padding: 20px;
     margin: 0;
-    color: #fff;
+    color: ghostwhite;
 }
 
 /**********************banner*************************/
@@ -179,7 +192,7 @@ p {
     font-size: 15px;
     font-weight: 400;
     text-align: justify;
-    color: #FFF;
+    color: ghostwhite;
     margin: 0;
     max-width: 80%;
     max-height: 80%;
@@ -209,7 +222,7 @@ p {
 #genre-container a {
     text-decoration: none;
     padding: 5px 20px;
-    color: #fff;
+    color: ghostwhite;
     border: none!important;
     margin: 10px;
     cursor: pointer;
@@ -233,7 +246,7 @@ p {
 
 /**************Pagination****************/
 .pagination-btn {
-    color: #fff;
+    color: ghostwhite;
     border: none!important;
     background: transparent;
     font-family: "Montserrat", Arial, sans-serif;
@@ -248,7 +261,7 @@ p {
 }
 
 .pagination-numbers{
-    color: #fff;
+    color: ghostwhite;
     border: none!important;
 }
 
@@ -309,4 +322,46 @@ body#register, body#login {
     background-size: cover;
     margin: 0;
     /* opacity: 0.8; */
+}
+
+
+/***************************
+    *   PANEL TABS
+***************************/
+.tab {
+    width: 80%;
+    margin: auto;
+    overflow: hidden; 
+    color:ghostwhite!important;
+    background-color: transparent;
+    border-bottom: 1px solid brown;
+    border-radius: 10px 10px 0 0;
+}
+.tabcontent {
+    width: 80%;
+    margin: auto;
+    color: ghostwhite;
+    display: none; 
+    border-top: none;
+}
+.tab button {
+    color: ghostwhite!important;
+    background-color: inherit; 
+    margin: auto;
+    float: left; 
+    border: none;
+    outline: none; 
+    cursor: pointer; 
+    padding: 14px 20px; 
+    transition: 0.3s;
+}
+.tab button:hover, .tab .active {
+    background-color: #333;
+    color: brown;
+}
+.tablinks button{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid brown
 }
