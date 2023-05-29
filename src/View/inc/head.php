@@ -23,7 +23,8 @@
         $('.navbar-collapse').toggle();
     });
     </script>
-
+    <!-- script de recherche -->
+    <script defer type="module" src="public/js/search.js"></script>
 
     <?php 
     // Ce script fonctionne mais l'ordre de chargement pose problème alors j'ai appelé les script directement dans les pages avant la fermeture de la balise body.

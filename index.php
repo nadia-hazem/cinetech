@@ -84,7 +84,7 @@ $router->addRoutes(array(   // array(method, path, target, name)
     }, 'serie-detail'),
     
     // search //////////////////////////////
-    array('GET', '/search', function() { 
+    array('GET', '/search.php', function() { 
         require_once 'src/View/search.php';
     }, 'search' ),
 

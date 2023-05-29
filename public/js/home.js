@@ -2,6 +2,7 @@ import { createMovieElement } from './script.js';
 import { createSerieElement } from './script.js';
 import { options, apiKey } from './script.js';
 
+
 // variables
 const nowPlayingMovies = document.querySelector("#now-playing-movies");
 const popularMovies = document.querySelector("#popular-movies");
