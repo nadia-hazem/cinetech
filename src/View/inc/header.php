@@ -1,14 +1,10 @@
 <?php
-require_once __DIR__ . '/../../../vendor/autoload.php';
+/* require_once __DIR__ . '/../../../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
-$dotenv->load();
-
+$dotenv->load(); */
 require_once 'vendor/autoload.php';
 $router = new AltoRouter();
 $user = new \App\Controller\UserController();
-
-require_once 'src/Model/SearchModel.php';
-$SearchModel = new SearchModel($_ENV['TMDB_API_KEY'] );
 
 // if user click on logout
 if (isset($_GET['logout'])) {
@@ -17,7 +13,11 @@ if (isset($_GET['logout'])) {
     }
 }
 
-$searchModel = new SearchModel($_ENV['TMDB_API_KEY']);
+require_once 'src/Model/SearchModel.php';
+
+$apiKey = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY';
+$searchModel = new SearchModel($apiKey); 
+
 // Vérifier si une recherche a été soumise
 if (isset($_GET['search'])) {
     $searchTerm = $_GET['search'];
@@ -89,8 +89,8 @@ if (isset($_GET['search'])) {
                         <input id="searchInput" class="form-control me-sm-1" type="text" name="search" placeholder="Search..." autocomplete="off">
                         <button class="btn btn-transparent text-white my-sm-0" type="submit"><i class="fas fa-search"></i></button>
                     </form>
-                    <ul id="matchList" class="position-absolute z-3 mt-5"></ul>
-                    <ul id="matchList2" class="position-absolute z-3 mt-5"></ul>
+                    <ul id="matchList" class="position-absolute z-3 mt-5" style="display:block;"></ul>
+                    <ul id="matchList2" class="position-absolute z-3 mt-5" style="display:block;"></ul>
                 </span> <!-- end search bar -->
 
             </div> <!-- end navbar-collapse -->

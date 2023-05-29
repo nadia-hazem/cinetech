@@ -35,6 +35,8 @@ const searchItem = async (searchText) => {
     if (searchText.length === 0) {
         matches = [];
         matchList.innerHTML = "";
+        matches2 = [];
+        matchList2.innerHTML = "";
     }
     // generate the html for each value
     outputHtml(matches);
@@ -90,8 +92,8 @@ search.addEventListener("keyup", () => searchItem(search.value));
 
 // Ecoute l'évènement keydown pour détecter la touche "Entrée"
 search.addEventListener("keydown", (event) => {
-    if (event.keyCode === 13) {
-    window.location.href = "search.php?search=" + search.value;
+    if (event.key === 'Enter') {
+    window.location.href = "/search.php?search=" + search.value;
     }
 });
 // Ecoute l'évènement blur pour cacher la liste des suggestions
@@ -103,7 +105,6 @@ search.addEventListener("blur", () => {
 
 // Pagination
 const pagination = async (page) => {
-    const search = document.getElementById('searchInput');
     const searchText = search.value;
     const response = await fetch(`https://api.themoviedb.org/3/search/multi?query=${searchText}&include_adult=false&language=fr-FR&page=${page}`, options);
     const data = await response.json();

@@ -1,3 +1,12 @@
+<?php
+// path: src/View/search.php
+
+require_once 'src/Model/SearchModel.php';
+
+$apiKey = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY';
+$searchModel = new SearchModel($apiKey); 
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -13,7 +22,7 @@ include 'inc/head.php';
     <main class="container min-vh-100 justify-content-center align-items-center">
         <section class="row">                
             <div class="col-md-6 m-auto">                    
-                <table class="table table-hover bg-light">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col text-white">
@@ -27,14 +36,14 @@ include 'inc/head.php';
                         if (isset($_GET['search'])) {
                             $searchTerm = $_GET['search'];
                             $results = $searchModel->search($searchTerm);
-                        
-                            // afficher les résultats dans une liste HTML
+                            
+                            // Afficher les résultats dans une liste HTML
                             echo '<ul>';
-                            foreach ($results as $result) {
-                                echo '<li>';
-                                echo '<a href="detail.php?id=' . $result['id'] . '">' . $result['title'] . '</a>';
-                                echo '</li>';
-                            }
+                            echo '<li class="list-unstyled">';
+                                foreach ($results as $result) {
+                                    echo '<a href="detail.php?id=' . $result['id'] . '">' . $result['title'] . '</a>';
+                                    echo '</li>';
+                                }
                             echo '</ul>';
                         }
                         ?>
@@ -52,8 +61,6 @@ include 'inc/head.php';
     
     <!-- pagination -->
     <script defer type="module" src="public/js/pagination.js"></script>
-    <!-- search -->
-    <!-- <script defer type="module" src="/search.js"></script> -->
 
 </body>
 </html>
