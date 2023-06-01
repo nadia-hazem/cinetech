@@ -7,6 +7,21 @@ use PDO;
 class UserModel extends AbstractModel
 {
     protected $tablename = 'user';
+    private $id;
+    private $login;
+    private $email;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Récupérer les données de l'utilisateur s'il est connecté
+        if (isset($_SESSION['user'])) {
+            $this->id = $_SESSION['user']['id'];
+            $this->login = $_SESSION['user']['login'];
+            $this->email = $_SESSION['user']['email'];
+        }
+    }
 
     // find all users
     public function findAll()
@@ -37,7 +52,7 @@ class UserModel extends AbstractModel
     }
 
     // update user
-    public function updateUser($id, $login, $email, $password, $role)
+    /* public function updateUser($id, $login, $email, $password, $role)
     {
         $req = $this->pdo->prepare('UPDATE user SET login = :login, email = :email, password = :password, role = :role WHERE id = :id');
         $req->execute([
@@ -47,7 +62,7 @@ class UserModel extends AbstractModel
             'password' => $password,
             'role' => $role
         ]);
-    }
+    } */
 
     // find user role by id
     public function findRoleById($id)
@@ -62,7 +77,7 @@ class UserModel extends AbstractModel
     // check if user exist
     public function isUserExist($login)
     {
-        $req = $this->pdo->prepare('SELECT * FROM $this->tablename WHERE login = :login');
+        $req = $this->pdo->prepare("SELECT * FROM $this->tablename WHERE login = :login");
         $req->execute([
             ':login' => $login
         ]);
@@ -83,47 +98,44 @@ class UserModel extends AbstractModel
             'id' => $id
         ]);
     }
-
     
-    // Update login
-    public function updateUserLogin($login, $old, $password)
+    public function updateUserLogin($newLogin, $oldLogin, $password)
     {
-        $requete = "SELECT password FROM $this->tablename where login = :old";
+        $requete = "SELECT password FROM $this->tablename WHERE login = :oldLogin";
 
         $select = $this->pdo->prepare($requete);
 
-        $old = htmlspecialchars($old);
-        $login = htmlspecialchars($login);
+        $oldLogin = htmlspecialchars($oldLogin);
+        $newLogin = htmlspecialchars($newLogin);
         $password = htmlspecialchars($password);
 
-        $select->execute(array(':old' => $old));
+        $select->execute(array(':oldLogin' => $oldLogin));
         $fetch_assoc = $select->fetch(PDO::FETCH_ASSOC);
-        $password_hash = $fetch_assoc['password'];
-
-        if (password_verify($password, $password_hash)) {
-            $requete2 = "UPDATE $this->tablename SET login=:login WHERE id=:id";
-            $update = $this->pdo->prepare($requete2);
-            $update->execute(array(
-                ':login' => $login,
-                ':id' => $_SESSION['id'],
-            ));
-
-            if ($update) {
-
-                $_SESSION['user']['login'] = $login;
-                $error = "ok";
-                echo $error;
+        
+        if ($fetch_assoc) {
+            $password_hash = $fetch_assoc['password'];
+    
+            if (password_verify($password, $password_hash)) {
+                $requete2 = "UPDATE $this->tablename SET login=:newLogin WHERE login=:oldLogin";
+                $update = $this->pdo->prepare($requete2);
+                $update->execute(array(
+                    ':newLogin' => $newLogin,
+                    ':oldLogin' => $oldLogin,
+                ));
+    
+                if ($update) {
+                    return "ok";
+                } else {
+                    return "Erreur lors de la modification du login";
+                }
+    
             } else {
-                $error = "error";
-                echo $error;
+                return "incorrect";
             }
         } else {
-            $error = "incorrect";
-            echo $error; // wrong password
+            return "notfound";
         }
-
-        $this->pdo = null;
-    }
+    }    
 
     // Update password
     public function updateUserPassword($password, $newPassword)
@@ -132,7 +144,7 @@ class UserModel extends AbstractModel
 
         $select = $this->pdo->prepare($requete);
 
-        $login = htmlspecialchars($_SESSION['login']);
+        $login = htmlspecialchars($_SESSION['user']['login']);
         $password = htmlspecialchars($password);
         $newPassword = htmlspecialchars($newPassword);
 
@@ -155,6 +167,7 @@ class UserModel extends AbstractModel
             if ($update) {
                 $error = "ok";
                 echo $error;
+                var_dump($this->findOneBy('login', $login));
             } else {
                 $error = "error";
                 echo $error;

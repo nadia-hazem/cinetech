@@ -6,6 +6,8 @@ require_once 'vendor/autoload.php';
 $router = new AltoRouter();
 $user = new \App\Controller\UserController();
 
+require_once 'src/Model/SearchModel.php';
+
 // if user click on logout
 if (isset($_GET['logout'])) {
     if ($_GET['logout'] == true) {
@@ -13,20 +15,16 @@ if (isset($_GET['logout'])) {
     }
 }
 
-<header class="header sticky-top bg-light">
-
-require_once 'src/Model/SearchModel.php';
-
 $apiKey = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTAyMzUyYjNiNmEyNWFhMGFjYzMzMjdmM2EyMWZkZiIsInN1YiI6IjY0NjFmNDY3NmUwZDcyMDBlMzFkNWRmNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GQupnjWOqDsMJQt1hWsEREsbFODpbc8TFxE4ULFhhNY';
 $searchModel = new SearchModel($apiKey); 
 
 // Vérifier si une recherche a été soumise
 if (isset($_GET['search'])) {
     $searchTerm = $_GET['search'];
-
+    
     // Effectuer la recherche en utilisant la méthode appropriée du modèle
     $results = $searchModel->search($searchTerm);
-
+    
     // Afficher les résultats ici
     foreach ($results as $result) {
         // Afficher les détails de chaque résultat
@@ -35,6 +33,7 @@ if (isset($_GET['search'])) {
 }
 ?>
 
+<header class="header sticky-top bg-light">
     <nav class="navbar bg-dark navbar-expand-lg" data-bs-theme="dark">
         <div class="container-fluid">
 

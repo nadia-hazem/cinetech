@@ -20,6 +20,7 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
     header('Location: /admin');
 } else {
     $user = $user->getCurrentUser();
+    $id = $user['id'];
     $login = $user['login'];
     $email = $user['email'];
 }
@@ -45,7 +46,7 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
                 <button class="tablinks" onclick="openTab(event, 'infos')">Informations</button>
                 <button class="tablinks" onclick="openTab(event, 'login')">Change Login</button>
                 <button class="tablinks" onclick="openTab(event, 'password')">Change Password</button>
-                <!-- <button class="tablinks" onclick="openTab(event, 'favorites')">Favorites</button> -->
+                <button class="tablinks" onclick="openTab(event, 'favorites')">Favorites</button>
             </div>
 
             <!-- Tab infos -->
@@ -64,7 +65,7 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
                     <div class="col">
                         <!-- FORMS -->
                         <form action="" method="post" id="loginForm" class="col-lg-6 col-md-12 col-sm-12 bg-secondary shadow my-2 p-5">
-                            <div class="d-flex my-5">
+                            <div class="d-flex my-3">
                                 <i class="fa fa-user fa-2x mx-2"></i>
                                 <h5 class="mb-3">Change login</h5>
                             </div>
@@ -80,7 +81,7 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
                                     <p></p>
                                 </div>
                                 <div class="col">
-                                    <input type="submit" value="Change" name="send" id="btnModifLogin" class="btn btn-outline-secondary my-2">
+                                    <input type="submit" value="Change" name="send" id="btnModifLogin" class="btn btn-light my-2">
                                     <p></p>
                                 </div>
                             </div> <!-- /col -->
@@ -94,7 +95,7 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
                 <div class="row wrap justify-content-between">
                     <div class="col">
                         <form action="" method="post" id="passwordForm" class="col-lg-6 col-md-12 col-sm-12 bg-secondary shadow my-2 p-5">
-                            <div class="d-flex my-5">
+                            <div class="d-flex my-3">
                                 <i class="fa fa-lock fa-2x mx-2"></i>
                                 <h5 class="mb-3">Change password</h5>
                             </div>
@@ -114,7 +115,7 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
                                 <p></p>
                             </div>
                             <div class="col">
-                                <input type="submit" value="Change" name="send" id="btnModifPass" class="btn btn-outline-secondary my-2">
+                                <input type="submit" value="Change" name="send" id="btnModifPass" class="btn btn-light my-2">
                                 <p></p>
                             </div>
 
@@ -122,6 +123,16 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
                     </div> <!-- /col -->
                 </div> <!-- /row -->
             </div>
+
+            <!-- Tab favorites -->
+            <div id="favorites" class="tabcontent p-2">
+                <div class="row wrap justify-content-between">
+                    <div class="col">
+
+                    </div> <!-- /col -->
+                </div> <!-- /row -->
+            </div>
+
         </section>
 
     </main>
@@ -129,7 +140,7 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
     <!---------------------------scripts------------------------------>
     <!-- Bootstrap js -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    
+    <script defer type="module" src="public/js/profile.js"></script>
     <script>
         /* Tabs script */
         function openTab(evt, information) {
