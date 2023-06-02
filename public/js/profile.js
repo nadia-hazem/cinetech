@@ -5,8 +5,6 @@ const loginForm = document.querySelector("#loginForm");
 let loginInput = loginForm.querySelector(".login");
 let passwordInput = loginForm.querySelector(".password");
 const loginButton = loginForm.querySelector("#btnModifLogin");
-let user = loginInput.value;
-
 // password
 const passwordForm = document.querySelector("#passwordForm");
 let oldPasswordInput = passwordForm.querySelector("#oldPassword");
@@ -14,8 +12,9 @@ let newPasswordInput = passwordForm.querySelector("#newPassword");
 let newPasswordConfirmInput = passwordForm.querySelector("#newPassword2");
 const passwordButton = passwordForm.querySelector("#btnModifPass");
 
+
 /////////////////////////////////////
-// Functions for login and password //
+// Functions for login & password //
 ////////////////////////////////////
 
 async function checkLogin() {
@@ -41,7 +40,7 @@ async function checkLogin() {
         data.append("checkLogin", loginValue ); // add the login value to FormData
 
         try {
-            const response = await fetch("../../src/Controller/UserController.php", {
+            const response = await fetch("/checkLogin", {
                 method: "POST",
                 headers: {
                     accept: "application/json",
@@ -52,13 +51,13 @@ async function checkLogin() {
 
             const responseData = await response.text();  // get the response text
 
-            if (responseData == "indispo") {   // use responseData instead of data
+            if (responseData == "indispo") {  
                 loginInput.nextElementSibling.innerHTML = "Login not available";
                 // change border color and background
                 loginInput.style.borderColor = "red";
                 loginInput.style.backgroundColor = "#fde2e2";
                 validation = false;
-            } else if (responseData == "dispo") {  // use responseData instead of data
+            } else if (responseData == "dispo") {  
                 loginInput.nextElementSibling.innerHTML = "Login available";
                 // change border color and background
                 loginInput.style.borderColor = "initial";
@@ -71,43 +70,105 @@ async function checkLogin() {
     }
 }
 
-async function modifLogin(newLogin, oldLogin, password) {
+async function modifLogin(event) {
+    const newLogin = loginInput.value;
+    const oldLogin = user;
+    const password = passwordInput.value;
+    
     try {
-        const response = await fetch("../../src/Controller/UserController.php?updateLogin=1", {
-            method: "POST",
-            body: JSON.stringify({newLogin: newLogin, oldLogin: oldLogin, password: password}),
+        // Appeler la fonction de vérification du login dans le contrôleur
+        const loginCheckResponse = await fetch('/checkLogin', {
+            method: 'POST',
+            body: JSON.stringify({ newLogin, oldLogin }),
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
         });
 
-        const data = await response.text();
-        console.log(data);
-        console.log(response);
-        console.log(response.ok);
-        console.log(response.status);
-        
-        if(!response.ok) {
-            throw new Error("Erreur lors de la modification du login");
-        }
+        const loginCheckData = await loginCheckResponse.text();
 
-        if (data === "ok") {
-            console.log("Login a été modifié avec succès");
-            loginInput.nextElementSibling.innerHTML = "Login a été modifié avec succès";
-            loginInput.style.borderColor = "initial";
-            loginInput.style.backgroundColor = "fafafa";
-        } else if (data === "incorrect") {
-            console.log("Le mot de passe est incorrect");
-            passwordInput.nextElementSibling.innerHTML = "Le mot de passe est incorrect";
-            passwordInput.style.borderColor = "red";
-            passwordInput.style.backgroundColor = "#fde2e2";
+        // Vérifier la réponse de la vérification du login
+        if (loginCheckResponse.ok) {
+            if (loginCheckData === 'available') {
+                // Le login est disponible, appeler la fonction de vérification du mot de passe
+                const passwordCheckResponse = await fetch('/checkPassword', {
+                    method: 'POST',
+                    body: JSON.stringify({ password }),
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                });
+    
+                const passwordCheckData = await passwordCheckResponse.text();
+
+                // Vérifier la réponse de la vérification du mot de passe
+                if (passwordCheckResponse.ok) {
+                    if (passwordCheckData === 'correct') {
+                        // Le mot de passe est correct, appeler la fonction de mise à jour du login
+                        const updateResponse = await fetch('/updateLogin', {
+                            method: 'POST',
+                            body: JSON.stringify({ newLogin, oldLogin, password }),
+                            headers: {
+                            'Content-Type': 'application/json',
+                            },
+                        });
+
+                        const updateData = await updateResponse.text();
+
+                        // Vérifier la réponse de la mise à jour du login
+                        if (updateResponse.ok) {
+                            if (updateData === 'ok') {
+                            console.log('Login a été modifié avec succès');
+                            // appeler la methode du Model pour mettre à jour le login dans la bdd
+                            try {
+                                const response = await fetch('/updateLogin', {
+                                    method: 'POST',
+                                    body: JSON.stringify({ newLogin, oldLogin }),
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                });
+                                const responseData = await response.json();
+                                if (response.ok) {
+                                    if (responseData === 'ok') {
+                                        console.log('Le login a été mis à jour dans la bdd');
+                                        // reset form
+                                        loginForm.reset();
+                                        loginInput.nextElementSibling.innerHTML = "";
+                                        passwordInput.nextElementSibling.innerHTML = "";
+                                    } else {
+                                        console.log('Erreur lors de la mise à jour du login dans la bdd');
+                                    }
+                                } else {
+                                    console.log('Erreur lors de la mise à jour du login dans la bdd');
+                                }
+                            } catch (error) {
+                                console.log('Erreur lors de la mise à jour du login dans la bdd', error);
+                            }
+                            } else {
+                            console.log('Erreur lors de la modification du login');
+                            }
+                        } else {
+                            console.log('Erreur lors de la modification du login');
+                        }
+                    } else {
+                        passwordInput.nextElementSibling.innerHTML = 'Mot de passe incorrect';
+                        passwordInput.style.borderColor = 'red';
+                        passwordInput.style.backgroundColor = '#fde2e2';
+                    }
+                } else {
+                    console.log('Erreur lors de la vérification du mot de passe');
+                }
+            } else {
+                loginInput.nextElementSibling.innerHTML = 'Login indisponible';
+                loginInput.style.borderColor = 'red';
+                loginInput.style.backgroundColor = '#fde2e2';
+            }
         } else {
-            console.log("Erreur lors de la modification du login");
-            passwordInput.nextElementSibling.innerHTML = "Erreur lors de la modification du login";
+            console.log('Erreur lors de la vérification du login');
         }
     } catch (error) {
-        console.log(error);
-        passwordInput.nextElementSibling.innerHTML = "Erreur, la modification du login a échoué";
+        console.log('Erreur lors de la modification du login', error);
     }
 }
 

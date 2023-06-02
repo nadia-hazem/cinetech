@@ -26,7 +26,7 @@ class UserModel extends AbstractModel
     // find all users
     public function findAll()
     {
-        $req = $this->pdo->prepare('SELECT * FROM user');
+        $req = $this->pdo->prepare('SELECT (id, login, email, password, role) VALUES (:id, :login, :email, :password,) FROM user');
         $req->execute();
         return $req->fetchAll();
     }
@@ -98,44 +98,21 @@ class UserModel extends AbstractModel
             'id' => $id
         ]);
     }
-    
-    public function updateUserLogin($newLogin, $oldLogin, $password)
-    {
-        $requete = "SELECT password FROM $this->tablename WHERE login = :oldLogin";
 
-        $select = $this->pdo->prepare($requete);
-
-        $oldLogin = htmlspecialchars($oldLogin);
-        $newLogin = htmlspecialchars($newLogin);
-        $password = htmlspecialchars($password);
-
-        $select->execute(array(':oldLogin' => $oldLogin));
-        $fetch_assoc = $select->fetch(PDO::FETCH_ASSOC);
-        
-        if ($fetch_assoc) {
-            $password_hash = $fetch_assoc['password'];
-    
-            if (password_verify($password, $password_hash)) {
-                $requete2 = "UPDATE $this->tablename SET login=:newLogin WHERE login=:oldLogin";
-                $update = $this->pdo->prepare($requete2);
-                $update->execute(array(
-                    ':newLogin' => $newLogin,
-                    ':oldLogin' => $oldLogin,
-                ));
-    
-                if ($update) {
-                    return "ok";
-                } else {
-                    return "Erreur lors de la modification du login";
-                }
-    
-            } else {
-                return "incorrect";
-            }
+    public function updateUserLogin($newLogin, $oldLogin) {
+        // update user login
+        $sql = "UPDATE user SET login=:newLogin WHERE password=:password AND login=:oldLogin";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(array(':newLogin' => $newLogin, ':id' => $_SESSION['user']['id'], ':oldLogin' => $oldLogin));
+        $count = $stmt->rowCount();
+        if ($count > 0) {
+            $_SESSION['user']['login'] = $newLogin;
+            echo 'ok';
         } else {
-            return "notfound";
+            echo 'error';
         }
-    }    
+
+    }   
 
     // Update password
     public function updateUserPassword($password, $newPassword)

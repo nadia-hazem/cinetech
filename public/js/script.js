@@ -6,14 +6,17 @@ export const options = {
         Authorization: 'Bearer ' + apiKey
     }
 };
+import { addFavorite } from './favorites.js';
+import { getFavorites } from './favorites.js';
+import { showFavorites } from './favorites.js';
 
 const itemsPerPage = 20; // Nombre de films par page
 
 /**************Fonctions de display******************/
 // item film
 export async function createMovieElement(item) {
-    const itemDiv = document.createElement('div');
-    itemDiv.classList.add('item');
+    const divItem = document.createElement('div');
+    divItem.classList.add('item');
     // img
     const posterUrl = 'https://image.tmdb.org/t/p/w300' + item.poster_path;
     const posterImg = document.createElement('img');
@@ -24,25 +27,40 @@ export async function createMovieElement(item) {
     const itemLink = document.createElement('a');
     itemLink.href = "#";
     itemLink.appendChild(posterImg);
-    itemDiv.appendChild(itemLink);
+    divItem.appendChild(itemLink);
     // overlay
     const overlayDiv = document.createElement('div');
     overlayDiv.classList.add('item-overlay');
     const summaryParagraph = document.createElement('p');
     summaryParagraph.textContent = item.overview;
     overlayDiv.appendChild(summaryParagraph);
-    itemDiv.appendChild(overlayDiv);
+    divItem.appendChild(overlayDiv);
     // title
     const titleHeading = document.createElement('h2');
     titleHeading.textContent = item.title;
-    itemDiv.appendChild(titleHeading);
+    divItem.appendChild(titleHeading);
+    // ajout du bouton favoris
+    const divFav = document.createElement('div');
+    divFav.classList.add('div-fav');
+    const favButton = document.createElement('button');
+    favButton.classList.add('fav-button btn btn-dark rounded-0');
+    favButton.setAttribute('data-item-id', item.id);
+    favButton.textContent = 'Ajouter aux favoris';
+    divFav.appendChild(favButton);
+    divItem.appendChild(divFav);
+
+    // Gestionnaire d'événements du bouton "Ajouter aux favoris"
+    favButton.addEventListener('click', () => {
+        addFavorite(item);
+    });
+
     // Ajout du gestionnaire d'événements pour les liens vers la page de détail
     itemLink.addEventListener('click', function (e) {
         e.preventDefault();
         const itemId = item.id;
             window.location.href = `/film-detail/${itemId}`;
         });
-    return itemDiv;
+    return divItem;
 }
 
 // item serie
@@ -73,12 +91,20 @@ export async function createSerieElement(item) {
     const titleHeading = document.createElement('h2');
     titleHeading.textContent = item.title;
     itemDiv.appendChild(titleHeading);
+    // ajout du bouton favoris
+    const divFav = document.createElement('div');
+    divFav.classList.add('div-fav');
+    const favButton = document.createElement('button');
+    favButton.classList.add('fav-button btn btn-dark rounded-0');
+    favButton.setAttribute('data-item-id', item.id);
+    favButton.textContent = 'Ajouter aux favoris';
+    divFav.appendChild(favButton);
+    itemDiv.appendChild(divFav);
 
-    // Ajout du gestionnaire d'événements pour les liens vers la page de détail
-    itemLink.addEventListener('click', function (e) {
-        e.preventDefault();
-        const itemId = item.id;
-            window.location.href = `/serie-detail/${itemId}`;
+
+    // Gestionnaire d'événements du bouton "Ajouter aux favoris"
+    favButton.addEventListener('click', () => {
+        addFavorite(item);
     });
 
     return itemDiv;
@@ -156,23 +182,3 @@ export async function createGridSerieElement(item) {
 
     return itemDiv;
 }
-
-
-/* async function fetchMoviesOrSeries(itemsPerPage) {
-    try {
-        const totalItems = 1000; // Nombre total de films à récupérer
-        totalPages = Math.ceil(totalItems / itemsPerPage);
-
-        if (allSeries) {
-            allSeries.innerHTML = ''; 
-            fetchSeriesByPage(1); // Récupère uniquement la première page initialement
-        } else if (allMovies) {
-            allMovies.innerHTML = '';
-            fetchMoviesByPage(1); // Récupère uniquement la première page initialement
-        }     
-        // Mettre à jour l'état des boutons de pagination
-        updatePaginationButtons();
-    } catch (error) {
-        console.error(error);
-    }
-} */

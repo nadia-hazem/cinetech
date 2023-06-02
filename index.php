@@ -25,70 +25,101 @@ $router->addRoutes(array(   // array(method, path, target, name)
             require_once 'src/View/home.php';
     }, 'home'), */
 
-    // register get //////////////////////////
+    // Register get //////////////////////////
     array('GET', '/register', function () {
         require 'src/View/register.php'; 
     }, 'register-get'),
 
-    // register post /////////////////////////
+    // Register post /////////////////////////
     array('POST', '/register', function () {
         $authController = new \App\Controller\AuthController();
         $authController->register();
     }, 'register-post'),
 
-    // login get /////////////////////////////
+    // Login get /////////////////////////////
     array('GET', '/login', function () {
         require 'src/View/login.php'; 
     }, 'login-get'),
 
-    // login post ////////////////////////////
+    // Login post ////////////////////////////
     array('POST', '/login', function () {
         $authController = new \App\Controller\AuthController();
         $authController->login();
     }, 'login-post'),
 
-    // logout ////////////////////////////////
+    // Logout ////////////////////////////////
     array('GET', '/logout', function () {
         $authController = new \App\Controller\AuthController();
         $authController->logout();
     }, 'logout'),
 
-    // profile ///////////////////////////////
+    // Profile ///////////////////////////////
     array('GET', '/profile', function () {
         require_once 'src/View/profile.php';
     }, 'profile'),
 
-    // admin /////////////////////////////////
+    // Admin /////////////////////////////////
     array('GET', '/admin', function () {
         require_once 'src/View/admin.php';
     }, 'admin'),
 
-    // films //////////////////////////////
+    // Films //////////////////////////////
     array('GET', '/films', function() { 
         require_once 'src/View/films.php';
     }, 'films' ),
     
-    // film-detail //////////////////////////////
+    // Film-detail //////////////////////////////
     array('GET', '/film-detail/[i:id]', function ($id) { 
         require_once 'src/View/film-detail.php'; 
     }, 'film-detail'),
 
-    // series //////////////////////////////
+    // Series //////////////////////////////
     array('GET', '/series', function() { 
         require_once 'src/View/series.php';
     }, 'series' ),
 
-    // serie-detail //////////////////////////////
+    // Serie-detail //////////////////////////////
     array('GET', '/serie-detail/[i:id]', function ($id) {
         require_once 'src/View/serie-detail.php';
     }, 'serie-detail'),
     
-    // search //////////////////////////////
+    // Search //////////////////////////////
     array('GET', '/search.php', function() { 
         require_once 'src/View/search.php';
     }, 'search' ),
 
-)); // end of addRoutes
+    // Vérification du login
+    array('POST', '/checkLogin', function() { 
+        $userController = new \App\Controller\UserController();
+        $userController->checkLogin();
+    }, 'checkLogin' ),
+
+    // Vérification du mot de passe
+    array('POST', '/checkPassword', function() { 
+        $userController = new \App\Controller\UserController();
+        $userController->checkPassword($_POST['password']);
+    }, 'checkPassword' ),
+
+    // Mise à jour du login
+    array('POST', '/updateLogin', function() { 
+        $userController = new \App\Controller\UserController();
+        $userController->updateLogin($_POST['newLogin'], $_POST['oldLogin'], $_POST['password']);
+    }, 'updateLogin' ),
+
+    // Ajouter un favori
+    array('POST', '/favorites', function() { 
+        $favController = new \App\Controller\FavController();
+        $favController->addToFav();
+    }, 'addToFav' ),
+
+    // Supprimer un favori
+    array('POST', '/delete', function() { 
+        $favController = new \App\Controller\FavController();
+        $favController->removeFromFav();
+    }, 'removeFromFav' ),
+
+
+)); // end of routes
 
 
 

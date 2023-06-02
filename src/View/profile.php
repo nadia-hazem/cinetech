@@ -3,9 +3,12 @@
 
 require_once 'src/Controller/UserController.php';
 require_once 'src/Model/UserModel.php';
-
+require_once 'src/Controller/FavController.php';
+require_once 'src/Model/FavModel.php';
 $userModel = new \App\Model\UserModel();
 $user = new \App\Controller\UserController();
+$favModel = new \App\Model\FavModel();
+$fav = new \App\Controller\FavController();
 
 // if user is not logged in
 if (!$user->isLogged()) {
@@ -125,13 +128,8 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
             </div>
 
             <!-- Tab favorites -->
-            <div id="favorites" class="tabcontent p-2">
-                <div class="row wrap justify-content-between">
-                    <div class="col">
-
-                    </div> <!-- /col -->
-                </div> <!-- /row -->
-            </div>
+            <h1>Mes favoris</h1>
+            <div id="favorites" class="tabcontent p-2"> </div>
 
         </section>
 
@@ -140,7 +138,9 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
     <!---------------------------scripts------------------------------>
     <!-- Bootstrap js -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="type/module" src="public/js/script.js"></script>
     <script defer type="module" src="public/js/profile.js"></script>
+    <script defer type="module" src="public/js/favorites.js"></script>
     <script>
         /* Tabs script */
         function openTab(evt, information) {

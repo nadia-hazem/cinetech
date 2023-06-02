@@ -24,6 +24,7 @@ abstract class AbstractModel {
             echo "Erreur : " . $e->getMessage();
             die();
         }
+        
     }
 
     public function findOneBy($colname, $value)
@@ -46,13 +47,36 @@ abstract class AbstractModel {
     }
 
     // delete one data from a table
-    public function deleteOne($id, $colname)
-    {
+    public function deleteOne($id, $colname = 'id') {
         $id = htmlspecialchars($id);
-
-        $query = "DELETE FROM $this->tablename WHERE $colname = :id";
-        $delete = $this->pdo->prepare($query);
-        $delete->execute([':id' => $id]);
+    
+        $stmt = $this->pdo->prepare("DELETE FROM $this->tablename WHERE $colname = :id");
+        $stmt->execute([$id]);
     }
+        
+    public function insert($data) {
+        // Obtenir les clés et les valeurs du tableau de données
+        $columns = array_keys($data);
+        $values = array_values($data);
+    
+        // Concaténer les noms de colonnes et les placeholders pour les valeurs
+        $columnsString = implode(',', $columns);
+        $placeholders = implode(',', array_fill(0, count($values), '?'));
+    
+        // Construire la requête SQL d'insertion
+        $query = "INSERT INTO $this->tablename ($columnsString) VALUES ($placeholders)";
+    
+        try {
+            // Préparer et exécuter la requête SQL avec les valeurs
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute($values);
+            return true;
+        } catch (\PDOException $e) {
+            // Gérer les exceptions
+            echo 'Erreur : ' . $e->getMessage();
+            exit;
+        }
+    }
+
 
 }

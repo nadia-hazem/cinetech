@@ -82,40 +82,63 @@ class UserController
     public function updateLogin($newLogin, $oldLogin, $password) {
         $userModel = new UserModel();
         $user = $userModel->findOneBy('id', $_SESSION['user']['id']);
-        $password = password_verify($password, $user['password']);
-        if ($password) {
-            $userModel->updateUserLogin($newLogin, $oldLogin, $password);
-            if (isset($_GET['updateLogin']) && $_GET['updateLogin'] == 1) {
-                $data = json_decode(file_get_contents("php://input"), true);
-                $newLogin = $data['newLogin'];
-                $oldLogin = $data['oldLogin'];
-                $password = $data['password'];
-            
-                $updateData = $userModel->updateUserLogin($newLogin, $oldLogin, $password);
-                var_dump($newLogin, $oldLogin, $password);
-                // Envoyer une réponse appropriée
-                if ($updateData === "ok") {
-                    echo ("ok");
-                } elseif ($updateData === "incorrect") {
-                    echo ("Mot de passe incorrect");
-                } elseif ($updateData === "notfound") {
-                    echo ("Utilisateur introuvable");
-                } else {
-                    echo ("Erreur lors de la modification du login");
-                }
-            }
-            if($user['role'] == 'admin') {
-                header('Location: /admin');
-            } else {
-                header('Location: /profile');
-            }
+    
+        if (isset($_GET['checkLogin']) && $_GET['checkLogin'] == 1) {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $newLogin = $data['newLogin'];
+            $oldLogin = $data['oldLogin'];
+        
+            // Appeler la méthode du modèle pour vérifier le login
+            $result = $user->checkLogin($newLogin, $oldLogin);
+        
+            // Envoyer une réponse appropriée
+            echo json_encode($result);
+        }
+        
+        if (isset($_GET['checkPassword']) && $_GET['checkPassword'] == 1) {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $password = $data['password'];
+        
+            // Appeler la méthode du modèle pour vérifier le mot de passe
+            $result = $user->checkPassword($password);
+        
+            // Envoyer une réponse appropriée
+            echo json_encode($result);
+        }
+        
+        if (isset($_GET['updateLogin']) && $_GET['updateLogin'] == 1) {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $newLogin = $data['newLogin'];
+            $oldLogin = $data['oldLogin'];
+            $password = $data['password'];
+        
+            // Appeler la méthode du modèle pour mettre à jour le login
+            $result = $userModel->updateUserLogin($newLogin, $oldLogin, $password);
+        
+            // Envoyer une réponse appropriée
+            echo json_encode($result);
+        }
+    }
+
+    // function to check if the password is same than bd password
+    function checkPassword() {
+        $userModel = new UserModel();
+        $password = $_POST['checkPassword'];
+        $login = $_SESSION['user']['login'];
+
+        $user = $userModel->findOneBy('login', $login);
+        $password_hash = $user['password'];
+
+        if (password_verify(
+            $password,
+            $password_hash
+        )) {
+            echo 'ok';
         } else {
-            throw new \Exception('Mot de passe incorrect');
+            echo 'incorrect';
         }
     }
     
-    
-
     public function updatePassword($password, $newPassword) {
         $userModel = new UserModel();
         $user = $userModel->findOneBy('id', $_SESSION['user']['id']);
