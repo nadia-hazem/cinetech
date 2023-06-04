@@ -1,6 +1,6 @@
 // path : public\js\favorites.js
 
-import { createGridMovieElement, createGridSerieElement } from './script.js';
+import { createGridMovieElement, createGridSerieElement } from './template.js';
 
 const divFav = document.querySelector("#favorites");
 const favButton = document.querySelector(".fav-button");
@@ -26,12 +26,12 @@ export async function getFavorites() {
 
 // Fonction pour afficher les favoris dans l'interface utilisateur
 export function showFavorites(favorites) {
-    const favoritesGrid = document.getElementById('favorites-grid');
-    favoritesGrid.innerHTML = '';
+    const sectionFav = document.getElementById('favorites');
+    sectionFav.innerHTML = '';
     if (favorites.length === 0) {
         const noFavoritesParagraph = document.createElement('p');
         noFavoritesParagraph.textContent = 'Aucun favori pour le moment';
-        favoritesGrid.appendChild(noFavoritesParagraph);
+        sectionFav.appendChild(noFavoritesParagraph);
     }
     favorites.forEach(favorite => {
         let favoriteItem;
@@ -43,7 +43,7 @@ export function showFavorites(favorites) {
             console.error('Type de favori inconnu');
         }
 
-        favoritesGrid.appendChild(favoriteItem);
+        sectionFav.appendChild(favoriteItem);
     });
 }
 
@@ -62,8 +62,28 @@ export async function addFavorite(item) {
             throw new Error('Impossible d\'ajouter le favori');
         }
 
-        const favorites = await response.json();
+        const favorites = await response.text();
         // Les favoris sont stockés dans un tableau JSON
+
+        return favorites;
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// Fonction pour supprimer un favori
+export async function deleteFavorite(itemId) {
+    try {
+        const response = await fetch('/delete/' + itemId, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error('Impossible de supprimer le favori');
+        }
+
+        const favorites = await response.text();
 
         return favorites;
 

@@ -7,6 +7,15 @@ use Exception;
 
 class UserController
 {
+    private $user;
+
+    public function __construct()
+    {
+        if (isset($_SESSION['user'])) {
+            $this->user = $_SESSION['user'];
+        }
+    }
+
     public function list() {
         $userModel = new UserModel();
         $users = $userModel->findAll();
@@ -34,7 +43,7 @@ class UserController
         $user = new UserModel();
         $user = $user->findOneBy('id', $_SESSION['user']['id']);
         $role = $user['role'];
-        if (isset($_SESSION['user']) && $_SESSION[$role] == 'admin') {
+        if (isset($_SESSION['user']) && $_SESSION['user'][$role] == 'admin') {
             return true;
         } else {
             return false;
@@ -45,7 +54,6 @@ class UserController
         if (isset($_SESSION['user'])) {
             $userModel = new UserModel();
             $userId = $_SESSION['user']['id'];
-            $_SESSION['id'] = $userId; // Ajout de l'identifiant de l'utilisateur à la session
             $user = $userModel->findOneBy('id', $userId);
             return $user;
         } else {
@@ -92,7 +100,7 @@ class UserController
             $result = $user->checkLogin($newLogin, $oldLogin);
         
             // Envoyer une réponse appropriée
-            echo json_encode($result);
+            return json_encode($result);
         }
         
         if (isset($_GET['checkPassword']) && $_GET['checkPassword'] == 1) {

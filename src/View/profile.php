@@ -5,27 +5,38 @@ require_once 'src/Controller/UserController.php';
 require_once 'src/Model/UserModel.php';
 require_once 'src/Controller/FavController.php';
 require_once 'src/Model/FavModel.php';
+
 $userModel = new \App\Model\UserModel();
 $user = new \App\Controller\UserController();
 $favModel = new \App\Model\FavModel();
 $fav = new \App\Controller\FavController();
 
-// if user is not logged in
+// Vérifiez si l'utilisateur est connecté
 if (!$user->isLogged()) {
     header('Location: /login');
     exit;
 }
-// Obtenez l'utilisateur actuel connecté
-$loggedInUser = $user->getCurrentUser();
-$login = $loggedInUser['login'];
+
+// Récupérez les informations de l'utilisateur connecté
+$currentUser = $user->getCurrentUser();
+var_dump($currentUser);
+var_dump("test");
+$id = $currentUser['id'];
+$login = $currentUser['login'];
+$email = $currentUser['email'];
+var_dump($currentUser);
+
+// Convertir les données en JSON
+$userDataJson = json_encode([
+    'id' => $id,
+    'login' => $login,
+    'email' => $email
+]);
+
 // Vérifiez si l'utilisateur est un administrateur
-if ($loggedInUser && $loggedInUser['role'] == 'admin') {
+if ($currentUser['role'] == 'admin') {
     header('Location: /admin');
-} else {
-    $user = $user->getCurrentUser();
-    $id = $user['id'];
-    $login = $user['login'];
-    $email = $user['email'];
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -53,17 +64,18 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
             </div>
 
             <!-- Tab infos -->
-            <div id="infos" class="tabcontent p-2">
+            <div id="infos" data-user-id="<?= $id ?>" data-user-login="<?= $login ?>" data-user-email="<?= $email ?>" class="tabcontent p-2">
                 <div class="row justify-content-between">
                     <div class="col-lg-5 col-md-12 col-sm-12 bg-ghost p-3 my-1 shadow">
                         <p class="text-muted">Login: <?= $login ?></p>
                         <p class="text-muted">E-mail: <?= $email ?></p>
+                        <?php echo $login ?>
                     </div>
                 </div>
             </div>
 
             <!-- Tab login -->
-            <div id="login" class="tabcontent p-2">
+            <div id="login" data-user-id="<?= $id ?>" data-user-login="<?= $login ?>" class="tabcontent p-2">
                 <div class="row wrap justify-content-between">
                     <div class="col">
                         <!-- FORMS -->
@@ -94,7 +106,7 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
             </div>
 
             <!-- Tab password -->
-            <div id="password" class="tabcontent p-2">
+            <div id="password" data-user-id="<?= $id ?>" data-user-login="<?= $login ?>" class="tabcontent p-2">
                 <div class="row wrap justify-content-between">
                     <div class="col">
                         <form action="" method="post" id="passwordForm" class="col-lg-6 col-md-12 col-sm-12 bg-secondary shadow my-2 p-5">
@@ -129,7 +141,8 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
 
             <!-- Tab favorites -->
             <h1>Mes favoris</h1>
-            <div id="favorites" class="tabcontent p-2"> </div>
+            <div id="favorites" data-user-id="<?= $id ?>" data-user-login="<?= $login ?>" class="tabcontent p-2"> 
+            </div>
 
         </section>
 
@@ -138,11 +151,17 @@ if ($loggedInUser && $loggedInUser['role'] == 'admin') {
     <!---------------------------scripts------------------------------>
     <!-- Bootstrap js -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="type/module" src="public/js/script.js"></script>
+    
+    <script>
+        var userId = <?php echo $id; ?>; // Récupérer l'identifiant de l'utilisateur depuis PHP
+    </script>
+
+    <script defer type="module" src="public/js/template.js"></script>
+    <script defer type="type/module" src="public/js/script.js"></script>
     <script defer type="module" src="public/js/profile.js"></script>
     <script defer type="module" src="public/js/favorites.js"></script>
-    <script>
-        /* Tabs script */
+
+    <script> /* Tabs script */
         function openTab(evt, information) {
             let i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");

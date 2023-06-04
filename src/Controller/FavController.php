@@ -3,39 +3,58 @@
 
 namespace App\Controller;
 use App\Model\FavModel;
+use PDO;
 use Exception;
 
-class FavController {
+class FavController
+{
+    private $user;
 
-    public function addToFav() {
-        // Ajouter un élément aux favoris de l'utilisateur
-        try {
-            $type = $_POST['type'];
-            $idType = $_POST['id_type'];
-            $idUser = $_SESSION['user_id'];
-
-            $favoriteModel = new FavModel();
-            $favoriteModel->addToFav($type, $idType, $idUser);
-
-            echo json_encode(['status' => 'success']);
-        } catch (Exception $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        }
+    public function addToFav($id, $type, $userId)
+    {
+        $favModel = new FavModel();
+        $favModel->addToFav($type, $id, $userId);
     }
 
-    public function removeFromFav() {
-        // Supprimer un élément des favoris de l'utilisateur
-        try {
-            $id = $_POST['id'];
+    public function removeFromFav()
+    {
+        $id = $_POST['id'];
+        $type = $_POST['type'];
+        $userId = $_POST['userId'];
 
-            $favoriteModel = new FavModel();
-            $favoriteModel->removeFromFav($id);
-            // Supprimer le favori de la base de données
-
-            echo json_encode(['status' => 'success']);
-        } catch (Exception $e) {
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        }
+        $favModel = new FavModel();
+        $favModel->removeFromFav($id, $type, $userId);
     }
 
+    public function toggleFav($id, $type, $userId)
+    {
+        $favModel = new FavModel();
+        $favModel->toggleFav($id, $type, $userId);
+    }
+
+    public function isFav($id, $type, $userId)
+    {
+        $favModel = new FavModel();
+        $favModel->isFav($id, $type, $userId);
+    }
+
+    public function displayFavs($id, $type, $userId)
+    {
+        if (isset($_POST['id']) && isset($_POST['type']) > 0) {
+            // on récupère l'id de l'utilisateur
+            $id_user = $_SESSION['user']['user_id'];
+            // on instancie le model
+            $favModel = new FavModel();
+            // on récupère les favoris de l'utilisateur
+            if(isset($_POST['id'], $_POST['type'])) {
+                $favModel->removeFromFav($_POST['id'], $_POST['type'], $id_user);
+            } else {
+                // sinon on l'ajoute aux favoris
+                $favModel->addToFav($_POST['id'], $_POST['type'], $id_user);
+            }
+        }
+        $favs = $favModel->displayFavs($id, $type, $userId);
+        return $favs;
+    }
+    
 } // end of class FavController

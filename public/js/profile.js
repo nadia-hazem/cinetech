@@ -18,6 +18,7 @@ const passwordButton = passwordForm.querySelector("#btnModifPass");
 ////////////////////////////////////
 
 async function checkLogin() {
+    let user = loginInput.getAttribute("data-user");
     let loginValue = loginInput.value;
     if (loginValue == "") {
         loginInput.nextElementSibling.innerHTML = "Login requis";
@@ -71,6 +72,7 @@ async function checkLogin() {
 }
 
 async function modifLogin(event) {
+    let user = loginInput.getAttribute("data-user");
     const newLogin = loginInput.value;
     const oldLogin = user;
     const password = passwordInput.value;
@@ -233,6 +235,7 @@ loginButton.addEventListener("click", async function (e) {
     e.preventDefault();
 
     // Get the new login, old login, and password values from the form
+    let user = loginInput.getAttribute("data-user");
     const newLogin = loginInput.value;
     const oldLogin = user;
     const password = passwordInput.value;

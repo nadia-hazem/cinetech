@@ -12,6 +12,7 @@ require_once 'src/Model/SearchModel.php';
 if (isset($_GET['logout'])) {
     if ($_GET['logout'] == true) {
         $user->logout();
+        session_destroy();
     }
 }
 

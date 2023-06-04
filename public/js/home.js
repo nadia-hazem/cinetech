@@ -1,5 +1,5 @@
-import { createMovieElement } from './script.js';
-import { createSerieElement } from './script.js';
+import { createMovieElement } from './template.js';
+import { createSerieElement } from './template.js';
 import { options, apiKey } from './script.js';
 
 
