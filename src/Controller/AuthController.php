@@ -6,6 +6,15 @@ use App\Model\UserModel;
 
 class AuthController {
 
+    private $user;
+
+    public function __construct()
+    {
+        if (isset($_SESSION['user'])) {
+            $this->user = $_SESSION['user'];
+        }
+    }
+
     public function register()
     {
         // Vérifier si le formulaire a été soumis
@@ -65,9 +74,6 @@ class AuthController {
             $_POST['login'] = htmlspecialchars($_POST['login'], ENT_QUOTES);
             $_POST['password'] = htmlspecialchars($_POST['password'], ENT_QUOTES);
 
-            $login = $_POST['login'];
-            $password = $_POST['password'];
-
             $request = new UserModel();
             $user = $request->findOneBy('login', $login);
             if(!$user) {
@@ -91,7 +97,6 @@ class AuthController {
                     echo '<p class="mx-5">login ou mot de passe incorrect</p>';
                 }
             }
-
         }
     }
 

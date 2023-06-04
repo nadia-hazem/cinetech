@@ -17,15 +17,11 @@
         </div>
 
         <h1 class="h1">Les films à venir</h1>
-
         <div id="upcoming-movies" class="aura d-flex"></div>
 
         <h1 class="h1">Tous les films</h1>
-
         <div id="genre-container" class="list-group-horizontal unstyled text-secondary"></div>
-
         <div id="all-movies" class="aura d-flex flex-wrap grid-items justify-content-between"></div>
-
 
         <div class="d-flex justify-content-center m-5">
             <button id="prev-page-btn" class="pagination-btn m-auto text-secondary">Précédent</button>

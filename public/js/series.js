@@ -1,9 +1,10 @@
+// path: public\js\series.js
+
 import { options, apiKey } from './script.js';
-import { createSerieElement } from './script.js';
-import { createGridSerieElement } from './script.js';
+import { createSerieElement } from './template.js';
+import { createGridSerieElement } from './template.js';
 import { initializePagination } from './pagination.js';
 
-// pagination
 const prevPageBtn = document.getElementById('prev-page-btn');
 const nextPageBtn = document.getElementById('next-page-btn');
 const paginationNumbers = document.getElementById('pagination-numbers');

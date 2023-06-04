@@ -1,6 +1,7 @@
 <?php
 session_start();
 use Dotenv\Dotenv;
+
 require __DIR__ . '/vendor/autoload.php';
 
 // Charger le fichier .env
@@ -11,8 +12,7 @@ $apiKey = $_ENV['TMDB_API_KEY'];
 // Passer la clé API aux pages de fetch
 $router = new AltoRouter();
 
-$router->addRoutes(array(   // array(method, path, target, name)
-    
+$router->addRoutes(array(   // array(method, path, target, name)    
     // Home //////////////////////////////
     array('GET', '/', function() { 
         require_once 'src/View/home.php';
@@ -24,6 +24,11 @@ $router->addRoutes(array(   // array(method, path, target, name)
     array('GET', '/home', function() { 
             require_once 'src/View/home.php';
     }, 'home'), */
+    
+    // Search //////////////////////////////
+    array('GET', '/search.php', function() { 
+        require_once 'src/View/search.php';
+    }, 'search' ),
 
     // Register get //////////////////////////
     array('GET', '/register', function () {
@@ -57,11 +62,17 @@ $router->addRoutes(array(   // array(method, path, target, name)
     array('GET', '/profile', function () {
         require_once 'src/View/profile.php';
     }, 'profile'),
-
+    
     // Admin /////////////////////////////////
     array('GET', '/admin', function () {
         require_once 'src/View/admin.php';
     }, 'admin'),
+
+    // CurentUser /////////////////////////////////
+    array ('GET', '/getCurrentUser', function () {
+        $userController = new \App\Controller\UserController();
+        $userController->getCurrentUser();
+    }, 'currentUser'),
 
     // Films //////////////////////////////
     array('GET', '/films', function() { 
@@ -82,11 +93,6 @@ $router->addRoutes(array(   // array(method, path, target, name)
     array('GET', '/serie-detail/[i:id]', function ($id) {
         require_once 'src/View/serie-detail.php';
     }, 'serie-detail'),
-    
-    // Search //////////////////////////////
-    array('GET', '/search.php', function() { 
-        require_once 'src/View/search.php';
-    }, 'search' ),
 
     // Vérification du login
     array('POST', '/checkLogin', function() { 
@@ -106,17 +112,46 @@ $router->addRoutes(array(   // array(method, path, target, name)
         $userController->updateLogin($_POST['newLogin'], $_POST['oldLogin'], $_POST['password']);
     }, 'updateLogin' ),
 
+    // FAVORIS ////////////////////////////////////////////
+
     // Ajouter un favori
-    array('POST', '/favorites', function() { 
+    /* array('POST', '/addToFav', function() { 
         $favController = new \App\Controller\FavController();
-        $favController->addToFav();
-    }, 'addToFav' ),
+        $favController->addToFav($_POST['id'], $_POST['type'], $_POST['userId']);
+    }, 'addToFav' ), */
+
+    // Ajouter un favori
+    array('POST', '/favorite', function() { 
+        $favController = new \App\Controller\FavController();
+        $type = $_POST['type'];
+        $itemId = $_POST['id'];
+        $favController->addToFav($itemId, $_POST['type'], $_SESSION['user']['user']['user_id']);
+    }, 'addToFav' ),    
 
     // Supprimer un favori
-    array('POST', '/delete', function() { 
+    array('POST', '/removeFromFav', function() { 
         $favController = new \App\Controller\FavController();
         $favController->removeFromFav();
     }, 'removeFromFav' ),
+
+    // Vérifier si un élément est un favori
+    array('POST', '/isFav', function() { 
+        $favModel = new \App\Model\FavModel();
+        $favModel->isFav($_POST['id'], $_POST['type'], $_POST['userId']);
+    }, 'isFav' ),
+
+    // Toggle favoris
+    array('POST', '/toggleFav', function() { 
+        $favController = new \App\Controller\FavController();
+        $favController->toggleFav($_POST['id'], $_POST['type'], $_POST['userId']);
+    }, 'toggleFav' ),
+
+    // Afficher les favoris
+    array('GET', '/profile/favorites', function() { 
+        $favController = new \App\Controller\FavController();
+        $favController->displayFavs($_GET['user_id'], $_GET['type'], $_GET['user'] = $_SESSION['user']['user']['user']);
+        require_once 'src/View/profile.php';
+    }, 'favorites' ),
 
 
 )); // end of routes

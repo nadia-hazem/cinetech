@@ -3,8 +3,8 @@ export function initializePagination(
     totalPages,
     prevPageBtn,
     nextPageBtn,
-    paginationNumbers
-) {
+    paginationNumbers) 
+    {
     const itemsPerPage = 20;
     let currentPage = 1; 
 

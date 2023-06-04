@@ -35,7 +35,7 @@ abstract class AbstractModel {
         $result = $select->fetch(PDO::FETCH_ASSOC);
         return $result;
     }
-
+    
     // Find all data from a table
     public function findAll()
     {
@@ -46,14 +46,6 @@ abstract class AbstractModel {
         return $result;
     }
 
-    // delete one data from a table
-    public function deleteOne($id, $colname = 'id') {
-        $id = htmlspecialchars($id);
-    
-        $stmt = $this->pdo->prepare("DELETE FROM $this->tablename WHERE $colname = :id");
-        $stmt->execute([$id]);
-    }
-        
     public function insert($data) {
         // Obtenir les clés et les valeurs du tableau de données
         $columns = array_keys($data);
@@ -78,5 +70,27 @@ abstract class AbstractModel {
         }
     }
 
-
+    public function delete($data) {
+        // Obtenir les clés et les valeurs du tableau de données
+        $columns = array_keys($data);
+        $values = array_values($data);
+    
+        // Concaténer les noms de colonnes et les placeholders pour les valeurs
+        $columnsString = implode(',', $columns);
+        $placeholders = implode(',', array_fill(0, count($values), '?'));
+    
+        // Construire la requête SQL d'insertion
+        $query = "DELETE FROM $this->tablename WHERE $columnsString = $placeholders";
+    
+        try {
+            // Préparer et exécuter la requête SQL avec les valeurs
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute($values);
+            return true;
+        } catch (\PDOException $e) {
+            // Gérer les exceptions
+            echo 'Erreur : ' . $e->getMessage();
+            exit;
+        }
+    }
 }

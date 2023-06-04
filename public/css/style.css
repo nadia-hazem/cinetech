@@ -216,7 +216,10 @@ input[type=text], input[type=password], input[type=email] {
 }
 
 .div-fav {
-    position: relative;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
     margin: 0;
     background: #000;
     border: none;
@@ -228,10 +231,8 @@ input[type=text], input[type=password], input[type=email] {
 }
 
 .fav-button {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    width: 100%;
+    height: 40px;
     border: none;
     cursor: pointer;
     outline: none;
@@ -334,7 +335,7 @@ input[type=text], input[type=password], input[type=email] {
 .aura {
     background: url(/public/img/aura.jpg) no-repeat center center fixed;
     background-position: center;
-    background-size: contain;
+    background-size: cover;
     margin: 0;
     opacity: 0.8;
 }

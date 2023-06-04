@@ -1,6 +1,6 @@
 import { options, apiKey } from './script.js';
-import { createMovieElement } from './script.js';
-import { createGridMovieElement } from './script.js';
+import { createMovieElement } from './template.js';
+import { createGridMovieElement } from './template.js';
 import { initializePagination } from './pagination.js';
 
 // pagination

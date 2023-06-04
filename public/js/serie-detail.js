@@ -1,5 +1,5 @@
 import { options, apiKey } from './script.js';
-import { createSerieElement } from './script.js';
+import { createSerieElement } from './template.js';
 
 const itemDetail = document.querySelector("#serie-detail");
 const similarSeries = document.querySelector("#similar-series");

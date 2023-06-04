@@ -1,5 +1,5 @@
 import { options, apiKey } from './script.js';
-import { createMovieElement } from './script.js';
+import { createMovieElement } from './template.js';
 
 const itemDetail = document.querySelector("#movie-detail");
 const similarMovies = document.querySelector("#similar-movies");
