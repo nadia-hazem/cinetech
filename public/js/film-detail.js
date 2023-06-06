@@ -26,7 +26,7 @@ function createDetailElement(movie) {
     // containerRight
     //************************************************* */
     const containerRight = document.createElement('div');
-    containerRight.classList.add('containerRight', 'justify-content-center', 'col','col-md-6','py-5');
+    containerRight.classList.add('containerRight', 'justify-content-center', 'col','col-md-6','py-2');
     detailDiv.appendChild(containerRight);
 
     // title

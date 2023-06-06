@@ -17,6 +17,41 @@ const passwordButton = passwordForm.querySelector("#btnModifPass");
 // Functions for login & password //
 ////////////////////////////////////
 
+async function modifLogin(event) {
+    const newLogin = loginInput.value;
+    const oldLogin = loginInput.getAttribute("data-user");
+    const password = passwordInput.value;
+
+    try {
+    const loginAvailable = await checkLogin(newLogin);
+    if (!loginAvailable) {
+        // Login non disponible, afficher un message d'erreur
+        showErrorMessage(loginInput, 'Login indisponible');
+        return;
+    }
+
+    const passwordCorrect = await checkPassword();
+    if (!passwordCorrect) {
+        // Mot de passe incorrect, afficher un message d'erreur
+        showErrorMessage(passwordInput, 'Mot de passe incorrect');
+        return;
+    }
+
+    const updateSuccess = await updateLogin(newLogin, oldLogin, password);
+    if (updateSuccess) {
+        console.log('Le login a été mis à jour dans la base de données');
+        // Réinitialiser le formulaire
+        loginForm.reset();
+        loginInput.nextElementSibling.innerHTML = "";
+        passwordInput.nextElementSibling.innerHTML = "";
+    } else {
+        console.log('Erreur lors de la mise à jour du login dans la base de données');
+    }
+    } catch (error) {
+    console.log('Erreur lors de la modification du login', error);
+    }
+}
+
 async function checkLogin() {
     let user = loginInput.getAttribute("data-user");
     let loginValue = loginInput.value;
@@ -50,16 +85,16 @@ async function checkLogin() {
                 body: data,
             });
 
-            const responseData = await response.text();  // get the response text
+            const responseData = await response.json();
 
-            if (responseData == "indispo") {  
-                loginInput.nextElementSibling.innerHTML = "Login not available";
+            if (responseData.status === "indispo") {
+                loginInput.nextElementSibling.innerHTML = "Login non disponible";
                 // change border color and background
                 loginInput.style.borderColor = "red";
                 loginInput.style.backgroundColor = "#fde2e2";
                 validation = false;
-            } else if (responseData == "dispo") {  
-                loginInput.nextElementSibling.innerHTML = "Login available";
+            } else if (responseData.status === "dispo") {
+                loginInput.nextElementSibling.innerHTML = "Login disponible";
                 // change border color and background
                 loginInput.style.borderColor = "initial";
                 loginInput.style.backgroundColor = "fafafa";
@@ -71,128 +106,51 @@ async function checkLogin() {
     }
 }
 
-async function modifLogin(event) {
-    let user = loginInput.getAttribute("data-user");
-    const newLogin = loginInput.value;
-    const oldLogin = user;
-    const password = passwordInput.value;
-    
-    try {
-        // Appeler la fonction de vérification du login dans le contrôleur
-        const loginCheckResponse = await fetch('/checkLogin', {
-            method: 'POST',
-            body: JSON.stringify({ newLogin, oldLogin }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        const loginCheckData = await loginCheckResponse.text();
-
-        // Vérifier la réponse de la vérification du login
-        if (loginCheckResponse.ok) {
-            if (loginCheckData === 'available') {
-                // Le login est disponible, appeler la fonction de vérification du mot de passe
-                const passwordCheckResponse = await fetch('/checkPassword', {
-                    method: 'POST',
-                    body: JSON.stringify({ password }),
-                    headers: {
-                    'Content-Type': 'application/json',
-                    },
-                });
-    
-                const passwordCheckData = await passwordCheckResponse.text();
-
-                // Vérifier la réponse de la vérification du mot de passe
-                if (passwordCheckResponse.ok) {
-                    if (passwordCheckData === 'correct') {
-                        // Le mot de passe est correct, appeler la fonction de mise à jour du login
-                        const updateResponse = await fetch('/updateLogin', {
-                            method: 'POST',
-                            body: JSON.stringify({ newLogin, oldLogin, password }),
-                            headers: {
-                            'Content-Type': 'application/json',
-                            },
-                        });
-
-                        const updateData = await updateResponse.text();
-
-                        // Vérifier la réponse de la mise à jour du login
-                        if (updateResponse.ok) {
-                            if (updateData === 'ok') {
-                            console.log('Login a été modifié avec succès');
-                            // appeler la methode du Model pour mettre à jour le login dans la bdd
-                            try {
-                                const response = await fetch('/updateLogin', {
-                                    method: 'POST',
-                                    body: JSON.stringify({ newLogin, oldLogin }),
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                });
-                                const responseData = await response.json();
-                                if (response.ok) {
-                                    if (responseData === 'ok') {
-                                        console.log('Le login a été mis à jour dans la bdd');
-                                        // reset form
-                                        loginForm.reset();
-                                        loginInput.nextElementSibling.innerHTML = "";
-                                        passwordInput.nextElementSibling.innerHTML = "";
-                                    } else {
-                                        console.log('Erreur lors de la mise à jour du login dans la bdd');
-                                    }
-                                } else {
-                                    console.log('Erreur lors de la mise à jour du login dans la bdd');
-                                }
-                            } catch (error) {
-                                console.log('Erreur lors de la mise à jour du login dans la bdd', error);
-                            }
-                            } else {
-                            console.log('Erreur lors de la modification du login');
-                            }
-                        } else {
-                            console.log('Erreur lors de la modification du login');
-                        }
-                    } else {
-                        passwordInput.nextElementSibling.innerHTML = 'Mot de passe incorrect';
-                        passwordInput.style.borderColor = 'red';
-                        passwordInput.style.backgroundColor = '#fde2e2';
-                    }
-                } else {
-                    console.log('Erreur lors de la vérification du mot de passe');
-                }
-            } else {
-                loginInput.nextElementSibling.innerHTML = 'Login indisponible';
-                loginInput.style.borderColor = 'red';
-                loginInput.style.backgroundColor = '#fde2e2';
-            }
-        } else {
-            console.log('Erreur lors de la vérification du login');
-        }
-    } catch (error) {
-        console.log('Erreur lors de la modification du login', error);
-    }
-}
-
-// function to check if the password is valid
-async function checkPassword(pass) {
-    let passwordValue = pass.value;
+async function checkPassword(password) {
+    let passwordValue = password.value;
     if (passwordValue == "") {
-        pass.nextElementSibling.innerHTML = "Password required";
+        password.nextElementSibling.innerHTML = "Password required";
         // change border color and background
-        pass.style.borderColor = "red";
-        pass.style.backgroundColor = "#fde2e2";
+        password.style.borderColor = "red";
+        password.style.backgroundColor = "#fde2e2";
         validation = false;
     } else {
-        pass.nextElementSibling.innerHTML = "";
+        password.nextElementSibling.innerHTML = "";
         // change border color and background
-        pass.style.borderColor = "initial";
-        pass.style.backgroundColor = "#fafafa";
+        password.style.borderColor = "initial";
+        password.style.backgroundColor = "fafafa";
         validation = true;
     }
+
+    const response = await fetch('/checkPassword', {
+        method: 'POST',
+        body: 'password=' + encodeURIComponent(passwordValue),
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    });
+    const data = await response.text();
+    return response.ok && data === 'ok';
 }
 
-// function to check if the new password confirm is valid
+async function updateLogin(newLogin, oldLogin, password) {
+    const response = await fetch('/updateLogin', {
+        method: 'POST',
+        body: JSON.stringify({ newLogin, oldLogin, password }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const data = await response.text();
+    return response.ok && data === 'ok';
+}
+
+function showErrorMessage(inputElement, message) {
+    inputElement.nextElementSibling.innerHTML = message;
+    inputElement.style.borderColor = 'red';
+    inputElement.style.backgroundColor = '#fde2e2';
+}
+
 async function checkNewPasswordConfirm() {
     let newPasswordValue = newPasswordInput.value;
     let newPasswordConfirmValue = newPasswordConfirmInput.value;
@@ -220,8 +178,8 @@ async function checkNewPasswordConfirm() {
 }
 
 /////////////////////////////////
-// events for login             //
-/////////////////////////////////
+// events for Input           //
+////////////////////////////////
 // login
 loginInput.addEventListener("blur", checkLogin);
 
@@ -230,6 +188,9 @@ passwordInput.addEventListener("blur", function (e) {
 checkPassword(passwordInput);
 });
 
+/////////////////////////////////
+// events for click           //
+////////////////////////////////
 // login form
 loginButton.addEventListener("click", async function (e) {
     e.preventDefault();
@@ -240,6 +201,8 @@ loginButton.addEventListener("click", async function (e) {
     const oldLogin = user;
     const password = passwordInput.value;
 
+    console.log(newLogin, oldLogin, password);
+
     // Call the updateLogin function with the new login, old login, and password values
     await modifLogin(newLogin, oldLogin, password);
 });
@@ -247,7 +210,6 @@ loginButton.addEventListener("click", async function (e) {
 /////////////////////////////////
 // events for password          //
 /////////////////////////////////
-
 // old password
 oldPasswordInput.addEventListener("blur", function (e) {
 checkPassword(oldPasswordInput);
@@ -268,7 +230,7 @@ passwordButton.addEventListener("click", async function (e) {
         let data = new FormData(passwordForm);
         data.append("modifPass", "ok");
         try {
-            const response = await fetch("../../src/Controller/UserController.php", {
+            const response = await fetch("/src/Controller/UserController.php", {
                 method: "POST",
                 body: data,
                 headers: {

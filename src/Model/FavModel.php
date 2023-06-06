@@ -62,6 +62,7 @@ class FavModel extends AbstractModel {
             
             $this->removeFromFav($id, $type, $userId); // supprimer le favori
             return false;
+            echo 'supprimé des favoris';
 
         } else {
             // Ajouter l'élément à la base de données
@@ -71,6 +72,7 @@ class FavModel extends AbstractModel {
                 'user_id' => $userId
             ];
             $this->insert($data);
+            echo 'ajouté aux favoris';
         }
     }
 

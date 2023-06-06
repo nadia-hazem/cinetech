@@ -34,9 +34,10 @@ p {
 }
 
 input[type=text], input[type=password], input[type=email] {
-    background: ghostwhite!important;
+    color: ghostwhite;
+    background: #32383E!important;
     border: none!important;
-    padding: 10px;
+    padding: 5px;
 }
 
 /***************************
@@ -326,6 +327,8 @@ input[type=text], input[type=password], input[type=email] {
 .title {
     font-family: 'Oswald', sans-serif;
     font-size: 2rem;
+    padding: 10px;
+    width: 100%;
     color: brown!important;
     background: #000;
     text-align: center;

@@ -17,13 +17,6 @@ $router->addRoutes(array(   // array(method, path, target, name)
     array('GET', '/', function() { 
         require_once 'src/View/home.php';
     }, 'home' ),
-    /* array('GET', '/', function() { 
-        header('Location: http://cinetech/home');
-    }),
-
-    array('GET', '/home', function() { 
-            require_once 'src/View/home.php';
-    }, 'home'), */
     
     // Search //////////////////////////////
     array('GET', '/search.php', function() { 
@@ -37,8 +30,8 @@ $router->addRoutes(array(   // array(method, path, target, name)
 
     // Register post /////////////////////////
     array('POST', '/register', function () {
-        $authController = new \App\Controller\AuthController();
-        $authController->register();
+        $userController = new \App\Controller\UserController();
+        $userController->register();
     }, 'register-post'),
 
     // Login get /////////////////////////////
@@ -48,14 +41,20 @@ $router->addRoutes(array(   // array(method, path, target, name)
 
     // Login post ////////////////////////////
     array('POST', '/login', function () {
-        $authController = new \App\Controller\AuthController();
-        $authController->login();
+        $userController = new \App\Controller\UserController();
+        $userController->login();
     }, 'login-post'),
+
+    // isLogged //////////////////////////////
+    array('GET', '/isLogged', function () {
+        $userController = new \App\Controller\UserController();
+        echo json_encode($userController->isLogged());
+    }, 'isLogged'),
 
     // Logout ////////////////////////////////
     array('GET', '/logout', function () {
-        $authController = new \App\Controller\AuthController();
-        $authController->logout();
+        $userController = new \App\Controller\UserController();
+        $userController->logout();
     }, 'logout'),
 
     // Profile ///////////////////////////////
@@ -71,7 +70,7 @@ $router->addRoutes(array(   // array(method, path, target, name)
     // CurentUser /////////////////////////////////
     array ('GET', '/getCurrentUser', function () {
         $userController = new \App\Controller\UserController();
-        $userController->getCurrentUser();
+        echo json_encode($userController->getCurrentUser());
     }, 'currentUser'),
 
     // Films //////////////////////////////
@@ -103,13 +102,26 @@ $router->addRoutes(array(   // array(method, path, target, name)
     // Vérification du mot de passe
     array('POST', '/checkPassword', function() { 
         $userController = new \App\Controller\UserController();
-        $userController->checkPassword($_POST['password']);
+        $password = $_POST['password'];
+        $userController->checkPassword($password);
     }, 'checkPassword' ),
+    
+
+    // Mise à jour du login
+    /* array('POST', '/updateLogin', function() { 
+        $userController = new \App\Controller\UserController();
+        $userController->updateLogin($_POST['newLogin'], $_POST['oldLogin'], $_POST['password']);
+    }, 'updateLogin' ), */
 
     // Mise à jour du login
     array('POST', '/updateLogin', function() { 
+        $data = json_decode(file_get_contents("php://input"), true);
+        $newLogin = isset($data['newLogin']) ? $data['newLogin'] : null;
+        $oldLogin = isset($data['oldLogin']) ? $data['oldLogin'] : null;
+        $password = isset($data['password']) ? $data['password'] : null;
+
         $userController = new \App\Controller\UserController();
-        $userController->updateLogin($_POST['newLogin'], $_POST['oldLogin'], $_POST['password']);
+        $userController->updateLogin($newLogin, $oldLogin, $password);
     }, 'updateLogin' ),
 
     // FAVORIS ////////////////////////////////////////////

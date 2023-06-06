@@ -22,9 +22,8 @@ console.log(currentUser);
 export async function getCurrentUser() {
     try {
         const response = await fetch("/getCurrentUser");
-        const data = await response.text();
+        const data = await response.json();
         return data;
-
     } catch (error) {
         console.error(error);
         return null;
@@ -32,12 +31,19 @@ export async function getCurrentUser() {
 }
 
 export async function isFavorite(id, type, userId) {
+    let data = new FormData();
+    data.append("id", id);
+    data.append("type", type);
+    data.append("userId", userId);
+
     try {
         const response = await fetch("/isFav", {
             method: "POST",
-            body: JSON.stringify({ id, type, userId }),
-            headers: {
-            "Content-Type": "application/json",
+            /* body: JSON.stringify({ id, type, userId }), */
+            body: {
+                id: id,
+                type: type,
+                userId: userId,
             },
         });
     
@@ -50,3 +56,16 @@ export async function isFavorite(id, type, userId) {
     return false;
     }
 }
+
+export async function isLogged() {
+    try {
+        const response = await fetch("/isLogged");
+        const data = await response.json();
+        return data;
+    
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+

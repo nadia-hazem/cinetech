@@ -61,6 +61,89 @@ class UserController
         }
     }
     
+    public function register() {
+        // Vérifier si le formulaire a été soumis
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            // Récupérer les données du formulaire
+            $login = $_POST['login'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $cpassword = $_POST['cpassword'];
+            if($password !== $cpassword) {
+                throw new \Exception('Les mots de passe ne correspondent pas');
+            }
+            
+            $_POST['login'] = htmlspecialchars($_POST['login'], ENT_QUOTES);
+            $_POST['email'] = htmlspecialchars($_POST['email'], ENT_QUOTES);
+            $_POST['password'] = htmlspecialchars($_POST['password'], ENT_QUOTES);
+            $_POST['cpassword'] = htmlspecialchars($_POST['cpassword'], ENT_QUOTES);
+            
+            $login = $_POST['login'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $cpassword = $_POST['cpassword'];
+            
+            $password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Vérifier si l'e-mail est déjà utilisé
+            $userModel = new UserModel();
+            $user = $userModel->findOneBy('email', $email);
+            if ($user) {
+                require_once 'src/View/register.php';
+                echo '<p class="mx-5">email déjà utilisé</p>';
+            } else {
+                // Créer un nouvel utilisateur dans la base de données
+                $userModel = new UserModel();
+                $userModel->createUser($login, $email, $password);
+                
+                require_once 'src/View/register.php'; ?>
+                <p class="mx-5">Utilisateur créé avec succès</p>
+                <?php
+                // Rediriger l'utilisateur vers une autre page
+                header('Location: /login');
+                exit;
+            }
+        }
+    }
+
+    public function login() {
+        // Vérifier si le formulaire a été soumis
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            // Récupérer les données du formulaire
+            $login = $_POST['login'];
+            $password = $_POST['password'];
+
+            $_POST['login'] = htmlspecialchars($_POST['login'], ENT_QUOTES);
+            $_POST['password'] = htmlspecialchars($_POST['password'], ENT_QUOTES);
+
+            $request = new UserModel();
+            $user = $request->findOneBy('login', $login);
+            if(!$user) {
+                require_once 'src/View/login.php';
+                echo '<p class="mx-5">login ou mot de passe incorrect</p>';
+            } else {
+                if(password_verify($password, $user['password'])) {
+                    session_start();
+                    $_SESSION['user'] = $user; // Définir l'utilisateur actuel dans la session
+
+                    if ($user['role'] == 'admin') {
+                        header('Location: /admin');
+                        exit;
+                    } else {
+                        header('Location: /profile');
+                        exit;
+                    }
+
+                } else {
+                    require_once 'src/View/login.php';
+                    echo '<p class="mx-5">login ou mot de passe incorrect</p>';
+                }
+            }
+        }
+    }
+    
     public function isLogged() {
         if (isset($_SESSION['user'])) {
             return true;
@@ -71,6 +154,7 @@ class UserController
     }
 
     public function logout() {
+        session_start();
         session_destroy();
         header('Location: index.php');
     }
@@ -78,16 +162,41 @@ class UserController
     public function checkLogin() {
         $userModel = new UserModel();
         $login = $_POST['checkLogin'];
-
+    
         $user = $userModel->findOneBy('login', $login);
         if ($user) {
-            echo 'indispo';
+            $response = ['status' => 'indispo'];
         } else {
-            echo 'dispo';
+            $response = ['status' => 'dispo'];
+        }
+    
+        echo json_encode($response);
+    }
+
+    public function updateLogin($newLogin, $oldLogin, $password)
+    {
+        // Vérification du mot de passe
+        $isPasswordCorrect = $this->checkPassword($password);
+
+        if ($isPasswordCorrect) {
+            // Appeler la méthode updateUserLogin du modèle pour mettre à jour le login
+            $userModel = new UserModel();
+            $updateResult = $userModel->updateUserLogin($newLogin, $oldLogin, $password);
+
+            if ($updateResult) {
+                // Envoyer la réponse JSON indiquant que la mise à jour a réussi
+                echo json_encode('ok');
+            } else {
+                // Envoyer la réponse JSON indiquant une erreur lors de la mise à jour
+                echo json_encode('error');
+            }
+        } else {
+            // Envoyer la réponse JSON indiquant que le mot de passe est incorrect
+            echo json_encode('incorrect');
         }
     }
 
-    public function updateLogin($newLogin, $oldLogin, $password) {
+    /* public function updateLogin($newLogin, $oldLogin, $password) {
         $userModel = new UserModel();
         $user = $userModel->findOneBy('id', $_SESSION['user']['id']);
     
@@ -116,9 +225,6 @@ class UserController
         
         if (isset($_GET['updateLogin']) && $_GET['updateLogin'] == 1) {
             $data = json_decode(file_get_contents("php://input"), true);
-            $newLogin = $data['newLogin'];
-            $oldLogin = $data['oldLogin'];
-            $password = $data['password'];
         
             // Appeler la méthode du modèle pour mettre à jour le login
             $result = $userModel->updateUserLogin($newLogin, $oldLogin, $password);
@@ -126,24 +232,21 @@ class UserController
             // Envoyer une réponse appropriée
             echo json_encode($result);
         }
-    }
+    } */
 
-    // function to check if the password is same than bd password
-    function checkPassword() {
+    public function checkPassword($password) {
         $userModel = new UserModel();
-        $password = $_POST['checkPassword'];
         $login = $_SESSION['user']['login'];
-
+    
         $user = $userModel->findOneBy('login', $login);
         $password_hash = $user['password'];
-
-        if (password_verify(
-            $password,
-            $password_hash
-        )) {
+    
+        if (password_verify($password, $password_hash)) {
             echo 'ok';
+            return true;
         } else {
             echo 'incorrect';
+            return false;
         }
     }
     
