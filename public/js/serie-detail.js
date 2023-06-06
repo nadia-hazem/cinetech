@@ -26,7 +26,7 @@ function createDetailElement(serie) {
     // containerRight
     //*************************************************** */
     const containerRight = document.createElement('div');
-    containerRight.classList.add('col', 'col-md-6', 'justify-content-center', 'mt-0', 'mb-5', 'py-5');
+    containerRight.classList.add('col', 'col-md-6', 'justify-content-center', 'mt-0', 'mb-5', 'py-2');
     detailDiv.appendChild(containerRight);
 
     // title

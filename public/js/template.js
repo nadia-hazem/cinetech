@@ -1,4 +1,4 @@
-import { isFavorite, getCurrentUser } from './script.js';
+import { isFavorite, getCurrentUser, isLogged } from './script.js';
 
 // éléments du DOM
 const favButtons = document.querySelectorAll('.fav-button');
@@ -10,7 +10,6 @@ console.log(currentUser.id, currentUser.login, currentUser.email);
 // eventListener favoris
 favButtons.forEach(async (button) => {
     button.addEventListener("click", async function (e) {
-        e.preventDefault();
         const id = button.dataset.id;
         const type = button.dataset.type;
         const userId = button.dataset.userId;
@@ -18,12 +17,18 @@ favButtons.forEach(async (button) => {
         try {
             const response = await fetch("/toggleFav", {
                 method: "POST",
-                body: JSON.stringify({ id, type, userId: userId }),
+                /* body: JSON.stringify({ id, type, userId }), */
+                body: {
+                    id: id,
+                    type: type,
+                    userId: userId,
+                },
+                /* body: JSON.stringify({ id, type, userId: userId }),
                 headers: {
                     "Content-Type": "application/json",
-                },
+                }, */
             });
-            const data = await response.json();
+            const data = await response.text();
 
             // Traiter la réponse
             if (data.success) {
@@ -49,6 +54,11 @@ export async function createMovieElement(item, userId) {
     const divItem = document.createElement("div");
     divItem.classList.add("item");
 
+    // Titre
+    const titleHeading = document.createElement("h6");
+    titleHeading.textContent = item.title;
+    divItem.appendChild(titleHeading);
+
     // Image
     const posterUrl = "https://image.tmdb.org/t/p/w300" + item.poster_path;
     const posterImg = document.createElement("img");
@@ -70,13 +80,12 @@ export async function createMovieElement(item, userId) {
     overlayDiv.appendChild(summaryParagraph);
     divItem.appendChild(overlayDiv);
 
-    // Titre
-    const titleHeading = document.createElement("h2");
-    titleHeading.textContent = item.title;
-    divItem.appendChild(titleHeading);
-
     const currentUser = await getCurrentUser();
-    if (currentUser) {
+    console.log(currentUser);
+    const isUserLogged = !!currentUser;
+    
+
+    if (isUserLogged) {
         const userId = currentUser.id;
         const login = currentUser.login;
         const email = currentUser.email;
@@ -112,7 +121,7 @@ export async function createMovieElement(item, userId) {
         /* favButtons.style.display = "none";   */      
     }
 
-    const favorite = isFavorite();
+    const favorite = await isFavorite();
     if (Array.isArray(favorite)) {
         // Boucle pour afficher les favoris
         favorite.forEach(item => {
@@ -120,9 +129,9 @@ export async function createMovieElement(item, userId) {
             const userId = item.dataset.userId;
 
             let favoriteItem;
-            if (favorite.type === 'movie') {
+            if (item.type === 'movie') {
                 favoriteItem = createGridMovieElement(favorite);
-            } else if (favorite.type === 'serie') {
+            } else if (item.type === 'serie') {
                 favoriteItem = createGridSerieElement(favorite);
             } else {
                 console.error('Type de favori inconnu');
@@ -147,9 +156,16 @@ export async function createMovieElement(item, userId) {
 ////////////////////////////////////////////////////////////////////
 // élément de serie
 ///////////////////////////////////////////////////////////////////
+
 export async function createSerieElement(item, userId) {
     const divItem = document.createElement('div');
     divItem.classList.add('item');
+    
+    // title
+    const titleHeading = document.createElement('h6');
+    titleHeading.textContent = item.title;
+    divItem.appendChild(titleHeading);
+
     // img
     const posterUrl = 'https://image.tmdb.org/t/p/w300' + item.poster_path;
     const posterImg = document.createElement('img');
@@ -171,17 +187,14 @@ export async function createSerieElement(item, userId) {
     overlayDiv.appendChild(summaryParagraph);
     divItem.appendChild(overlayDiv);
 
-    // title
-    const titleHeading = document.createElement('h2');
-    titleHeading.textContent = item.title;
-    divItem.appendChild(titleHeading);
-    
     const currentUser = await getCurrentUser();
-    if (currentUser) {
+    const isUserLogged = !!currentUser;
+
+    if (isUserLogged) {
         const userId = currentUser.id;
         const login = currentUser.login;
         const email = currentUser.email;
-        
+
         console.log("Utilisateur connecté - ID :", userId);
         console.log("Nom d'utilisateur :", login);
         console.log("Email :", email);
@@ -213,7 +226,7 @@ export async function createSerieElement(item, userId) {
         /* favButtons.style.display = "none"; */
     }
 
-    const favorite = isFavorite();
+    const favorite = await isFavorite();
     if (Array.isArray(favorite)) {
         // Boucle pour afficher les favoris
         favorite.forEach(item => {
@@ -221,9 +234,9 @@ export async function createSerieElement(item, userId) {
             const userId = item.dataset.userId;
             
             let favoriteItem;
-            if (favorite.type === 'movie') {
+            if (item.type === 'movie') {
                 favoriteItem = createGridMovieElement(favorite);
-            } else if (favorite.type === 'serie') {
+            } else if (item.type === 'serie') {
                 favoriteItem = createGridSerieElement(favorite);
             } else {
                 console.error('Type de favori inconnu');
@@ -251,16 +264,24 @@ export async function createSerieElement(item, userId) {
 export async function createGridMovieElement(item, userId, favButtons) {
     const divItem = document.createElement('div');
     divItem.classList.add('item');
+    
+        // title
+        const titleHeading = document.createElement('h6');
+        titleHeading.textContent = item.title;
+        divItem.appendChild(titleHeading);
+
     // img
     const posterUrl = 'https://image.tmdb.org/t/p/w300' + item.poster_path;
     const posterImg = document.createElement('img');
     posterImg.src = posterUrl;
     posterImg.alt = item.title;
     posterImg.setAttribute('data-item-id', item.id);
+
     // Ajout du lien vers la page de détail
     const itemLink = document.createElement('a');
     itemLink.appendChild(posterImg);
     divItem.appendChild(itemLink);
+
     // overlay
     const overlayDiv = document.createElement('div');
     overlayDiv.classList.add('item-overlay');
@@ -268,10 +289,7 @@ export async function createGridMovieElement(item, userId, favButtons) {
     summaryParagraph.textContent = item.overview;
     overlayDiv.appendChild(summaryParagraph);
     divItem.appendChild(overlayDiv);
-    // title
-    const titleHeading = document.createElement('h2');
-    titleHeading.textContent = item.title;
-    divItem.appendChild(titleHeading);
+
     // activer les liens vers les détails du film
     itemLink.href = "/film-detail/"+item.id;
 
@@ -287,9 +305,10 @@ export async function createGridMovieElement(item, userId, favButtons) {
     }); */
 
     const currentUser = await getCurrentUser();
-    const isFav = await isFavorite(item.id, 'movie', userId);
-    
-    if (currentUser) {
+    const isFav = await isFavorite(item.id, 'movie', userId);    
+    const isUserLogged = !!currentUser;
+
+    if (isUserLogged) {
         const userId = currentUser.id;
         // ajout du bouton favoris
         const divFav = document.createElement('div');
@@ -322,6 +341,11 @@ export async function createGridMovieElement(item, userId, favButtons) {
 export async function createGridSerieElement(item, userId, favButtons) {
     const divItem = document.createElement('div');
     divItem.classList.add('item');
+    
+    // title
+    const titleHeading = document.createElement('h2');
+    titleHeading.textContent = item.title;
+    divItem.appendChild(titleHeading);
 
     // img
     const posterUrl = 'https://image.tmdb.org/t/p/w300' + item.poster_path;
@@ -343,17 +367,14 @@ export async function createGridSerieElement(item, userId, favButtons) {
     overlayDiv.appendChild(summaryParagraph);
     divItem.appendChild(overlayDiv);
 
-    // title
-    const titleHeading = document.createElement('h2');
-    titleHeading.textContent = item.title;
-    divItem.appendChild(titleHeading);
     // ajout du code pour activer les liens vers les détails de la série
     itemLink.href = "serie-detail/"+item.id;
 
     const currentUser = await getCurrentUser();
     const isFav = await isFavorite(item.id, 'movie', userId);
-    
-    if (currentUser) {
+    const isUserLogged = !!currentUser;
+
+    if (isUserLogged) {
         const userId = currentUser.id;
         // ajout du bouton favoris
         const divFav = document.createElement('div');

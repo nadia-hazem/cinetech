@@ -6,6 +6,7 @@ require_once 'src/Model/UserModel.php';
 require_once 'src/Controller/FavController.php';
 require_once 'src/Model/FavModel.php';
 
+
 $userModel = new \App\Model\UserModel();
 $user = new \App\Controller\UserController();
 $favModel = new \App\Model\FavModel();
@@ -16,16 +17,19 @@ if (!$user->isLogged()) {
     header('Location: /login');
     exit;
 }
+if (isset($_COOKIE['session'])) {
+    echo ' L\'utilisateur est connecté';
+} else {
+    echo 'L\'utilisateur n\'est pas connecté';
+}
 
 // Récupérez les informations de l'utilisateur connecté
 $currentUser = $user->getCurrentUser();
-var_dump($currentUser);
-var_dump("test");
 $id = $currentUser['id'];
 $login = $currentUser['login'];
 $email = $currentUser['email'];
 var_dump($currentUser);
-
+var_dump($_SESSION);
 // Convertir les données en JSON
 $userDataJson = json_encode([
     'id' => $id,
