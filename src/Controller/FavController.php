@@ -34,27 +34,55 @@ class FavController
 
     public function isFav($id, $type, $userId)
     {
-        $favModel = new FavModel();
-        $favModel->isFav($id, $type, $userId);
+        $id = $_POST['id'];
+        $type = $_POST['type'];
+        $userId = $_POST['userId'];
+        $favModel = new \App\Model\FavModel();
+        $isFav = $favModel->isFav($id, $type, $userId);
+
+        if ($isFav) {
+            echo json_encode(['isFavorite' => true]);
+        } else {
+            echo json_encode(['isFavorite' => false]);
+        }
     }
 
+    /* public function isFav($id, $type, $userId)
+    {
+        $favModel = new FavModel();
+        $favModel->isFav($id, $type, $userId);
+    } */
+    public function getFavs($userId)
+    {
+        $id = $_POST['id'];
+        $type = $_POST['type'];
+        $favModel = new FavModel();
+        $favs = $favModel->getFavs($id, $type, $userId);
+        echo json_encode($favs);
+    }
+    
     public function displayFavs($id, $type, $userId)
     {
-        if (isset($_POST['id']) && isset($_POST['type']) > 0) {
-            // on récupère l'id de l'utilisateur
+        // on instancie le modèle
+        $favModel = new FavModel();
+        
+        if (isset($_POST['id']) && isset($_POST['type'])) {
+            // Si les paramètres id et type sont définis, cela signifie que la demande concerne la suppression ou l'ajout d'un favori
             $id_user = $_SESSION['user']['user_id'];
-            // on instancie le model
-            $favModel = new FavModel();
-            // on récupère les favoris de l'utilisateur
-            if(isset($_POST['id'], $_POST['type'])) {
+            
+            if ($favModel->isFav($_POST['id'], $_POST['type'], $id_user)) {
+                // Si l'élément est déjà un favori, on le supprime
                 $favModel->removeFromFav($_POST['id'], $_POST['type'], $id_user);
             } else {
-                // sinon on l'ajoute aux favoris
+                // Sinon, on l'ajoute aux favoris
                 $favModel->addToFav($_POST['id'], $_POST['type'], $id_user);
             }
         }
+        
+        // Récupérer les favoris de l'utilisateur
         $favs = $favModel->displayFavs($id, $type, $userId);
-        return $favs;
+        echo json_encode($favs);
     }
+    
     
 } // end of class FavController

@@ -15,8 +15,6 @@ const favorites = document.querySelectorAll('#favorites');
 // Définir les informations de l'utilisateur connecté
 const currentUser = await getCurrentUser();
 
-console.log(currentUser);
-
 /**************Fonctions de display******************/
 
 export async function getCurrentUser() {
@@ -39,21 +37,17 @@ export async function isFavorite(id, type, userId) {
     try {
         const response = await fetch("/isFav", {
             method: "POST",
-            /* body: JSON.stringify({ id, type, userId }), */
-            body: {
-                id: id,
-                type: type,
-                userId: userId,
-            },
+            body: data,
         });
     
-        const data = await response.text();
-    
-        return data.isFavorite;
+        console.log(response);
+        
+        const responseData = await response.json();
+        return responseData.isFavorite;
 
     } catch (error) {
         console.error(error);
-    return false;
+        return false;
     }
 }
 
@@ -69,3 +63,18 @@ export async function isLogged() {
     }
 }
 
+export function showErrorMessage(inputElement, message) {
+    const errorElement = inputElement.nextElementSibling;
+    errorElement.innerHTML = message;
+    errorElement.style.color = 'red';
+    inputElement.style.borderColor = 'red';
+    inputElement.style.backgroundColor = '#fde2e2';
+}
+
+export function showSuccessMessage(inputElement, message) {
+    const successElement = inputElement.nextElementSibling;
+    successElement.innerHTML = message;
+    successElement.style.color = 'green';
+    inputElement.style.borderColor = 'green';
+    inputElement.style.backgroundColor = '#e2fde2';
+}

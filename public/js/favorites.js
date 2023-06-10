@@ -1,14 +1,19 @@
 // path : public\js\favorites.js
 
 import { createGridMovieElement, createGridSerieElement } from './template.js';
+import { isFavorite } from './script.js';
 
 const divFav = document.querySelector("#favorites");
 const favButton = document.querySelector(".fav-button");
 
+// Utiliser les valeurs récupérées
+console.log('User ID:', userId);
+console.log('User Login:', userLogin);
+
 // Fonction pour récupérer les favoris depuis le contrôleur
 export async function getFavorites() {
     try {
-        const response = await fetch('/favorites');
+        const response = await fetch('/profile/favorites');
 
         if (!response.ok) {
             throw new Error('Impossible de récupérer les favoris');
@@ -50,7 +55,7 @@ export function showFavorites(favorites) {
 // Fonction pour ajouter un favori
 export async function addFavorite(item) {
     try {
-        const response = await fetch('/favorites', {
+        const response = await fetch('/addFavorite', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -91,3 +96,5 @@ export async function deleteFavorite(itemId) {
         console.error(error);
     }
 }
+
+

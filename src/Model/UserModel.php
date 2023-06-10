@@ -10,6 +10,7 @@ class UserModel extends AbstractModel
     private $id;
     private $login;
     private $email;
+    private $role;
 
     public function __construct()
     {
@@ -20,6 +21,7 @@ class UserModel extends AbstractModel
             $this->id = $_SESSION['user']['id'];
             $this->login = $_SESSION['user']['login'];
             $this->email = $_SESSION['user']['email'];
+            $this->role = $_SESSION['user']['role'];
         }
     }
 
@@ -50,19 +52,6 @@ class UserModel extends AbstractModel
         $req->execute([$value]);
         return $req->fetch();
     }
-
-    // update user
-    /* public function updateUser($id, $login, $email, $password, $role)
-    {
-        $req = $this->pdo->prepare('UPDATE user SET login = :login, email = :email, password = :password, role = :role WHERE id = :id');
-        $req->execute([
-            'id' => $id,
-            'login' => $login,
-            'email' => $email,
-            'password' => $password,
-            'role' => $role
-        ]);
-    } */
 
     // find user role by id
     public function findRoleById($id)
@@ -99,6 +88,7 @@ class UserModel extends AbstractModel
         ]);
     }
 
+    // Update login
     public function updateUserLogin($newLogin, $oldLogin, $password)
     {
         // Vérifier si l'ancien login et le mot de passe correspondent à l'utilisateur actuel
@@ -106,41 +96,26 @@ class UserModel extends AbstractModel
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(array(':oldLogin' => $oldLogin, ':password' => $password));
         $count = $stmt->rowCount();
-
+    
         if ($count > 0) {
             // Mettre à jour le login de l'utilisateur
             $sql = "UPDATE user SET login=:newLogin WHERE login=:oldLogin";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute(array(':newLogin' => $newLogin, ':oldLogin' => $oldLogin));
+            $stmt->execute(array(':newLogin' => $oldLogin, ':oldLogin' => $oldLogin));
             $count = $stmt->rowCount();
-
+    
             if ($count > 0) {
                 // Mettre à jour le login dans la session de l'utilisateur
-                $_SESSION['user']['login'] = $newLogin;
-                echo 'ok';
+                $_SESSION['user']['login'] = $oldLogin;
+                return 'ok';
             } else {
-                echo 'error';
+                return 'error';
             }
         } else {
-            echo 'incorrect';
+            return 'incorrect';
         }
     }
-
-
-    /* public function updateUserLogin($newLogin, $oldLogin) {
-        // update user login
-        $sql = "UPDATE user SET login=:newLogin WHERE password=:password AND login=:oldLogin";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(array(':newLogin' => $newLogin, ':id' => $_SESSION['user']['id'], ':oldLogin' => $oldLogin));
-        $count = $stmt->rowCount();
-        if ($count > 0) {
-            $_SESSION['user']['login'] = $newLogin;
-            echo 'ok';
-        } else {
-            echo 'error';
-        }
-    }  */  
-
+    
     // Update password
     public function updateUserPassword($password, $newPassword)
     {
