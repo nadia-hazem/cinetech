@@ -7,17 +7,17 @@ use PDO;
 class FavModel extends AbstractModel {
 
     protected $pdo;
-    protected $tableName = 'fav';
+    protected $tablename = 'fav';
 
-    public function isFav($id, $type)
+    public function isFav($id, $type, $userId)
     {
-        if (isset($_SESSION['user'])) {
+        if (isset($_SESSION['user']) && isset($_SESSION['user']['id'])) {
             $userId = $_SESSION['user']['id'];
-            $stmt = $this->pdo->prepare("SELECT * FROM $this->tableName WHERE id = :id AND type = :type AND user_id = :user_id");
+            $stmt = $this->pdo->prepare("SELECT * FROM $this->tablename WHERE id = :id AND type = :type AND user_id = :user_id");
             $stmt->execute(['id' => $id, 'type' => $type, 'user_id' => $userId]);
             return $stmt->rowCount() > 0;
         } else {
-            return false; // L'utilisateur n'est pas connecté
+            return false; // L'utilisateur n'est pas connecté ou les clés ne sont pas définies
         }
     }
 
@@ -25,10 +25,10 @@ class FavModel extends AbstractModel {
     {
         // Vérifier si l'élément est déjà un favori
         if ($this->isFav($id, $type, $userId)) {
-            
-            $this->removeFromFav($id, $type, $userId); // supprimer le favori
+            // Supprimer le favori
+            $this->removeFromFav($id, $type, $userId);
+            echo 'Retiré des favoris';
             return false;
-
         } else {
             // Ajouter l'élément à la base de données
             $data = [
@@ -36,13 +36,14 @@ class FavModel extends AbstractModel {
                 'type' => $type,
                 'user_id' => $userId
             ];
-
-            $sql = "INSERT INTO $this->tableName (id, type, user_id) VALUES (:id, :type, :user_id)";
+    
+            $sql = "INSERT INTO $this->tablename (id, type, user_id) VALUES (:id, :type, :user_id)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($data);
+            echo 'Ajouté aux favoris';
             return $this->pdo->lastInsertId();
         }
-    }
+    }    
 
     public function removeFromFav($id, $type, $userId)
     {
@@ -76,7 +77,7 @@ class FavModel extends AbstractModel {
         }
     }
 
-    public function getFav($id, $type, $userId)
+    public function getFavs($id, $type, $userId)
     {
         $sql = "SELECT * FROM $this->tablename WHERE id = :id AND type = :type AND user_id = :user_id";
         $req = $this->pdo->prepare($sql);
@@ -85,15 +86,15 @@ class FavModel extends AbstractModel {
             'type' => $type,
             'user_id' => $userId
         ]);
-        return $req->fetch(\PDO::FETCH_ASSOC);
+        return $req->fetchAll(\PDO::FETCH_ASSOC);
     }
-
-    public function displayFavs($id, $type,$userId)
+    
+    public function displayFavs($userId)
     {
-        $sql = "SELECT (id, type, user_id) values (id = :id, type = :type, user_id = :user_id) FROM $this->tablename WHERE user_id = :user_id";
+        $sql = "SELECT * FROM $this->tablename WHERE user_id = :user_id";
         $req = $this->pdo->prepare($sql);
         $req->execute(['user_id' => $userId]);
-        $favs = $req->fetchAll(\PDO::FETCH_ASSOC);
-        return $favs;
+        return $req->fetchAll(\PDO::FETCH_ASSOC);
     }
+    
 }

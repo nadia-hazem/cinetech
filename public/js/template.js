@@ -1,55 +1,9 @@
-import { isFavorite, getCurrentUser, isLogged } from './script.js';
+import { isFavorite, getCurrentUser } from './script.js';
 
-// éléments du DOM
-const favButtons = document.querySelectorAll('.fav-button');
 
-/* console.log(userData.id, userData.login, userData.email); */
-console.log(currentUser);
-console.log(currentUser.id, currentUser.login, currentUser.email);
-
-// eventListener favoris
-favButtons.forEach(async (button) => {
-    button.addEventListener("click", async function (e) {
-        const id = button.dataset.id;
-        const type = button.dataset.type;
-        const userId = button.dataset.userId;
-
-        try {
-            const response = await fetch("/toggleFav", {
-                method: "POST",
-                /* body: JSON.stringify({ id, type, userId }), */
-                body: {
-                    id: id,
-                    type: type,
-                    userId: userId,
-                },
-                /* body: JSON.stringify({ id, type, userId: userId }),
-                headers: {
-                    "Content-Type": "application/json",
-                }, */
-            });
-            const data = await response.text();
-
-            // Traiter la réponse
-            if (data.success) {
-                if (button.classList.contains("active")) {
-                    button.classList.remove("active");
-                } else {
-                    button.classList.add("active");
-                }
-                console.log(id, type, userId);
-            } else {
-                console.error(data.message);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    });
-});
-
-////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////
 // élément de film
-///////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////
 export async function createMovieElement(item, userId) {
     const divItem = document.createElement("div");
     divItem.classList.add("item");
@@ -102,7 +56,10 @@ export async function createMovieElement(item, userId) {
         favButton.setAttribute('data-id', item.id);
         favButton.setAttribute('data-type', 'movie');
         favButton.setAttribute('data-user-id', userId);
-        favButton.textContent = 'Ajouter aux favoris';
+
+        console.log('data-id', item.id);
+        console.log('data-type', 'movie');
+        console.log('data-user-id', userId);
 
         const isFav = await isFavorite(item.id, 'movie', userId);
 
@@ -112,6 +69,48 @@ export async function createMovieElement(item, userId) {
         } else {
             favButton.textContent = 'Ajouter aux favoris';
         }
+
+        // EventListener bouton favori
+        favButton.addEventListener("click", async function (e) {
+            const id = favButton.dataset.id;
+            const type = favButton.dataset.type;
+            const userId = favButton.dataset.userId;
+
+            try {
+                const response = await fetch("/toggleFav", {
+                    method: "POST",
+                    body: JSON.stringify({ id, type, userId }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+            
+                if (response.ok) {
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        // Réponse JSON
+                        const data = await response.json();
+                        // Traiter la réponse JSON
+                        if (data.isFavorite) {
+                            favButton.textContent = 'Supprimer des favoris';
+                        } else {
+                            favButton.textContent = 'Ajouter aux favoris';
+                        }
+                    } else {
+                        // Réponse non JSON
+                        const text = await response.text();
+                        // Traiter la réponse non JSON
+                        console.log('Réponse non JSON:', text);
+                    }
+                } else {
+                    // Réponse avec erreur HTTP
+                    console.error('Erreur HTTP:', response.status);
+                }
+            } catch (error) {
+                // Erreur de la requête
+                console.error('Erreur de la requête:', error);
+            }
+        });
         
         divFav.appendChild(favButton);
         divItem.appendChild(divFav);
@@ -120,24 +119,22 @@ export async function createMovieElement(item, userId) {
         console.log("Aucun utilisateur connecté.");
         /* favButtons.style.display = "none";   */      
     }
-
-    const favorite = await isFavorite();
-    if (Array.isArray(favorite)) {
+    if (Array.isArray(item)) {
         // Boucle pour afficher les favoris
-        favorite.forEach(item => {
+        item.forEach(item => {
             
             const userId = item.dataset.userId;
-
+    
             let favoriteItem;
             if (item.type === 'movie') {
-                favoriteItem = createGridMovieElement(favorite);
+                favoriteItem = createGridMovieElement(item);
             } else if (item.type === 'serie') {
-                favoriteItem = createGridSerieElement(favorite);
+                favoriteItem = createGridSerieElement(item);
             } else {
                 console.error('Type de favori inconnu');
-            return;
+                return;
             }
-
+    
             // Ajouter l'élément favori à la liste des favoris
             const favoritesContainer = document.querySelector('#favorites');
             favoritesContainer.appendChild(favoriteItem);
@@ -153,9 +150,9 @@ export async function createMovieElement(item, userId) {
     return divItem;
 }
 
-////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////
 // élément de serie
-///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////
 
 export async function createSerieElement(item, userId) {
     const divItem = document.createElement('div');
@@ -207,7 +204,7 @@ export async function createSerieElement(item, userId) {
         favButton.setAttribute('data-id', item.id);
         favButton.setAttribute('data-type', 'serie');
         favButton.setAttribute('data-user-id', userId);
-        favButton.textContent = 'Ajouter aux favoris';
+
 
         const isFav = await isFavorite(item.id, 'serie', userId);
 
@@ -217,7 +214,38 @@ export async function createSerieElement(item, userId) {
         } else {
             favButton.textContent = 'Ajouter aux favoris';
         }
-    
+
+        // EventListener bouton favori
+        favButton.addEventListener("click", async function (e) {
+            const id = favButton.dataset.id;
+            const type = favButton.dataset.type;
+            const userId = favButton.dataset.userId;
+
+            try {
+                const response = await fetch("/toggleFav", {
+                    method: "POST",
+                    body: JSON.stringify({ id, type, userId }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+
+                // Traiter la réponse
+                if (response.ok) {
+                    if (data.isFavorite) {
+                        favButton.textContent = 'Supprimer des favoris';
+                    } else {
+                        favButton.textContent = 'Ajouter aux favoris';
+                    }
+                } else {
+                    console.error(data.message);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+
         divFav.appendChild(favButton);
         divItem.appendChild(divFav);
 
@@ -401,3 +429,41 @@ export async function createGridSerieElement(item, userId, favButtons) {
 
     return divItem;
 }
+
+/////////////////////////////////////////////////////
+// eventListerner favoris
+////////////////////////////////////////////////////
+/* const favButtons = document.querySelectorAll('.fav-button');
+
+favButtons.forEach(async (button) => {
+    button.addEventListener("click", async function (e) {
+        const id = button.dataset.id;
+        const type = button.dataset.type;
+        const userId = button.dataset.userId;
+
+
+        try {
+            const response = await fetch("/toggleFav", {
+                method: "POST",
+                body: JSON.stringify({ id, type, userId }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+
+            // Traiter la réponse
+            if (response.ok) {
+                if (data.isFavorite) {
+                    button.classList.add("active");
+                } else {
+                    button.classList.remove("active");
+                }
+            } else {
+                console.error(data.message);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+}); */

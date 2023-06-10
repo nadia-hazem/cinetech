@@ -93,6 +93,8 @@ $router->addRoutes(array(   // array(method, path, target, name)
         require_once 'src/View/serie-detail.php';
     }, 'serie-detail'),
 
+//////////////////////////////// PROFILE /////////////////////////////////////////
+
     // Vérification du login
     array('POST', '/checkLogin', function() { 
         $userController = new \App\Controller\UserController();
@@ -106,23 +108,22 @@ $router->addRoutes(array(   // array(method, path, target, name)
         $userController->checkPassword($password);
     }, 'checkPassword' ),
     
-
     // Mise à jour du login
-    /* array('POST', '/updateLogin', function() { 
+    array('POST', '/updateLogin', function() {
+        $oldLogin = isset($_POST['oldLogin']) ? $_POST['oldLogin'] : null;
+        $newLogin = isset($_POST['newLogin']) ? $_POST['newLogin'] : null;
+        $password = isset($_POST['password']) ? $_POST['password'] : null;
         $userController = new \App\Controller\UserController();
-        $userController->updateLogin($_POST['newLogin'], $_POST['oldLogin'], $_POST['password']);
-    }, 'updateLogin' ), */
-
-    // Mise à jour du login
-    array('POST', '/updateLogin', function() { 
-        $data = json_decode(file_get_contents("php://input"), true);
-        $newLogin = isset($data['newLogin']) ? $data['newLogin'] : null;
-        $oldLogin = isset($data['oldLogin']) ? $data['oldLogin'] : null;
-        $password = isset($data['password']) ? $data['password'] : null;
-
+        $user = $userController->getCurrentUser();
+        $oldLogin = $user['login'];    
+        $userController->updateLogin($oldLogin, $newLogin, $password);
+    }, 'updateLogin'),
+    
+    // Mise à jour du mot de passe
+    array('POST', '/updatePassword', function() { 
         $userController = new \App\Controller\UserController();
-        $userController->updateLogin($newLogin, $oldLogin, $password);
-    }, 'updateLogin' ),
+        $userController->updatePassword($_POST['newPassword'], $_POST['oldPassword'], $_POST['password']);
+    }, 'updatePassword' ),
 
     // FAVORIS ////////////////////////////////////////////
 
@@ -133,11 +134,11 @@ $router->addRoutes(array(   // array(method, path, target, name)
     }, 'addToFav' ), */
 
     // Ajouter un favori
-    array('POST', '/favorite', function() { 
+    array('POST', '/addFavorite', function() { 
         $favController = new \App\Controller\FavController();
         $type = $_POST['type'];
         $itemId = $_POST['id'];
-        $favController->addToFav($itemId, $_POST['type'], $_SESSION['user']['user']['user_id']);
+        $favController->addToFav($itemId, $_POST['type'], $_SESSION['user']['user_id']);
     }, 'addToFav' ),    
 
     // Supprimer un favori
@@ -148,20 +149,27 @@ $router->addRoutes(array(   // array(method, path, target, name)
 
     // Vérifier si un élément est un favori
     array('POST', '/isFav', function() { 
-        $favModel = new \App\Model\FavModel();
-        $favModel->isFav($_POST['id'], $_POST['type'], $_POST['userId']);
+        $favController = new \App\Controller\FavController();
+        $isFav = $favController->isFav($_POST['id'], $_POST['type'], $_POST['userId']);
     }, 'isFav' ),
 
-    // Toggle favoris
+        /* if (isset($_POST['id']) && isset($_POST['type']) && isset($_POST['userId'])) {
+            $favModel->isFav($_POST['id'], $_POST['type'], $_POST['userId']);
+        } else {
+            echo json_encode('error');
+        }
+    },  'isFav' ),*/
+
     array('POST', '/toggleFav', function() { 
         $favController = new \App\Controller\FavController();
-        $favController->toggleFav($_POST['id'], $_POST['type'], $_POST['userId']);
+        $favController->toggleFav($_GET['id'], $_GET['type'], $_GET['userId']);
     }, 'toggleFav' ),
+    
 
     // Afficher les favoris
     array('GET', '/profile/favorites', function() { 
         $favController = new \App\Controller\FavController();
-        $favController->displayFavs($_GET['user_id'], $_GET['type'], $_GET['user'] = $_SESSION['user']['user']['user']);
+        $favController->displayFavs($_GET['user_id'], $_GET['type'], $_GET['user']);
         require_once 'src/View/profile.php';
     }, 'favorites' ),
 

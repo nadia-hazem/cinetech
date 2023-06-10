@@ -16,32 +16,34 @@ $fav = new \App\Controller\FavController();
 if (!$user->isLogged()) {
     header('Location: /login');
     exit;
-}
-if (isset($_COOKIE['session'])) {
-    echo ' L\'utilisateur est connecté';
-} else {
-    echo 'L\'utilisateur n\'est pas connecté';
-}
-
-// Récupérez les informations de l'utilisateur connecté
-$currentUser = $user->getCurrentUser();
-$id = $currentUser['id'];
-$login = $currentUser['login'];
-$email = $currentUser['email'];
-var_dump($currentUser);
-var_dump($_SESSION);
-// Convertir les données en JSON
-$userDataJson = json_encode([
+} else if (isset($_SESSION['user'])) {    
+    echo ' Vous êtes connecté(e)';
+    // Récupérez les informations de l'utilisateur connecté
+    $currentUser = $user->getCurrentUser();
+    $id = $currentUser['id'];
+    $login = $currentUser['login'];
+    $email = $currentUser['email'];
+    $role = $currentUser['role'];
+    // Convertir les données en JSON
+    $userDataJson = json_encode([
     'id' => $id,
     'login' => $login,
-    'email' => $email
-]);
+    'email' => $email,
+    'role' => $role
+    ]);
 
-// Vérifiez si l'utilisateur est un administrateur
-if ($currentUser['role'] == 'admin') {
-    header('Location: /admin');
-    exit;
+    // Vérifiez si l'utilisateur est un administrateur
+    if ($currentUser['role'] == 'admin') {
+        header('Location: /admin');
+        exit;
+    }
+
+} else {
+    echo 'Vous n\'êtes pas connecté(e)';
 }
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -79,7 +81,7 @@ if ($currentUser['role'] == 'admin') {
             </div>
 
             <!-- Tab login -->
-            <div id="login" data-user-id="<?= $id ?>" data-user-login="<?= $login ?>" class="tabcontent p-2">
+            <div id="login" data-user-id="<?= $id ?>" class="tabcontent p-2">
                 <div class="row wrap justify-content-between">
                     <div class="col">
                         <!-- FORMS -->
@@ -91,7 +93,7 @@ if ($currentUser['role'] == 'admin') {
                             <div class="col">
                                 <div class="row">
                                     <label for="login">login</label>
-                                    <input type="text" name="login" class="login rounded" value="<?= $login ?>" required>
+                                    <input type="text" name="newLogin" class="login newLogin rounded" data-user-login="<?= $login ?>" value="<?= $login ?>" required>
                                     <p></p>
                                 </div>
                                 <div class="row">
@@ -100,7 +102,7 @@ if ($currentUser['role'] == 'admin') {
                                     <p></p>
                                 </div>
                                 <div class="col">
-                                    <input type="submit" value="Change" name="send" id="btnModifLogin" class="btn btn-light my-2">
+                                    <input type="submit" value="Change" id="btnModifLogin" class="btn btn-light my-2">
                                     <p></p>
                                 </div>
                             </div> <!-- /col -->
@@ -134,7 +136,7 @@ if ($currentUser['role'] == 'admin') {
                                 <p></p>
                             </div>
                             <div class="col">
-                                <input type="submit" value="Change" name="send" id="btnModifPass" class="btn btn-light my-2">
+                                <input type="submit" value="Change" id="btnModifPass" class="btn btn-light my-2">
                                 <p></p>
                             </div>
 
@@ -145,7 +147,7 @@ if ($currentUser['role'] == 'admin') {
 
             <!-- Tab favorites -->
             <h1>Mes favoris</h1>
-            <div id="favorites" data-user-id="<?= $id ?>" data-user-login="<?= $login ?>" class="tabcontent p-2"> 
+            <div id="favorites" data-user-id="<?= $userId ?>" data-user-login="<?= $login ?>" class="tabcontent p-2"> 
             </div>
 
         </section>
@@ -160,10 +162,8 @@ if ($currentUser['role'] == 'admin') {
         var userId = <?php echo $id; ?>; // Récupérer l'identifiant de l'utilisateur depuis PHP
     </script>
 
-    <script defer type="module" src="public/js/template.js"></script>
-    <script defer type="type/module" src="public/js/script.js"></script>
+    <script defer type="module" src="public/js/script.js"></script>
     <script defer type="module" src="public/js/profile.js"></script>
-    <script defer type="module" src="public/js/favorites.js"></script>
 
     <script> /* Tabs script */
         function openTab(evt, information) {

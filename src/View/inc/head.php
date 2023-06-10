@@ -1,18 +1,19 @@
 <?php
 require_once 'src/Controller/UserController.php';
-
+require_once 'src/Controller/FavController.php';
 $userController = new \App\Controller\UserController();
 $user = $userController->getCurrentUser();
+$favController = new \App\Controller\FavController();
+
+$id = null;
+$login = null;
+$email = null;
 
 // Vérifiez si l'utilisateur est connecté
 if ($user) {
     $id = $user['id'];
     $login = $user['login'];
     $email = $user['email'];
-} else {
-    $id = null;
-    $login = null;
-    $email = null;
 }
 
 // Encodez les données utilisateur en JSON pour les passer au JavaScript
@@ -61,6 +62,7 @@ $userDataJson = json_encode([
     <!-- script de recherche -->
     <script defer type="module" src="public/js/search.js"></script>
     <script defer type="module" src="public/js/template.js"></script>
+    <script defer type="module" src="public/js/favorites.js" data-user-id="<?= $userId ?>"></script>
 
     <?php 
     // Ce script fonctionne mais l'ordre de chargement pose problème alors j'ai appelé les script directement dans les pages avant la fermeture de la balise body.

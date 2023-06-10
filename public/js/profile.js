@@ -1,3 +1,5 @@
+import { showSuccessMessage, showErrorMessage } from './script.js';
+
 // variables
 let validation = false;
 // login
@@ -18,42 +20,59 @@ const passwordButton = passwordForm.querySelector("#btnModifPass");
 ////////////////////////////////////
 
 async function modifLogin(event) {
-    const newLogin = loginInput.value;
-    const oldLogin = loginInput.getAttribute("data-user");
+
+    const newLoginInput = loginForm.querySelector(".newLogin");
+    const newLogin = newLoginInput.value;
+    const oldLogin = newLoginInput.getAttribute('data-user-login');
     const password = passwordInput.value;
 
+    console.log(newLogin, oldLogin, password);
+
     try {
-    const loginAvailable = await checkLogin(newLogin);
-    if (!loginAvailable) {
-        // Login non disponible, afficher un message d'erreur
-        showErrorMessage(loginInput, 'Login indisponible');
-        return;
-    }
+        const loginStatus = await checkLogin(newLogin);
+        if (loginStatus === 'dispo') {
+            // Login disponible
+            showSuccessMessage(loginInput, 'Login disponible');
 
-    const passwordCorrect = await checkPassword();
-    if (!passwordCorrect) {
-        // Mot de passe incorrect, afficher un message d'erreur
-        showErrorMessage(passwordInput, 'Mot de passe incorrect');
-        return;
-    }
+            console.log('loginInput', loginInput);
 
-    const updateSuccess = await updateLogin(newLogin, oldLogin, password);
-    if (updateSuccess) {
-        console.log('Le login a été mis à jour dans la base de données');
-        // Réinitialiser le formulaire
-        loginForm.reset();
-        loginInput.nextElementSibling.innerHTML = "";
-        passwordInput.nextElementSibling.innerHTML = "";
-    } else {
-        console.log('Erreur lors de la mise à jour du login dans la base de données');
-    }
+            return;
+        } else if (loginStatus === 'indispo') {
+            // Login indisponible
+            showErrorMessage(loginInput, 'Login indisponible');
+            return;
+        } else if (loginStatus === '') {
+            // Ne rien faire, initialisation du formulaire
+            return;
+        }
+        console.log(loginStatus);
+
+        const passwordCorrect = await checkPassword(password);
+
+        console.log(passwordCorrect);
+
+        if (!passwordCorrect) {
+            // Mot de passe incorrect, afficher un message d'erreur
+            showErrorMessage(passwordInput, 'Mot de passe incorrect');
+            return;
+        }
+
+        const updateSuccess = await updateLogin(newLogin, oldLogin, password);
+        if (updateSuccess) {
+            // Login mis à jour avec succès
+            showSuccessMessage(loginInput, 'Login mis à jour avec succès');
+            return;
+        } else {
+            // Erreur lors de la mise à jour du login
+            showErrorMessage(loginInput, 'Erreur lors de la mise à jour du login');
+        }
     } catch (error) {
-    console.log('Erreur lors de la modification du login', error);
+        console.error(error);
     }
 }
 
-async function checkLogin() {
-    let user = loginInput.getAttribute("data-user");
+async function checkLogin(newLogin) {
+    const oldLogin = loginInput.getAttribute("data-user");
     let loginValue = loginInput.value;
     if (loginValue == "") {
         loginInput.nextElementSibling.innerHTML = "Login requis";
@@ -62,7 +81,7 @@ async function checkLogin() {
         loginInput.style.backgroundColor = "#fde2e2";
         // loginInput.style.backgroundColor = "#ff000063";
         validation = false;
-    } else if (loginValue == user) {
+    } else if (loginValue == oldLogin) {
         loginInput.nextElementSibling.innerHTML = "";
         // change border color and background
         loginInput.style.borderColor = "initial";
@@ -73,7 +92,7 @@ async function checkLogin() {
         // change border color and background
         loginInput.style.borderColor = "initial";
         let data = new FormData();
-        data.append("checkLogin", loginValue ); // add the login value to FormData
+        data.append("checkLogin", loginValue);
 
         try {
             const response = await fetch("/checkLogin", {
@@ -88,7 +107,7 @@ async function checkLogin() {
             const responseData = await response.json();
 
             if (responseData.status === "indispo") {
-                loginInput.nextElementSibling.innerHTML = "Login non disponible";
+                loginInput.nextElementSibling.innerHTML = "Login indisponible";
                 // change border color and background
                 loginInput.style.borderColor = "red";
                 loginInput.style.backgroundColor = "#fde2e2";
@@ -106,37 +125,11 @@ async function checkLogin() {
     }
 }
 
-async function checkPassword(password) {
-    let passwordValue = password.value;
-    if (passwordValue == "") {
-        password.nextElementSibling.innerHTML = "Password required";
-        // change border color and background
-        password.style.borderColor = "red";
-        password.style.backgroundColor = "#fde2e2";
-        validation = false;
-    } else {
-        password.nextElementSibling.innerHTML = "";
-        // change border color and background
-        password.style.borderColor = "initial";
-        password.style.backgroundColor = "fafafa";
-        validation = true;
-    }
-
-    const response = await fetch('/checkPassword', {
-        method: 'POST',
-        body: 'password=' + encodeURIComponent(passwordValue),
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-    });
-    const data = await response.text();
-    return response.ok && data === 'ok';
-}
-
 async function updateLogin(newLogin, oldLogin, password) {
     const response = await fetch('/updateLogin', {
         method: 'POST',
-        body: JSON.stringify({ newLogin, oldLogin, password }),
+        body: JSON.stringify({ 
+            newLogin, oldLogin, password }),
         headers: {
             'Content-Type': 'application/json',
         },
@@ -145,35 +138,41 @@ async function updateLogin(newLogin, oldLogin, password) {
     return response.ok && data === 'ok';
 }
 
-function showErrorMessage(inputElement, message) {
-    inputElement.nextElementSibling.innerHTML = message;
-    inputElement.style.borderColor = 'red';
-    inputElement.style.backgroundColor = '#fde2e2';
+async function checkPassword(passwordInput) {
+    const passwordValue = passwordInput.value;
+
+    if (passwordValue === "") {
+        showErrorMessage(passwordInput, 'Mot de passe requis');
+        return false;
+    } else {
+        showSuccessMessage(passwordInput, ''); // Effacer le message s'il existe
+
+        const response = await fetch('/checkPassword', {
+            method: 'POST',
+            body: 'password=' + encodeURIComponent(passwordValue),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
+
+        const data = await response.text();
+        return response.ok && data === 'ok';
+    }
 }
 
-async function checkNewPasswordConfirm() {
-    let newPasswordValue = newPasswordInput.value;
-    let newPasswordConfirmValue = newPasswordConfirmInput.value;
-    if (newPasswordConfirmValue == "") {
-        newPasswordConfirmInput.nextElementSibling.innerHTML =
-        "Password required";
-        // change border color and background
-        newPasswordConfirmInput.style.borderColor = "red";
-        newPasswordConfirmInput.style.backgroundColor = "#fde2e2";
-        validation = false;
-    } else if (newPasswordConfirmValue != newPasswordValue) {
-        newPasswordConfirmInput.nextElementSibling.innerHTML =
-        "Password does not match";
-        // change border color and background
-        newPasswordConfirmInput.style.borderColor = "red";
-        newPasswordConfirmInput.style.backgroundColor = "#fde2e2";
-        validation = false;
+function checkNewPasswordConfirm() {
+    const newPasswordValue = newPasswordInput.value;
+    const newPasswordConfirmValue = newPasswordConfirmInput.value;
+
+    if (newPasswordConfirmValue === "") {
+        showErrorMessage(newPasswordConfirmInput, 'Mot de passe requis');
+        return false;
+    } else if (newPasswordValue !== newPasswordConfirmValue) {
+        showErrorMessage(newPasswordConfirmInput, 'Mot de passe érroné');
+        return false;
     } else {
-        newPasswordConfirmInput.nextElementSibling.innerHTML = "";
-        // change border color and background
-        newPasswordConfirmInput.style.borderColor = "initial";
-        newPasswordConfirmInput.style.backgroundColor = "#fafafa";
-        validation = true;
+        showSuccessMessage(newPasswordConfirmInput, ''); // Effacer le message s'il existe
+        return true;
     }
 }
 
@@ -185,45 +184,54 @@ loginInput.addEventListener("blur", checkLogin);
 
 // password
 passwordInput.addEventListener("blur", function (e) {
-checkPassword(passwordInput);
+    checkPassword(passwordInput);
 });
+
+// old password
+oldPasswordInput.addEventListener("blur", function (e) {
+    checkPassword(oldPasswordInput);
+});
+    
+// new password
+newPasswordInput.addEventListener("blur", function (e) {
+    checkPassword(newPasswordInput);
+});
+    
+// new password confirm
+newPasswordConfirmInput.addEventListener("keyup", checkNewPasswordConfirm);
+    
 
 /////////////////////////////////
 // events for click           //
 ////////////////////////////////
 // login form
-loginButton.addEventListener("click", async function (e) {
+// Gestionnaire d'événement pour le formulaire de connexion
+loginForm.addEventListener("submit", async function (e) {
     e.preventDefault();
-
-    // Get the new login, old login, and password values from the form
-    let user = loginInput.getAttribute("data-user");
-    const newLogin = loginInput.value;
-    const oldLogin = user;
+    const newLoginInput = loginForm.querySelector(".newLogin");
+    const newLogin = newLoginInput.value;
+    const oldLogin = newLoginInput.getAttribute("data-user");
     const password = passwordInput.value;
-
-    console.log(newLogin, oldLogin, password);
-
-    // Call the updateLogin function with the new login, old login, and password values
     await modifLogin(newLogin, oldLogin, password);
+});
+
+
+// password form
+// Gestionnaire d'événement pour le formulaire de modification du mot de passe
+passwordForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    // Récupérez les valeurs des champs spécifiques au formulaire de modification du mot de passe
+    const oldPassword = oldPasswordInput.value;
+    const newPassword = newPasswordInput.value;
+    const newPasswordConfirm = newPasswordConfirmInput.value;
+    await modifPassword(oldPassword, newPassword, newPasswordConfirm);
 });
 
 /////////////////////////////////
 // events for password          //
 /////////////////////////////////
-// old password
-oldPasswordInput.addEventListener("blur", function (e) {
-checkPassword(oldPasswordInput);
-});
 
-// new password
-newPasswordInput.addEventListener("blur", function (e) {
-checkPassword(newPasswordInput);
-});
-
-// new password confirm
-newPasswordConfirmInput.addEventListener("keyup", checkNewPasswordConfirm);
-
-// password form
+/* // password form
 passwordButton.addEventListener("click", async function (e) {
     e.preventDefault();
     if (validation) {
@@ -261,4 +269,4 @@ passwordButton.addEventListener("click", async function (e) {
             console.log(error);
         }
     }
-});
+}); */
